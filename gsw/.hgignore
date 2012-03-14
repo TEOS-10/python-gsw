@@ -1,0 +1,13 @@
+syntax: glob
+*~
+_build
+.*swp
+.directory
+*.pyc
+MANIFEST
+build/*
+dist/*
+gsw.egg-info/*
+gsw/gibbs/MATLAB-TMP/*
+gsw/gibbs/GIBBS2-TMP/*
+gsw/gibbs/TODO.txt
