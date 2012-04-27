@@ -31,7 +31,7 @@ from library import Hill_ratio_at_SP2
 from utilities import match_args_return
 
 __all__ = ['SP_from_C',
-           'C_from_SP',
+           #'C_from_SP',
            #'SP_from_R',
            #'R_from_SP',
            'SP_salinometer']
@@ -449,7 +449,8 @@ def gsw_C_from_SP(SP, t, p):
             Hill_ratio = Hill_ratio_at_SP2(t[I2])
             SP_est[I2] = Hill_ratio * SP_Hill_raw
 
-        SP_error = np.abs(SP - SP_est)
+        #FIXME: local variable 'SP_error' is assigned to but never used.
+        #SP_error = np.abs(SP - SP_est)
     #--------------This is the end of the error testing------------------------
 
     # Now go from Rtx to Rt and then to the conductivity ratio R at pressure p.
@@ -493,7 +494,9 @@ def SP_salinometer(Rt, t):
     ----------
     Rt : array
          C(SP,t_68,0)/C(SP=35,t_68,0) [unitless]
-         conductivity ratio :math:`R = \frac{C(S, t_68, 0)}{C(35, 15(IPTS-68),0)} [unitless]
+         conductivity ratio
+         :math:`R = \frac{C(S, t_68, 0)}{C(35, 15(IPTS-68),0)} [unitless]
+
     t : array
         Temperature of the bath of the salinometer [:math:`^\circ` C (ITS-90)]
 
