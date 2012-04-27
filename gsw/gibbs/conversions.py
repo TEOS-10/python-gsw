@@ -1,45 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-Other conversions between temperatures, salinities, pressure and height
-
-Functions:
-----------
-
-  t_from_CT(SA, CT, p)
-      in-situ temperature from Conservative Temperature
-  pt_from_t(SA, t, p, pr=0)
-      potential temperature
-  CT_from_pt(SA, pt)
-      Conservative Temperature from potential temperature
-  pot_enthalpy_from_pt(SA, pt)
-      potential enthalpy from potential temperature
-  pt0_from_t(SA, t, p)
-      potential temperature with a reference pressure of zero dbar
-  pt_from_CT(SA, CT)
-      potential temperature from Conservative Temperature
-  SP_from_SA(SA, p, lon, lat)
-      Practical Salinity from Absolute Salinity
-  Sstar_from_SA(SA, p, lon, lat)
-      Preformed Salinity from Absolute Salinity
-  SA_from_Sstar(Sstar, p, lon, lat)
-      Absolute Salinity from Preformed Salinity
-  SP_from_Sstar(Sstar, p, lon, lat)
-      Practical Salinity from Preformed Salinity
-  z_from_p(p, lat)
-      height from pressure
-  p_from_z(z, lat)
-      pressure from height
-  t90_from_t48(t48)
-      ITS-90 temperature from IPTS-48 temperature
-  t90_from_t68(t68)
-      ITS-90 temperature from IPTS-68 temperature
-
-This is part of the python Gibbs Sea Water library
-http://code.google.com/p/python-gsw.
-
-"""
-
 from __future__ import division
 
 import numpy as np
@@ -50,22 +10,96 @@ from library import entropy_part, entropy_part_zerop, gibbs
 from library import gibbs_pt0_pt0, enthalpy_SSO_0_p, specvol_SSO_0_p
 from utilities import match_args_return, strip_mask
 
-__all__ = ['t_from_CT',
+__all__ = [
            'pt_from_t',
+           't_from_CT',
+           'pt_from_entropy',
            'CT_from_pt',
            'pot_enthalpy_from_pt',
            'pt0_from_t',
            'pt_from_CT',
-           #'SP_from_SA', # TODO: change, check gsw_SAAR.m
-           #'Sstar_from_SA', # TODO: change, check gsw_SAAR.m
-           #'SA_from_Sstar', # TODO: change, check gsw_SAAR.m
-           #'SP_from_Sstar', # TODO: change, check gsw_SAAR.m
-           'z_from_p',  # TODO: New test case with geo_strf_dyn_height != None
+           #'SP_from_SA',    # TODO: changed, check gsw_SAAR.m
+           #'Sstar_from_SA', # TODO: changed, check gsw_SAAR.m
+           #'SA_from_Sstar', # TODO: changed, check gsw_SAAR.m
+           #'SP_from_Sstar', # TODO: changed, check gsw_SAAR.m
+           'z_from_p',       # TODO: New test case with geo_strf_dyn_height != None
            'p_from_z',
            't90_from_t48',
-           't90_from_t68']
+           't90_from_t68'
+           ]
 
 rad = np.pi / 180.0
+
+@match_args_return
+def pt_from_entropy(SA, entropy):
+    r"""Calculates potential temperature with reference pressure p_ref = 0 dbar
+    and with entropy as an input variable.
+
+    Parameters
+    ----------
+    SA : array_like
+         Absolute salinity [g kg :sup:`-1`]
+    entropy : array_like
+              specific entropy [J kg :sup:`-1` K :sup:`-1`]
+
+    Returns
+    -------
+    pt : array_like
+         potential temperature [:math:`^\circ` C (ITS-90)]
+         with reference sea pressure (p_ref) = 0 dbar.
+
+    See Also
+    --------
+    _gibbs_pt0_pt0
+
+    Notes
+    -----
+    TODO
+
+    Examples
+    --------
+    >>> import seawater.gibbs as gsw
+    >>> SA = [34.7118, 34.8915, 35.0256, 34.8472, 34.7366, 34.7324]
+    >>> entropy = [400.3892, 395.4378, 319.8668, 146.7910, 98.6471, 62.7919]
+    >>> gsw.pt_from_entropy(SA, entropy)
+    array([ 28.78317983,  28.42095483,  22.78495274,  10.23053207,
+             6.82921333,   4.32453778])
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp. See appendix  A.10.
+
+    Modifications:
+    2010-10-13. Trevor McDougall and Paul Barker.
+    2011-04-03. Trevor McDougall and Paul Barker. (version 3.0)
+    """
+
+    SA.clip(0, np.inf)
+
+    n0, n1 = 0, 1
+
+    part1 = 1 - SA / SSO
+    part2 = 1 - 0.05 * part1
+    ent_SA = (cp0 / Kelvin) * part1 * ( 1 - 1.01 * part1)
+    c = (entropy - ent_SA) * part2 / cp0
+    pt = Kelvin * (np.exp(c) - 1)
+    dentropy_dt = cp0 / ((Kelvin + pt) * part2) # initial dentropy_dt
+
+    for Number_of_iterations in range(0,3):
+        pt_old = pt
+        dentropy = entropy_from_pt(SA, pt_old) - entropy
+        pt = pt_old - dentropy / dentropy_dt # half way through mod. method
+        ptm = 0.5 * (pt + pt_old)
+        dentropy_dt = -lib._gibbs_pt0_pt0(SA, ptm)
+        pt = pt_old - dentropy / dentropy_dt
+
+    #maximum error of 2.2x10^-6 degrees C for one iteration.
+    #maximum error is 1.4x10^-14 degrees C for two iterations
+    #(two iterations is the default, "for Number_of_iterations = 1:2").
+    return pt
 
 
 @match_args_return
