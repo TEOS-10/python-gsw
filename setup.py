@@ -59,8 +59,8 @@ Topic :: Software Development :: Libraries :: Python Modules
 """
 
 config = dict(name='gsw',
-              version='3.0.0',
-              packages=['gsw', 'gsw/gsw']
+              version='3.0.1',
+              packages=['gsw', 'gsw/gibbs']
               package_data={'': ['gsw/data/*.npz']},
               license=open('LICENSE.txt').read(),
               description='Gibbs SeaWater Oceanographic Package of TEOS-10',
