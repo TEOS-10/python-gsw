@@ -1,26 +1,7 @@
 # -*- coding: utf-8 -*-
 
-"""
-Absolute Salinity (SA) and Preformed Salinity (Sstar)
-
-Functions:
-----------
-  SA_from_SP(SP, p, lon, lat)
-        Absolute Salinity from Practical Salinity
-  Sstar_from_SP(SP, p, lon, lat)
-        Preformed Salinity from Practical Salinity
-  CT_from_t(SA, t, p)
-        Conservative Temperature from in-situ temperature
-
-This is part of the python Gibbs Sea Water library
-http://code.google.com/p/python-gsw.
-
-"""
-
 from __future__ import division
 
-#from gsw.constants import TODO
-#from library import delta_SA
 from utilities import match_args_return
 from conversions import pt0_from_t, CT_from_pt
 

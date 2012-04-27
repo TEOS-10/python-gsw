@@ -1,19 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-Isobaric melting enthalpy and isobaric evaporation enthalpy.
-
-Functions:
-----------
-
-  latentheat_evap_t(SA, t)
-      latent heat, or enthalpy, of evaporation at p = 0
-
-This is part of the python Gibbs Sea Water library
-http://code.google.com/p/python-gsw.
-
-"""
-
 from __future__ import division
 
 from utilities import match_args_return

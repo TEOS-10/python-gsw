@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""Python utilities for the Gibbs Seawater package
-"""
-
-
 from __future__ import division
 
 import os

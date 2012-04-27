@@ -1,26 +1,9 @@
 # -*- coding: utf-8 -*-
 
-"""
-Planet Earth properties
-
-Functions:
-----------
-  f
-      Coriolis parameter (f)
-  grav
-      Gravitational acceleration
-  distance
-      spherical earth distance between points
-      in lon, lat coordinates at a given pressure
-
-This is part of the python Gibbs Sea Water library
-http://code.google.com/p/python-gsw.
-
-"""
-
 from __future__ import division
 
 import numpy as np
+
 from constants import gamma, earth_radius
 from utilities import match_args_return
 from conversions import z_from_p

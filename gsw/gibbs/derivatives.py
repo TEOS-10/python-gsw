@@ -1,29 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-Derivatives of enthalpy, entropy, CT and pt
-
-Functions:
-----------
-
-  CT_first_derivatives(SA, pt)
-     first derivatives of Conservative Temperature
-  CT_second_derivatives(SA, pt)
-     second derivatives of Conservative Temperature
-  enthalpy_first_derivatives(SA, CT, p)
-     first derivatives of enthalpy
-  enthalpy_second_derivatives(SA, CT, p)
-     second derivatives of enthalpy
-  entropy_first_derivatives(SA, CT)
-     first derivatives of entropy
-  entropy_second_derivatives(SA, CT)
-     second derivatives of entropy
-  pt_first_derivatives(SA, CT)
-     first derivatives of potential temperature
-  pt_second_derivatives(SA, CT)
-     second derivatives of potential temperature
-
-"""
 from __future__ import division
 
 import numpy as np

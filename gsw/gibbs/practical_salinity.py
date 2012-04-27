@@ -1,28 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-Practical Salinity (SP), PSS-78
-
-Functions:
-----------
-
-  gsw_SP_from_C
-    Practical Salinity from conductivity, C (inc. for SP < 2)
-  gsw_C_from_SP
-    conductivity, C, from Practical Salinity (inc. for SP < 2)
-  gsw_SP_from_R
-    Practical Salinity from conductivity ratio, R (inc. for SP < 2)
-  gsw_R_from_SP
-    conductivity ratio, R, from Practical Salinity (inc. for SP < 2)
-  gsw_SP_salinometer
-    Practical Salinity from a laboratory salinometer (inc. for SP < 2)
-
-
-This is part of the python Gibbs Sea Water library
-http://code.google.com/p/python-gsw.
-
-"""
-
 from __future__ import division
 
 import numpy as np
