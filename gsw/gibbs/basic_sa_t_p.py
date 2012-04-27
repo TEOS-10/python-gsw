@@ -65,9 +65,9 @@ from __future__ import division
 import numpy as np
 
 from library import gibbs
-from utilities import match_args_return, strip_mask, sfac
-from constants import Kelvin, db2Pascal, P0, SSO, cp0, R
-from conversion import pt_from_CT, pt_from_t, pt0_from_t, molality_from_SA
+from utilities import match_args_return, strip_mask
+from constants import Kelvin, db2Pascal, P0, SSO, cp0, R, sfac
+from conversions import pt_from_CT, pt_from_t, pt0_from_t, molality_from_SA
 
 __all__ = [
            'rho_t_exact',

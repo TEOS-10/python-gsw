@@ -44,8 +44,8 @@ from __future__ import division
 
 import numpy as np
 
-from gsw.constants import SSO, cp0, Kelvin, sfac, uPS
-from gsw.constants import db2Pascal, gamma, P0, M_S, valence_factor
+from constants import SSO, cp0, Kelvin, sfac, uPS
+from constants import db2Pascal, gamma, P0, M_S, valence_factor
 from library import entropy_part, entropy_part_zerop, gibbs
 from library import gibbs_pt0_pt0, enthalpy_SSO_0_p, specvol_SSO_0_p
 from utilities import match_args_return, strip_mask
@@ -828,7 +828,7 @@ def z_from_depth(depth):
     2011-03-26. Winston.
     """
 
-    return -detph
+    return -depth
 
 
 @match_args_return

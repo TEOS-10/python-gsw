@@ -21,7 +21,7 @@ http://code.google.com/p/python-gsw.
 from __future__ import division
 
 import numpy as np
-from gsw.constants import gamma, earth_radius
+from constants import gamma, earth_radius
 from utilities import match_args_return
 from conversions import z_from_p
 

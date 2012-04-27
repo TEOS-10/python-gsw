@@ -15,7 +15,7 @@ http://code.google.com/p/python-gsw.
 from __future__ import division
 
 from library import match_args_return
-from basicsa_t_p import sound_speed_t_exact
+from basic_sa_t_p import sound_speed_t_exact
 
 __all__ = [
            #'rho_CT',

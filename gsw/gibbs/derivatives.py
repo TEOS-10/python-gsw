@@ -29,7 +29,7 @@ from __future__ import division
 import numpy as np
 
 from library import gibbs
-from gsw.constants import cp0, Kelvin
+from constants import cp0, Kelvin
 from utilities import match_args_return
 from conversions import pt_from_CT, pt_from_t
 
