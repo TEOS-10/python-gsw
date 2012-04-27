@@ -799,7 +799,8 @@ def entropy_part_zerop(SA, pt0):
     return np.ma.array(entropy_part_zerop, mask=mask, copy=False)
 
 
-def enthalpy_SSO_0_CT25(p):  # FIXME: Remove (Check if this is used.)
+# FIXME: Check if this is still used and remove it.
+def enthalpy_SSO_0_CT25(p):
     r"""
     Calculates enthalpy at the Standard Ocean Salinity (SSO) and at a
     Conservative Temperature of zero degrees C (CT=0), as a function of
@@ -848,6 +849,7 @@ def enthalpy_SSO_0_CT25(p):  # FIXME: Remove (Check if this is used.)
     return np.ma.array(enthalpy_SSO_0_CT25, mask=mask, copy=False)
 
 
+# FIXME: Check if this is still used and remove it.
 def specvol_SSO_0_CT25(p):
     r"""
     Calculates specific volume at the Standard Ocean Salinity (SSO) and
@@ -1025,6 +1027,7 @@ def SP_from_SA_Baltic(SA, lon, lat):
     return SP_baltic
 
 
+# FIXME: Check if this is still used and remove it.
 def SP_from_SA_Baltic_old(SA, lon, lat):
     r"""
     Calculates Practical Salinity (SP) for the Baltic Sea, from a value
