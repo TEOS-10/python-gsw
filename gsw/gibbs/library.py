@@ -1,41 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-  Library functions in the Gibbs SeaWater toolbox
-
-  gibbs
-    the TEOS-10 Gibbs function and its derivatives
-  SAAR
-    Absolute Salinity Anomaly Ratio (excluding the Baltic Sea)
-  _Fdelta
-    ratio of Absolute to Preformed Salinity, minus 1
-  delta_SA_ref
-    Absolute Salinity Anomaly ref. value (excluding the Baltic Sea)
-  SA_from_SP_Baltic
-    Calculates Absolute Salinity in the Baltic Sea
-  SP_from_SA_Baltic
-    Calculates Practical Salinity in the Baltic Sea
-  infunnel
-    "oceanographic funnel" check for the 25-term equation
-  entropy_part
-    entropy minus the terms that are a function of only SA
-  entropy_part_zerop
-    entropy_part evaluated at 0 dbar
-  interp_ref_cast
-    linearly interpolates the reference cast
-  interp_SA_CT
-    linearly interpolates (SA,CT,p) to the desired p
-  gibbs_pt0_pt0
-    gibbs(0,2,0,SA,t,0)
-  specvol_SSO_0_p
-    specvol_CT(35.16504,0,p)
-  enthalpy_SSO_0_p
-    enthalpy_CT(35.16504,0,p)
-  Hill_ratio_at_SP2
-    Hill ratio at a Practical Salinity of 2
-
-"""
-
 from __future__ import division
 
 import numpy as np
