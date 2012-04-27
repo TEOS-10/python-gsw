@@ -41,7 +41,7 @@ from __future__ import division
 import numpy as np
 
 from utilities import match_args_return, strip_mask, read_data
-from gsw.constants import sfac, SSO, db2Pascal
+from constants import sfac, SSO, db2Pascal
 
 
 def gibbs(ns, nt, npr, SA, t, p):
@@ -90,7 +90,8 @@ def gibbs(ns, nt, npr, SA, t, p):
             [(J kg :sup:`-1`) Pa :sup:`-npr`]
 
             The mixed derivatives are output in units of:
-            [(J kg :sup:`-1`) (g kg :sup:`-1`) :sup:`-ns` K :sup:`-nt` Pa :sup:`-npr`]
+            [(J kg :sup:`-1`) (g kg :sup:`-1`) :sup:`-ns` K :sup:`-nt`
+            Pa :sup:`-npr`]
 
     Notes
     -----
@@ -1434,7 +1435,7 @@ def delta_SA(p, lon, lat):
 
 
 def infunnel(SA, CT, p):
-    u"""oceanographic funnel check for the 25-term equation
+    r"""oceanographic funnel check for the 25-term equation
 
     Parameters
     ----------
@@ -1461,8 +1462,7 @@ def infunnel(SA, CT, p):
     author:
     Trevor McDougall and Paul Barker    [ help_gsw@csiro.au ]
     2011-02-27: Bjørn Ådlandsvik, python version
-
-"""
+    """
 
     # Check variables and resize if necessary
     scalar = np.isscalar(SA) and np.isscalar(CT) and np.isscalar(p)
@@ -1490,12 +1490,10 @@ def infunnel(SA, CT, p):
 @match_args_return
 def Hill_ratio_at_SP2(t):
 
-    """
-    TODO: Write docstring
+    r"""TODO: Write docstring
     Hill ratio at SP = 2
-
     """
-    #
+
     # USAGE:
     #  Hill_ratio = gsw_Hill_ratio_at_SP2(t)
     #
@@ -1517,11 +1515,6 @@ def Hill_ratio_at_SP2(t):
     #  Trevor McDougall and Paul Barker
     #
     # VERSION NUMBER: 3.0 (26th March, 2011)
-    #
-    #
-    #  The software is available from http://www.TEOS-10.org
-    #
-    #======================================================================
 
     SP2 = 2 * np.ones_like(t)
 
@@ -1601,7 +1594,7 @@ def Hill_ratio_at_SP2(t):
 
 
 def interp_S_T(S, T, z, znew, P=None):
-    """
+    r"""
     Linear interpolation of ndarrays *S* and *T* from *z* to *znew*.
     Optionally interpolate a third ndarray, *P*.
 
@@ -1618,9 +1611,6 @@ def interp_S_T(S, T, z, znew, P=None):
     yield corresponding *nan* in the output.
 
     The basic algorithm is from scipy.interpolate.
-
-
-
     """
 
     isscalar = False
@@ -1683,8 +1673,7 @@ def interp_S_T(S, T, z, znew, P=None):
 
 
 def interp_SA_CT(SA, CT, p, p_i):
-    """
-    TODO: Write docstring.
+    r"""TODO: Write docstring.
     function [SA_i, CT_i] = gsw_interp_SA_CT(SA,CT,p,p_i)
     gsw_interp_SA_CT                    linear interpolation to p_i on a cast
     ==========================================================================
@@ -1696,7 +1685,7 @@ def interp_SA_CT(SA, CT, p, p_i):
 
 def interp_ref_cast(spycnl, A="gn"):
 
-    """
+    r"""
     Translation of:
 
     [SA_iref_cast, CT_iref_cast, p_iref_cast] = gsw_interp_ref_cast(spycnl, A)
@@ -1748,3 +1737,97 @@ def interp_ref_cast(spycnl, A="gn"):
     Si, Ci, Pi = interp_S_T(SA_ref, CT_ref, zvar_ref, zvar_new, P=p_ref)
 
     return Si, Ci, Pi
+
+
+def enthalpy_SSO_0_p(p):
+    r"""
+    This function calculates enthalpy at the Standard Ocean Salinty, SSO,
+    and at a Conservative Temperature of zero degrees C, as a function of
+    pressure, p, in dbar, using a streamlined version of the 48-term CT
+    version of the Gibbs function, that is, a streamlined version of the
+    code "enthalpy(SA,CT,p).
+
+    Modifications:
+    2011-03-29. Filipe Fernandes (version 3.0).
+    """
+
+    v01 = 9.998420897506056e+2
+    v05 = -6.698001071123802
+    v08 = -3.988822378968490e-2
+    v12 = -2.233269627352527e-2
+    v15 = -1.806789763745328e-4
+    v17 = -3.087032500374211e-7
+    v20 = 1.550932729220080e-10
+    v21 = 1.0
+    v26 = -7.521448093615448e-3
+    v31 = -3.303308871386421e-5
+    v36 = 5.419326551148740e-6
+    v37 = -2.742185394906099e-5
+    v41 = -1.105097577149576e-7
+    v43 = -1.119011592875110e-10
+    v47 = -1.200507748551599e-15
+
+    a0 = v21 + SSO * (v26 + v36 * SSO + v31 * np.sqrt(SSO))
+
+    a1 = v37 + v41 * SSO
+
+    a2 = v43
+
+    a3 = v47
+
+    b0 = v01 + SSO * (v05 + v08 * np.sqrt(SSO))
+
+    b1 = 0.5 * (v12 + v15 * SSO)
+
+    b2 = v17 + v20 * SSO
+
+    b1sq = b1 ** 2
+
+    sqrt_disc = np.sqrt(b1sq - b0 * b2)
+
+    N = a0 + (2 * a3 * b0 * b1 / b2 - a2 * b0) / b2
+
+    M = a1 + (4 * a3 * b1sq / b2 - a3 * b0 - 2 * a2 * b1) / b2
+
+    A = b1 - sqrt_disc
+    B = b1 + sqrt_disc
+
+    part = (N * b2 - M * b1) / (b2 * (B - A))
+
+    return db2Pascal * (p * (a2 - 2 * a3 * b1 / b2 + 0.5 * a3 * p) /
+                        b2 + (M / (2 * b2)) * np.log(1 + p *
+                        (2 * b1 + b2 * p) / b0) + part *
+                        np.log(1 + (b2 * p * (B - A)) / (A * (B + b2 * p))))
+
+
+def specvol_SSO_0_p(p):
+    r"""
+    This function calculates specific volume at the Standard Ocean Salinity,
+    SSO, and at a Conservative Temperature of zero degrees C, as a function
+    of pressure, p, in dbar, using a streamlined version of the 48-term CT
+    version of specific volume, that is, a streamlined version of the code
+    "specvol(SA, CT, p)".
+
+    Modifications:
+    2011-03-29. Filipe Fernandes (version 3.0).
+    """
+
+    v01 = 9.998420897506056e+2
+    v05 = -6.698001071123802
+    v08 = -3.988822378968490e-2
+    v12 = -2.233269627352527e-2
+    v15 = -1.806789763745328e-4
+    v17 = -3.087032500374211e-7
+    v20 = 1.550932729220080e-10
+    v21 = 1.0
+    v26 = -7.521448093615448e-3
+    v31 = -3.303308871386421e-5
+    v36 = 5.419326551148740e-6
+    v37 = -2.742185394906099e-5
+    v41 = -1.105097577149576e-7
+    v43 = -1.119011592875110e-10
+    v47 = -1.200507748551599e-15
+
+    return ((v21 + SSO * (v26 + v36 * SSO + v31 * np.sqrt(SSO)) + p *
+           (v37 + v41 * SSO + p * (v43 + v47 * p))) / (v01 + SSO * (v05 + v08 *
+           np.sqrt(SSO)) + p * (v12 + v15 * SSO + p * (v17 + v20 * SSO))))
