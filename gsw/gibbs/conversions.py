@@ -22,13 +22,14 @@ __all__ = [
            #'Sstar_from_SA', # TODO: changed, check gsw_SAAR.m
            #'SA_from_Sstar', # TODO: changed, check gsw_SAAR.m
            #'SP_from_Sstar', # TODO: changed, check gsw_SAAR.m
-           'z_from_p',       # TODO: New test case with geo_strf_dyn_height != None
+           'z_from_p',  # TODO: New test case with geo_strf_dyn_height != None
            'p_from_z',
            't90_from_t48',
            't90_from_t68'
            ]
 
 rad = np.pi / 180.0
+
 
 @match_args_return
 def pt_from_entropy(SA, entropy):
@@ -83,17 +84,17 @@ def pt_from_entropy(SA, entropy):
 
     part1 = 1 - SA / SSO
     part2 = 1 - 0.05 * part1
-    ent_SA = (cp0 / Kelvin) * part1 * ( 1 - 1.01 * part1)
+    ent_SA = (cp0 / Kelvin) * part1 * (1 - 1.01 * part1)
     c = (entropy - ent_SA) * part2 / cp0
     pt = Kelvin * (np.exp(c) - 1)
-    dentropy_dt = cp0 / ((Kelvin + pt) * part2) # initial dentropy_dt
+    dentropy_dt = cp0 / ((Kelvin + pt) * part2)  # Initial dentropy_dt.
 
-    for Number_of_iterations in range(0,3):
+    for Number_of_iterations in range(0, 3):
         pt_old = pt
         dentropy = entropy_from_pt(SA, pt_old) - entropy
-        pt = pt_old - dentropy / dentropy_dt # half way through mod. method
+        pt = pt_old - dentropy / dentropy_dt  # Half way through mod. method.
         ptm = 0.5 * (pt + pt_old)
-        dentropy_dt = -lib._gibbs_pt0_pt0(SA, ptm)
+        dentropy_dt = -gibbs_pt0_pt0(SA, ptm)
         pt = pt_old - dentropy / dentropy_dt
 
     #maximum error of 2.2x10^-6 degrees C for one iteration.
