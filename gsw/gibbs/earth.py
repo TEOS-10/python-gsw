@@ -132,7 +132,8 @@ def distance(lon, lat, p=0):
         R = earth's radius (mean radius = 6,371 km)
 
     .. math::
-        a = \sin^2(\delta \text{lat}/2) + \cos(\text{lat}_1) \cos(\text{lat}_2) \sin^2(\delta \text{lon}/2)
+        a = \sin^2(\delta \text{lat}/2) +
+            \cos(\text{lat}_1) \cos(\text{lat}_2) \sin^2(\delta \text{lon}/2)
 
         c = 2 \times \text{atan2}(\sqrt{a}, \sqrt{(1-a)})
 
