@@ -5,7 +5,7 @@ from __future__ import division
 import numpy as np
 
 from constants import gamma, earth_radius
-from utilities import match_args_return
+from gsw.utilities import match_args_return
 from conversions import z_from_p
 
 

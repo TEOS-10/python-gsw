@@ -5,7 +5,7 @@ from __future__ import division
 import numpy as np
 
 from library import gibbs
-from utilities import match_args_return, strip_mask
+from gsw.utilities import match_args_return, strip_mask
 from constants import Kelvin, db2Pascal, P0, SSO, cp0, R, sfac
 from conversions import pt_from_CT, pt_from_t, pt0_from_t, molality_from_SA
 from absolute_salinity_sstar_ct import CT_from_t

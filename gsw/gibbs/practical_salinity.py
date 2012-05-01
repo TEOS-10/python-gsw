@@ -5,7 +5,7 @@ from __future__ import division
 import numpy as np
 
 from library import Hill_ratio_at_SP2
-from utilities import match_args_return
+from gsw.utilities import match_args_return
 
 __all__ = ['SP_from_C',
            #'C_from_SP',

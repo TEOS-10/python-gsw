@@ -4,7 +4,7 @@ from __future__ import division
 
 import numpy as np
 
-from utilities import match_args_return, strip_mask, read_data
+from gsw.utilities import match_args_return, strip_mask, read_data
 from constants import sfac, SSO, db2Pascal
 
 

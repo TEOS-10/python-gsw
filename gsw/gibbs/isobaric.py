@@ -2,7 +2,7 @@
 
 from __future__ import division
 
-from utilities import match_args_return
+from gsw.utilities import match_args_return
 from conversions import CT_from_pt
 
 

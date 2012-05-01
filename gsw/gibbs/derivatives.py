@@ -6,7 +6,7 @@ import numpy as np
 
 from library import gibbs
 from constants import cp0, Kelvin
-from utilities import match_args_return
+from gsw.utilities import match_args_return
 from conversions import pt_from_CT, pt_from_t
 
 __all__ = [
