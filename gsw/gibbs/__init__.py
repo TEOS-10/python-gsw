@@ -17,4 +17,3 @@ from neutral_nonlinear_48 import *
 from practical_salinity import *
 from steric import *
 from water_column_48 import *
-from utilities import *
