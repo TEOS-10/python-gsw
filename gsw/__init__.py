@@ -53,7 +53,7 @@ low and temperatures high (for details, see IOC et al., 2010).
 
 __authors__ = ['Eric Firing', 'Bjørn Ådlandsvik', 'Filipe Fernandes']
 __license__ = ["MIT"]
-__version__ = ["3.0.0"]
+__version__ = ["3.0.1"]
 __maintainer__ = ["Filipe Fernandes"]
 __email__ = ["ocefpaf@gmail.com"]
 __status__ = ["Production"]
