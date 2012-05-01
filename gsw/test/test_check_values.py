@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
 
-"""
-Unit tests using the check values from the version 3 documentation,
-http://www.teos-10.org/pubs/gsw/html/gsw_contents.html
-"""
-
+"""Unit tests using the check values from the version 3 documentation,
+http://www.teos-10.org/pubs/gsw/html/gsw_contents.html."""
 
 import sys
 import unittest
 import numpy as np
-import numpy.testing as npt
+import numpy.testing
+
 import gsw
-#import seawater.gibbs.library as gswl
 
 # Standard values for arguments from
 # http://www.teos-10.org/pubs/gsw/html/gsw_contents.html
-
-
 C = [34.5487, 34.7275, 34.8605, 34.6810, 34.5680, 34.5600]
 t = [28.7856, 28.4329, 22.8103, 10.2600,  6.8863,  4.4036]
 p = [10, 50, 125, 250, 600, 1000]
@@ -43,7 +38,7 @@ p = [10, 50, 125, 250, 600, 1000]
 
 
 class Test_standard(unittest.TestCase):
-#class Test_standard(npt.TestCase):
+#class Test_standard(numpy.testing.TestCase):
 
     # ----------------------
     # practical_salinity.py
@@ -58,14 +53,14 @@ class Test_standard(unittest.TestCase):
                                  31.204503263727982,
                                  34.032315787432829,
                                  36.400308494388170))
-        npt.assert_array_equal(output, check_values)
+        numpy.testing.assert_array_equal(output, check_values)
 
 # -----------------------------------------------
 if __name__ == '__main__':
-    # A more verbose output
+    # Verbose output.
     suite = unittest.TestLoader().loadTestsFromTestCase(Test_standard)
     a = unittest.TextTestRunner(verbosity=2).run(suite)
     if a.errors or a.failures:
         sys.exit(1)
     #unittest.main()
-    #npt.test()
+    #numpy.testing.test()
