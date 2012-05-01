@@ -1,11 +1,8 @@
-"""
-Constants used
-==============
-"""
+# -*- coding: utf-8 -*-
+
+"""Constants"""
 
 from __future__ import division
-
-#TODO: Make this a dictionary.
 
 C3515 = 42.9140
 """Conductivity of 42.914 [mmho cm :sup:`-1` == mS cm :sup:`-1`] at Salinity
@@ -24,7 +21,8 @@ earth_radius = 6371000.
 """Mean radius of earth  A.E. Gill."""
 
 OMEGA = 7.292115e-5
-""":math:`\\Omega = \\frac{2\\pi}{\\textrm{sidereal day}}` = 7.292e-5.radians sec :sup:`-1`
+""":math:`\\Omega = \\frac{2\\pi}{\\textrm{sidereal day}}` =
+                                                 7.292e-5.radians sec :sup:`-1`
 
 1 sidereal day = 23.9344696 hours
 
