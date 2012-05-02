@@ -7,10 +7,9 @@ from conversions import pt0_from_t, CT_from_pt
 
 
 __all__ = [
-           #'SA_from_SP',
-           #'Sstar_from_SP',
-           'CT_from_t'  # NOTE: previously at conservative_temperature.py
-           #'SA_Sstar_from_SP'  # NOTE: Dropped?
+           #'SA_from_SP',  TODO
+           #'Sstar_from_SP',  TODO
+           'CT_from_t'
            ]
 
 
