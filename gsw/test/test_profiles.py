@@ -52,6 +52,8 @@ cv = Dict2Struc(np.load(os.path.join(datadir, fname)))
 
 # Could perhaps be auto-generated
 function_arguments = {
+    #density_enthalpy_ct.py
+    'enthalpy_CT_exact': ('SA', 'CT', 'p'),
     #conversion.py
     'pt_from_t': ('SA', 't', 'p', 'pr'),
     't_from_CT': ('SA', 'CT', 'p'),
