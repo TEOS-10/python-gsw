@@ -7,11 +7,14 @@ import numpy as np
 from library import Hill_ratio_at_SP2
 from gsw.utilities import match_args_return
 
-__all__ = ['SP_from_C',
-           #'C_from_SP',
-           #'SP_from_R',
-           #'R_from_SP',
-           'SP_salinometer']
+__all__ = [
+           'SP_from_C',
+           'C_from_SP',
+           #'SP_from_R',  TODO
+           #'R_from_SP',  TODO
+           'SP_salinometer',
+           #'SP_from_SK'  TODO
+           ]
 
 
 @match_args_return
@@ -152,7 +155,7 @@ def SP_from_C(C, t, p):
 
 
 @match_args_return
-def gsw_C_from_SP(SP, t, p):
+def C_from_SP(SP, t, p):
     r"""
     Calculates conductivity, C, from (SP, t, p) using PSS-78 in the range
     2 < SP < 42. If the input Practical Salinity is less than 2 then a
@@ -261,13 +264,14 @@ def gsw_C_from_SP(SP, t, p):
         -8.542357182595853e+3, -1.408635241899082, 1.660164829963661e-4,
         6.797409608973845e-7, 3.345074990451475e-10, 8.285687652694768e-13)
 
+    a, b, c, d, e, p, q, r, u = map(np.asarray, (a, b, c, d, e, p, q, r, u))
     k = 0.0162
 
     t68 = t * 1.00024
     ft68 = (t68 - 15) / (1 + k * (t68 - 15))
 
     x = np.sqrt(SP)
-    Rtx = np.nan(SP.shape)
+    Rtx = np.zeros_like(SP) * np.nan
 
     # Finding the starting value of Rtx, the square root of Rt, using four
     # different polynomials of SP and t68.
@@ -440,7 +444,7 @@ def gsw_C_from_SP(SP, t, p):
     rt_lc = c[0] + (c[1] + (c[2] + (c[3] + c[4] * t68) * t68) * t68) * t68
 
     D = B - A * rt_lc * Rt
-    E = rt_lc * Rt * A * (B + C)
+    E = rt_lc * Rt * A * (B + C)  # BUG
     Ra = np.sqrt(D ** 2 + 4 * E) - D
     R = 0.5 * Ra / A
 
