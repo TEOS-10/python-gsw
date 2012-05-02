@@ -11,21 +11,34 @@ from library import gibbs_pt0_pt0, enthalpy_SSO_0_p, specvol_SSO_0_p
 from gsw.utilities import match_args_return, strip_mask
 
 __all__ = [
-           'pt_from_t',
+           #'deltaSA_from_SP',  TODO
+           #'SA_Sstar_from_SP',  TODO
+           'SR_from_SP',
+           'SP_from_SR',
+           #'SP_from_SA',  TODO: changed, check gsw_SAAR.m
+           #'Sstar_from_SA',  TODO: changed, check gsw_SAAR.m
+           #'SA_from_Sstar',  TODO: changed, check gsw_SAAR.m
+           #'SP_from_Sstar',  TODO: changed, check gsw_SAAR.m
+           'pt_from_CT',
            't_from_CT',
-           'pt_from_entropy',
            'CT_from_pt',
            'pot_enthalpy_from_pt',
            'pt0_from_t',
-           'pt_from_CT',
-           #'SP_from_SA',    # TODO: changed, check gsw_SAAR.m
-           #'Sstar_from_SA', # TODO: changed, check gsw_SAAR.m
-           #'SA_from_Sstar', # TODO: changed, check gsw_SAAR.m
-           #'SP_from_Sstar', # TODO: changed, check gsw_SAAR.m
+           'pt_from_t',
+           't90_from_t48',
+           't90_from_t68',
            'z_from_p',  # TODO: New test case with geo_strf_dyn_height != None
            'p_from_z',
-           't90_from_t48',
-           't90_from_t68'
+           'depth_from_z',
+           'z_from_depth',
+           'Abs_Pressure_from_p',
+           'p_from_Abs_Pressure',
+           'entropy_from_CT',
+           'CT_from_entropy',
+           'entropy_from_pt',
+           'pt_from_entropy',
+           'molality_from_SA',
+           'ionic_strength_from_SA'
            ]
 
 rad = np.pi / 180.0
@@ -1032,8 +1045,6 @@ def SP_from_SR(SR):
     return 1. / uPS * SR
 
 
-# NOTE: Renamed from [molality() to molality_from_SA(), ionic_strength() to
-# ionic_strength_from_SA] and moved from basic_sa_t_p.py to conversion.py
 @match_args_return
 def ionic_strength_from_SA(SA):
     r"""
@@ -1138,8 +1149,6 @@ def molality_from_SA(SA):
     return molality
 
 
-# NOTE: entropy_from_pt(),  entropy_from_CT(), and CT_from_entropy() were
-# Previously at basic_ct.py.
 @match_args_return
 def entropy_from_pt(SA, pt):
     r"""
