@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 
-"""Unit check for standard profiles for the
-Gibbs Sea Water python package.
+"""Unit check for standard profiles for the Gibbs Sea Water python package."""
 
-Functionality similar to matlab_test.py
-without the nice output."""
-
-# Autogenerates and perform a set of test methods like:
+# Auto generates and perform a set of test methods like:
 #
 #    def test_funct(self):
 #        out = gsw.func(arg1_chck_cast, arg2_chck_cast, ...)
@@ -44,169 +40,198 @@ cv = Dict2Struc(np.load(os.path.join(datadir, fname)))
 # Main dictionary of functions with arguments
 # Codes for non-tested functions
 #
-# TI  : Returning a tuple, tested individually
-# NI: Not Implemented
+# TI: Returning a tuple, tested individually
 # NV: No test value
 # NA: Don't fit the testing scheme
 # ERR: Gives error
 
 # Could perhaps be auto-generated
 function_arguments = {
-    #density_enthalpy_ct.py
-    'enthalpy_CT_exact': ('SA', 'CT', 'p'),
-    #conversion.py
-    'pt_from_t': ('SA', 't', 'p', 'pr'),
-    't_from_CT': ('SA', 'CT', 'p'),
-    #'pt_from_entropy': ('SA', 'entropy'),  #FIXME: ERR
-    'CT_from_pt': ('SA', 'pt'),
-    #'pot_enthalpy_from_pt': 'pot_enthalpy',   #FIXME: ERR
-    'pt0_from_t': ('SA', 't', 'p'),
+    # absolute_salinity_sstar_ct.py
+    #SA_from_SP TODO
+    #Sstar_from_SP TODO
+    'CT_from_t': ('SA', 't', 'p'),
+    #
+    # basic_thermodynamic_t.py
+    'rho_t_exact': ('SA', 't', 'p'),
+    'pot_rho_t_exact': ('SA', 't', 'p', 'pr'),
+    #'sigma0_pt0_exact'  TODO
+    'alpha_wrt_CT_t_exact': ('SA', 't', 'p'),
+    'alpha_wrt_pt_t_exact': ('SA', 't', 'p'),
+    'alpha_wrt_t_exact': ('SA', 't', 'p'),
+    'beta_const_CT_t_exact': ('SA', 't', 'p'),
+    'beta_const_pt_t_exact': ('SA', 't', 'p'),
+    'beta_const_t_exact': ('SA', 't', 'p'),
+    'specvol_t_exact': ('SA', 't', 'p'),
+    'specvol_anom_t_exact': ('SA', 't', 'p'),
+    'sound_speed_t_exact': ('SA', 't', 'p'),
+    'kappa_t_exact': ('SA', 't', 'p'),
+    'kappa_const_t_exact': ('SA', 't', 'p'),
+    'internal_energy_t_exact': ('SA', 't', 'p'),
+    'enthalpy_t_exact': ('SA', 't', 'p'),
+    'dynamic_enthalpy_t_exact': ('SA', 't', 'p'),
+    #'SA_from_rho_t_exact': ('rho', 't', 'p'), FIXME: No rho_chck_cast.
+    #'t_from_rho_exact'  TODO
+    't_maxdensity_exact': ('SA', 'p'),
+    'entropy_t_exact': ('SA', 't', 'p'),
+    'cp_t_exact': ('SA', 't', 'p'),
+    'isochoric_heat_cap_t_exact': ('SA', 't', 'p'),
+    #'chem_potential_relative_t_exact': ('SA', 't', 'p'), FIXME: No chem_potential_relative_t_exact.
+    'chem_potential_water_t_exact': ('SA', 't', 'p'),
+    'chem_potential_salt_t_exact': ('SA', 't', 'p'),
+    'Helmholtz_energy_t_exact': ('SA', 't', 'p'),
+    'adiabatic_lapse_rate_t_exact': ('SA', 't', 'p'),
+    'osmotic_coefficient_t_exact': ('SA', 't', 'p'),
+    #'osmotic_pressure_t_exact': ('SA', 't', 'pw'), FIXME: No pw_chck_cast.
+    #
+    # conversion.py
+    #'deltaSA_from_SP'
+    #'SA_Sstar_from_SP'
+    #'SR_from_SP': ('SP'),  FIXME: No S_chck_cast
+    #'SP_from_SR': ('SR'),  FIXME: No S_chck_cast
+    #'SP_from_SA': ('SA', 'p', 'long', 'lat'),  TODO
+    #'Sstar_from_SA': ('SA', 'p', 'long', 'lat'),  TODO
+    #'SA_from_Sstar': ('Sstar', 'p', 'long', 'lat'), TODO
+    #'SP_from_Sstar': ('Sstar', 'p', 'long', 'lat'),  TODO
     'pt_from_CT': ('SA', 'CT'),
-    #'SP_from_SA': ('SA', 'p', 'long', 'lat'),  #NOTE: NI
-    #'Sstar_from_SA': ('SA', 'p', 'long', 'lat'),  #NOTE: NI
-    #'SA_from_Sstar': ('Sstar', 'p', 'long', 'lat'),  #NOTE: NI
-    #'SP_from_Sstar': ('Sstar', 'p', 'long', 'lat'),  #NOTE: NI
-    'z_from_p': ('p', 'lat'),
-    #'p_from_z': ('z', 'lat'),  #FIXME: ERR
+    't_from_CT': ('SA', 'CT', 'p'),
+    'CT_from_pt': ('SA', 'pt'),
+    #'pot_enthalpy_from_pt': ('pot_enthalpy'), FIXME: No o_chck_cast.
+    'pt0_from_t': ('SA', 't', 'p'),
+    'pt_from_t': ('SA', 't', 'p', 'pr'),
     't90_from_t48': ('t',),
     't90_from_t68': ('t',),
-    #derivatives.py
-    #'CT_first_derivatives': ('SA', 'pt'),  #NOTE: TI
-    #'CT_second_derivatives': ('SA', 'pt'),  #NOTE: TI
-    #'enthalpy_first_derivatives': ('SA', 'CT', 'p'),
-    #'enthalpy_second_derivatives': ('SA', 'CT', 'p'),
-    #'entropy_first_derivatives': ('SA', 'CT'),  #NOTE: TI
-    #'entropy_second_derivatives': ('SA', 'pt'),  #NOTE: TI
-    #'pt_first_derivatives':,  #NOTE: TI
-    #'pt_second_derivatives':  #NOTE: TI
-    #earth.py
+    'z_from_p': ('p', 'lat'),
+    #'p_from_z': ('z', 'lat'), BUG
+    'depth_from_z': ('z'),
+    #'z_from_depth': ('depth'), FIXME: No d_chck_cast.
+    'Abs_Pressure_from_p': ('p'),
+    #'p_from_Abs_Pressure': ('Absolute_Pressure'),  FIXME: No A_chck_cast.
+    'entropy_from_CT': ('SA', 'CT'),
+    #'CT_from_entropy': ('SA', 'entropy'),  FIXME: No entropy_chck_cast.
+    'entropy_from_pt': ('SA', 'pt'),
+    #'pt_from_entropy' : ('SA', 'entropy'), FIXME: No entropy_chck_cast.
+    #'molality_from_SA': ('SA'),  FIXME: No S_chck_cast.
+    #'ionic_strength_from_SA': ('SA'),  FIXME: No S_chck_cast
+    #
+    # density_enthalpy_48.py TODO
+    #'rho_CT',  TODO
+    #'alpha_CT',  TODO
+    #'beta_CT',  TODO
+    #'rho_alpha_beta_CT',  TODO
+    #'specvol_CT',  TODO
+    #'specvol_anom_CT',  TODO
+    #'sigma0_CT',  TODO
+    #'sigma1_CT',  TODO
+    #'sigma2_CT',  TODO
+    #'sigma3_CT',  TODO
+    #'sigma4_CT',  TODO
+    #'sound_speed_CT',  TODO
+    #'internal_energy_CT',  TODO
+    #'enthalpy_CT',  TODO
+    #'enthalpy_diff_CT',  TODO
+    #'dynamic_enthalpy_CT',  TODO
+    #'SA_from_rho_CT',  TODO
+    #'CT_from_rho',  TODO
+    #'CT_maxdensity', TODO
+    #
+    # density_enthalpy_ct.py
+    'rho_CT_exact': ('SA', 'CT', 'p'),
+    'alpha_CT_exact': ('SA', 'CT', 'p'),
+    'beta_CT_exact': ('SA', 'CT', 'p'),
+    #'rho_alpha_beta_CT_exact': ('SA', 'CT', 'p'),  TODO
+    'specvol_CT_exact': ('SA', 'CT', 'p'),
+    'specvol_anom_CT_exact': ('SA', 'CT', 'p'),
+    #'sigma0_CT_exact': ('SA', 'CT'),  FIXME: No sigma0_pt0_exact.
+    'sigma1_CT_exact': ('SA', 'CT'),
+    'sigma2_CT_exact': ('SA', 'CT'),
+    'sigma3_CT_exact': ('SA', 'CT'),
+    'sigma4_CT_exact': ('SA', 'CT'),
+    'sound_speed_CT_exact': ('SA', 'CT', 'p'),
+    'internal_energy_CT_exact': ('SA', 'CT', 'p'),
+    'enthalpy_CT_exact': ('SA', 'CT', 'p'),
+    #'enthalpy_diff_CT_exact': ('SA', 'CT', 'p_shallow', 'p_deep'),  FIXME: No p_shallow_chck_cast
+    'dynamic_enthalpy_CT_exact': ('SA', 'CT', 'p'),
+    #'SA_from_rho_CT_exact': ('rho', 'CT', 'p'),  FIXME: No rho_chck_cast
+    #'CT_from_rho_exact': ('rho', 'SA', 'p'),  FIXME: No rho_chck_cast
+    'CT_maxdensity_exact': ('SA', 'p'),
+    #
+    # derivatives.py
+    #'CT_first_derivatives': ('SA', 'pt'),  #NOTE: TI, FIXME name match
+    #'CT_second_derivatives': ('SA', 'pt'),  #NOTE: TI FIXME name match
+    #'enthalpy_first_derivatives': ('SA', 'CT', 'p'), FIXME name match
+    #'enthalpy_second_derivatives': ('SA', 'CT', 'p'), FIXME name match
+    #'entropy_first_derivatives': ('SA', 'CT'),  #NOTE: TI FIXME name match
+    #'entropy_second_derivatives': ('SA', 'pt'),  #NOTE: TI FIXME name match
+    #'pt_first_derivatives':,  #NOTE: TI FIXME name match
+    #'pt_second_derivatives':  #NOTE: TI FIXME name match
+    #
+    # earth.py
     'f': ('lat',),
     'grav': ('lat', 'p'),
     'distance': ('long', 'lat', 'p'),
-    #isobaric.py
-    #'latentheat_evap_t': ('SA'. 't')
-    #library.py
-    #'gibbs':
-    #'entropy_part':
-    #'gibbs_pt0_pt0':
-    #'entropy_part_zerop':
-    #'enthalpy_SSO_0_CT25': ('p',),
-    #'specvol_SSO_0_CT25': ('p',),
-    #'delta_SA': ('p', 'long', 'lat'),
-    #'SA_from_SP_Baltic': ('SP', 'long', 'lat'),
-    #'SP_from_SA_Baltic' : ('SA', 'long', 'lat'),
-    #'interp_SA_CT':  #NOTE: NI
-    #practical_salinity.py
+    #
+    # freezing.py
+    #'CT_freezing ',  TODO
+    #'t_freezing',  TODO
+    #'brineSA_CT',  TODO
+    #'brineSA_t'  TODO
+    #
+    # geostrophic.py
+    # 'geostrophic_velocity' TODO
+    #
+    # geostrophic_48.py
+    #'geo_strf_dyn_height',  TODO
+    #'geo_strf_dyn_height_pc',  TODO
+    #'geo_strf_isopycnal',  TODO
+    #'geof_str_isopycnal_pc',  TODO
+    #'geo_strf_Montgomery',  TODO
+    #'geo_strf_Cunningham'  TODO
+    #
+    # isobaric.py
+    #'latentheat_melting':
+    #'latentheat_evap_CT':
+    #'latentheat_evap_t': ('SA', 't'),
+    #
+    # library.py
+    #'gibbs'
+    #'SAAR'  TODO
+    #'Fdelta'  TODO
+    #'delta_SA_ref': ('p', 'long', 'lat'), TODO
+    #'SA_from_SP_Baltic': ('SP', 'long', 'lat'),  FIXME: No SA_from_SP_Baltic
+    #'SP_from_SA_Baltic' : ('SA', 'long', 'lat'),  FIXME: No SP_from_SA_Baltic.
+    #'infunnel': ('SA', 'CT', 'p'),  FIXME: No infunnel.
+    #'entropy_part': ('SA', 'CT', 'p'),  FIXME: No entropy_part
+    #'entropy_part_zerop': ('SA', 'pt0'),  FIXME: No pt0_chck_cast.
+    #'interp_ref_cast': ('spycnl', 'gn'),  FIXME: No spycnl_chck_cast.
+    #'interp_SA_CT': ('SA', 'CT', 'p', 'p_i'),  FIXME: No p_i_chck_cast.
+    #'gibbs_pt0_pt0': ('SA', 'pt0'),  FIXME: No pt0_chck_cast.
+    #'specvol_SSO_0_p': ('p'),  FIXME: No specvol_SSO_0_p.
+    #'enthalpy_SSO_0_p': ('p',),  FIXME: No enthalpy_SSO_0_p.
+    #'Hill_ratio_at_SP2':  ('t'),  FIXME: No Hill_ratio_at_SP2.
+    #
+    # neutral_nonlinear_48.py
+    #'cabbeling',  TODO
+    #'thermobaric',  TODO
+    #'isopycnal_slope_ratio',  TODO
+    #'isopycnal_vs_ntp_CT_ratio',  TODO
+    #'ntp_pt_vs_CT_ratio'  TODO
+    #
+    # TODO below this line.
+    #
+    # practical_salinity.py
     'SP_from_C': ('C', 't', 'p'),
-    #C_from_SP
-    #SP_from_R
-    #R_from_SP
-    #SP_salinometer
-    #TODO:
-    'CT_from_t': ('SA', 't', 'p'),
-    #'rho_t_exact': ('SA', 't', 'p'),  #FIXME not in cv
-    #'CT_derivative_SA': ('SA', 'pt'),
-    #'CT_derivative_SA_SA': ('SA', 'pt'),
-    #'CT_derivative_SA_pt': ('SA', 'pt'),
-    #'CT_derivative_pt': ('SA', 'pt'),
-    #'CT_derivative_pt_pt': ('SA', 'pt'),
-    #'CT_from_entropy': ('SA', 'entropy'),
-    #'CT_maxdensity': ('SA', 'p'),
-    #'Helmholtz_energy_t_exact': ('SA', 't', 'p'),  #FIXME not in cv
-    #'IPV_vs_fNsquared_ratio_CT25': ('SA', 'CT', 'p', 'pr'),
-    #'Nsquared_CT25': ('SA', 'CT', 'p', 'lat'),
-    #'Rsubrho_CT25': ('SA', 'CT', 'p'),
-    #'SA_from_SP': ('SP', 'p', 'long', 'lat'),
-    #'Sstar_from_SP': ('SP', 'p', 'long', 'lat'),
-    #'SA_from_rho': ('rho', 't', 'p'),
-    #'SA_Sstar_from_SP': ('SP', 'p', 'long', 'lat'),  #NOTE: TI
-    #'Sstar_from_SP': ('SP', 'p', 'long', 'lat'),
-    #'Turner_Rsubrho_CT25': ('SA', 'CT', 'p'),  #NOTE: TI
-    #'Turner_CT25': ('SA', 'CT', 'p'),
-    #'adiabatic_lapse_rate': ('SA', 't', 'p'),
-    #'alpha_CT': ('SA', 'CT', 'p'),
-    #'alpha_CT25': ('SA', 'CT', 'p'),
-    #'alpha_wrt_CT': ('SA', 't', 'p'),
-    #'alpha_wrt_pt': ('SA', 't', 'p'),
-    #'alpha_wrt_t': ('SA', 't', 'p'),
-    #'beta_CT': ('SA', 'CT', 'p'),
-    #'beta_CT25': ('SA', 'CT', 'p'),
-    #'beta_const_CT': ('SA', 't', 'p'),
-    #'beta_const_pt': ('SA', 't', 'p'),
-    #'beta_const_t': ('SA', 't', 'p'),
-#BUG in profile values on file
-    #'cabbeling_CT25': ('SA', 't', 'p'),
-    #'chem_potential_relative': ('SA', 't', 'p'),
-    #'chem_potential_salt': ('SA', 't', 'p'),
-    #'chem_potential_water': ('SA', 't', 'p'),
-    #'cndr_from_SP': ('SP', 't', 'p'),
-    #'cp': ('SA', 't', 'p'),
-    #'enthalpy': ('SA', 't', 'p'),
-    #'enthalpy_CT': ('SA', 'CT', 'p'),
-    #'enthalpy_CT25': ('SA', 'CT', 'p'),
-    #'enthalpy_derivative_CT': ('SA', 'CT', 'p'),
-    #'enthalpy_derivative_CT_CT': ('SA', 'CT', 'p'),
-    #'enthalpy_derivative_p': ('SA', 'CT', 'p'),
-    #'enthalpy_derivative_SA': ('SA', 'CT', 'p'),
-    #'enthalpy_derivative_SA_CT': ('SA', 'CT', 'p'),
-    #'enthalpy_derivative_SA_SA': ('SA', 'CT', 'p'),
-    #'enthalpy_diff_CT': ('SA', 'CT', 'p0', 'p1'),  #NOTE: TI
-    #'enthalpy_diff_CT25': ('SA', 'CT', 'p0', 'p1'),  #NOTE: TI
-    #'entropy': ('SA', 't', 'p'),
-    #'entropy_derivative_SA': ('SA', 'CT'),
-    #'entropy_derivative_CT': ('SA', 'CT'),
-    #'entropy_from_CT': ('SA', 'CT'),
-    #'entropy_from_pt': ('SA', 'pt'),
-    #'entropy_derivative_CT_CT': ('SA', 'CT'),
-    #'entropy_derivative_SA_CT': ('SA', 'CT'),
-    #'entropy_derivative_SA_SA': ('SA', 'CT'),
-    #'geo_strf_Cunningham':  #NOTE: NI
-    #'geo_strf_McD_Klocker':
-    #'geo_strf_McD_Klocker_pc':  #NOTE: NI
-    #'geo_strf_Montgomery' :  #NOTE: NI
-    #'geo_strf_dyn_height' :  #NOTE: NI
-    #'geo_strf_dyn_height_pc':  #NOTE: NI
-    #'geostrophic_velocity' :
-    #'internal_energy': ('SA', 't', 'p'),
-    #'interp_McD_Klocker':  #NOTE: NI
-    #'ionic_strength': ('SA',),
-    #'isochoric_heat_cap': ('SA', 't', 'p'),
-    #'isopycnal_slope_ratio_CT25': ('SA', 'CT', 'p'),
-    #'isopycnal_vs_ntp_CT_ratio_CT25': ('SA', 'CT', 'p'),
-    #'kappa': ('SA', 't', 'p'),
-    #'kappa_const_t': ('SA', 't', 'p'),
-    #'molality': ('SA',)
-    #'ntp_pt_vs_CT_ratio_CT25': ('SA', 'CT', 'p'),
-    #'osmotic_coefficient': ('SA', 't', 'p'),
-    #'pot_enthalpy_from_pt': ('SA', 'pt'),
-    #'pot_rho': ('SA', 't', 'p', 'pr'),
-    #'pt_derivative_CT': ('SA', 'CT'),
-    #'pt_derivative_CT_CT': ('SA', 'CT'),
-    #'pt_derivative_SA': ('SA', 'CT'),
-    #'pt_derivative_SA_CT': ('SA', 'CT'),
-    #'pt_derivative_SA_SA': ('SA', 'CT'),
-    #'pt_maxdensity': ('SA', 'p'),
-    #'rho': ('SA', 't', 'p'),
-    #'rho_CT': ('SA', 'CT', 'p'),
-    #'rho_CT25': ('SA', 'CT', 'p'),
-    #'rho_alpha_beta_CT': ('SA', 'CT', 'p'),  #NOTE: TI
-    #'rho_alpha_beta_CT25': ('SA', 'CT', 'p'),  #NOTE: TI
-    #'sigma0_CT': ('SA', 'CT'),
-    #'sigma0_pt': ('SA', 'pt'),
-    #'sigma1_CT': ('SA', 'CT'),
-    #'sigma2_CT': ('SA', 'CT'),
-    #'sigma3_CT': ('SA', 'CT'),
-    #'sigma4_CT': ('SA', 'CT'),
-    #'sound_speed': ('SA', 't', 'p'),
-    #'specvol': ('SA', 't', 'p'),
-    #'specvol_CT': ('SA', 'CT', 'p'),
-    #'specvol_CT25': ('SA', 'CT', 'p'),
-    #'specvol_anom': ('SA', 't', 'p'),
-    #'specvol_anom_CT': ('SA', 'CT', 'p'),
-    #'specvol_anom_CT25': ('SA', 'CT', 'p'),
-    #'temps_maxdensity': ('SA', 'p'),  #NOTE: TI
-    #'t_maxdensity' : ('SA', 'p'),
-    #'thermobaric_CT25': ('SA', 'CT', 'p'),
+    #'C_from_SP': ('SP', 't', 'p'),  BUG: line 447 could not be broadcast shapes (45,3) (21)
+    #'SP_from_R':  TODO
+    #'R_from_SP': TODO
+    'SP_salinometer': ('Rt', 't'),
+    #'SP_from_SK':  TODO
+    #
+    # steric.py
+    # 'steric_height': TODO
+    #
+    # water_column_48.py
+    #
    }
 
 
@@ -240,12 +265,10 @@ cv.pr_chck_cast      = cv.pr
 
 # Functions and targets which does not follow the naming convention.
 not_match = {
-    #'CT_derivative_SA'            : 'CT_SA',
-    #'CT_derivative_SA_SA'         : 'CT_SA_SA',
-    #'CT_derivative_SA_pt'         : 'CT_SA_pt',
-    #'CT_derivative_pt'            : 'CT_pt',
-    #'CT_derivative_pt_pt'         : 'CT_pt_pt',
-    #'CT_derivative_SA'            : 'CT_SA',
+    #'CT_first_derivatives'        : 'CT_SA',
+    #'CT_second_derivatives'       : 'CT_SA_SA',
+    #'enthalpy_first_derivatives'  : 'CT_SA_pt',
+    #
     #'CT_maxdensity'               : 'CT_maxden',
     #'IPV_vs_fNsquared_ratio_CT25' : 'IPVfN2',
     #'Turner_CT25'                 : 'Tu',
@@ -257,29 +280,13 @@ not_match = {
     #'beta_CT25'                   : 'beta_CT25rab',
     #'chem_potential_relative'     : 'chem_potential',
     #'cndr_from_SP'                : 'cndr',
-    #'enthalpy_derivative_CT'      : 'h_CT',
-    #'enthalpy_derivative_CT_CT'   : 'h_CT_CT',
-    #'enthalpy_derivative_p'       : 'h_P',
-    #'enthalpy_derivative_SA'      : 'h_SA',
-    #'enthalpy_derivative_SA_CT'   : 'h_SA_CT',
-    #'enthalpy_derivative_SA_SA'   : 'h_SA_SA',
-    #'entropy_derivative_CT'       : 'eta_CT',
-    #'entropy_derivative_CT_CT'    : 'eta_CT_CT',
-    #'entropy_derivative_SA'       : 'eta_SA',
-    #'entropy_derivative_SA_CT'    : 'eta_SA_CT',
-    #'entropy_derivative_SA_SA'    : 'eta_SA_SA',
     #'isopycnal_vs_ntp_CT_ratio_CT25' : 'G_CT_CT25',
     #'ntp_pt_vs_CT_ratio_CT25'     : 'ntpptCT_CT25',
     #'pt0_from_t'                  : 'pt0',
-    #'pt_derivative_CT'            : 'pt_CT',
-    #'pt_derivative_CT_CT'         : 'pt_CT_CT',
-    #'pt_derivative_SA'            : 'pt_SA',
-    #'pt_derivative_SA_CT'         : 'pt_SA_CT',
-    #'pt_derivative_SA_SA'         : 'pt_SA_SA',
     #'pt_from_CT'                  : 'pt',
     #'pt_maxdensity'               : 'pt_maxden',
     #'t_maxdensity'                : 't_maxden',
-            }
+    }
 
 # Add target aliases to cv
 for f in not_match:
