@@ -17,7 +17,7 @@ RAD = np.pi / 180.0
 
 
 def f(lat):
-    """
+    r"""
     Calculates the Coriolis parameter (f) defined by:
         f = 2*omega*sin(lat)
     where,
