@@ -10,7 +10,7 @@ from derivatives import *
 from earth import *
 from freezing import *
 from geostrophic import *
-from geostrophic48 import *
+from geostrophic_48 import *
 from isobaric import *
 from library import *
 from neutral_nonlinear_48 import *
