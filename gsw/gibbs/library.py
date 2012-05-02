@@ -7,6 +7,23 @@ import numpy as np
 from gsw.utilities import match_args_return, strip_mask, read_data
 from constants import sfac, SSO, db2Pascal
 
+__all__ = [
+           'gibbs',
+           #'SAAR',  TODO
+           #'Fdelta',  TODO
+           #'delta_SA_ref',  TODO: delta_SA ?
+           'SA_from_SP_Baltic',
+           'SP_from_SA_Baltic',
+           'infunnel',
+           'entropy_part',
+           'entropy_part_zerop',
+           'interp_ref_cast',
+           'interp_SA_CT',
+           'gibbs_pt0_pt0',
+           'specvol_SSO_0_p',
+           'enthalpy_SSO_0_p',
+           'Hill_ratio_at_SP2'
+          ]
 
 def gibbs(ns, nt, npr, SA, t, p):
     r"""
