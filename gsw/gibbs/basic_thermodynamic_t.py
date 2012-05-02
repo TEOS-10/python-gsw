@@ -12,29 +12,34 @@ from absolute_salinity_sstar_ct import CT_from_t
 __all__ = [
            'rho_t_exact',
            'pot_rho_t_exact',
-           'specvol_t_exact',
-           'specvol_anom_t_exact',
+           #'sigma0_pt0_exact',  TODO
            'alpha_wrt_CT_t_exact',
            'alpha_wrt_pt_t_exact',
            'alpha_wrt_t_exact',
            'beta_const_CT_t_exact',
            'beta_const_pt_t_exact',
            'beta_const_t_exact',
-           'entropy_t_exact',
+           'specvol_t_exact',
+           'specvol_anom_t_exact',
+           'sound_speed_t_exact',
+           'kappa_t_exact',
+           'kappa_const_t_exact',
            'internal_energy_t_exact',
            'enthalpy_t_exact',
+           'dynamic_enthalpy_t_exact',
+           'SA_from_rho_t_exact',
+           #'t_from_rho_exact',  TODO
+           't_maxdensity_exact',
+           'entropy_t_exact',
            'cp_t_exact',
            'isochoric_heat_cap_t_exact',
            'chem_potential_relative_t_exact',
            'chem_potential_water_t_exact',
            'chem_potential_salt_t_exact',
            'Helmholtz_energy_t_exact',
-           'sound_speed_t_exact',
-           'kappa_t_exact',
-           'kappa_const_t_exact',
            'adiabatic_lapse_rate_t_exact',
-           'SA_from_rho_t_exact',
            'osmotic_coefficient_t_exact',
+           'osmotic_pressure_t_exact'
           ]
 
 
