@@ -4,14 +4,206 @@ from __future__ import division
 
 from gsw.utilities import match_args_return
 from conversions import pt0_from_t, CT_from_pt
-
+from constants import SSO, r1
 
 __all__ = [
-           #'SA_from_SP',  TODO
-           #'Sstar_from_SP',  TODO
+           'SA_from_SP',  #FIXME: Incomplete and untested. (need lib.SAAR)
+           'Sstar_from_SP',  #FIXME: Incomplete and untested. (need lib.SAAR)
            'CT_from_t'
            ]
 
+
+@match_args_return
+def SA_from_SP(SP, p, lon, lat):
+    r"""Calculates Absolute Salinity from Practical Salinity.
+
+    Parameters
+    ----------
+    SP : array_like
+         salinity (PSS-78) [unitless]
+    p : array_like
+        pressure [dbar]
+    lon : array_like
+          decimal degrees east [0..+360] or [-180..+180]
+    lat : array_like
+          decimal degrees (+ve N, -ve S) [-90..+90]
+
+    Returns
+    -------
+    SA : masked array
+         Absolute salinity [g kg :sup:`-1`]
+
+    See Also
+    --------
+    FIXME
+    _delta_SA, _SA_from_SP_Baltic
+
+    Notes
+    -----
+    The mask is only set when the observation is well and truly on dry
+    land; often the warning flag is not set until one is several hundred
+    kilometers inland from the coast.
+
+    Since SP is non-negative by definition, this function changes any negative
+    input values of SP to be zero.
+
+    Examples
+    --------
+    >>> import seawater.gibbs as gsw
+    >>> SP = [34.5487, 34.7275, 34.8605, 34.6810, 34.5680, 34.5600]
+    >>> p = [10, 50, 125, 250, 600, 1000]
+    >>> lon, lat = 188, 4
+    >>> gsw.SA_from_SP(SP, p, lon, lat)
+    array([ 34.71177971,  34.89152372,  35.02554774,  34.84723008,
+            34.7366296 ,  34.73236186])
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp. See section 2.5 and appendices A.4 and A.5.
+
+    .. [2] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
+    for estimating Absolute Salinity in the global ocean. Submitted to Ocean
+    Science. A preliminary version is available at Ocean Sci. Discuss.,
+    6, 215-242.
+    http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
+
+    Modifications:
+    2010-07-23. David Jackett, Trevor McDougall & Paul Barker.
+    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    """
+
+    lon, lat, p, SP = np.broadcast_arrays(lon, lat, p, SP)
+
+    #FIXME: Maybe I should put these checks inside SAAR...
+    # Check for out of range.
+    SP[(p < 100) & (SP > 120)] = np.NaN
+    SP[(p >= 100) & (SP > 42)] = np.NaN
+
+    # The original also checks for 9999s, not sure why.
+    # TODO: Test these exceptions.
+    if ((p < -1.5) | (p > 12000)).all():
+        raise(Exception, 'Sstar_from_SP: pressure is out of range')
+    if ((lon < 0) | (lon > 360)):
+        raise(Exception, 'Sstar_from_SP: longitude is out of range')
+    if (np.abs(lat) > 90):
+        raise(Exception, 'Sstar_from_SP: latitude is out of range')
+
+    #NOTE: Check which is better: SP[SP < 0] = 0
+    SP.clip(0, np.inf)
+
+    #SP[SP < 0] = 0
+    SP = np.maximum(SP, 0)
+
+    SAAR = lib.SAAR(p, lon, lat)
+    #SAAR = lib.delta_SA( p, lon, lat )
+
+    SA = (SSO / 35 ) * SP + (1 + SAAR)
+    SA_baltic = lib.SA_from_SP_Baltic(SP, lon, lat)
+
+    # The following function (SAAR) finds SAAR in the non-Baltic parts of
+    # the world ocean.  (Actually, this SAAR look-up table returns values
+    # of zero in the Baltic Sea since SAAR in the Baltic is a function of SP,
+    # not space.
+    if SA_baltic is not None:
+        SA[~SA_baltic.mask] = SA_baltic[~SA_baltic.mask]
+
+    return SA
+
+@match_args_return
+def Sstar_from_SP(SP, p, lon, lat):
+    r"""Calculates Preformed Salinity from Absolute Salinity.
+
+    Parameters
+    ----------
+    SP : array_like
+         salinity (PSS-78) [unitless]
+    p : array_like
+        pressure [dbar]
+    lon : array_like
+          decimal degrees east [0..+360] or [-180..+180]
+    lat : array_like
+          decimal degrees (+ve N, -ve S) [-90..+90]
+
+    Returns
+    -------
+    Sstar : masked array
+            Preformed Salinity [g kg :sup:`-1`]
+
+    See Also
+    --------
+    FIXME
+    _delta_SA, _SA_from_SP_Baltic
+
+    Notes
+    -----
+    The mask is only set when the observation is well and truly on dry
+    land; often the warning flag is not set until one is several hundred
+    kilometers inland from the coast.
+
+    Since SP is non-negative by definition, this function changes any negative
+    input values of SP to be zero.
+
+    Examples
+    --------
+    >>> import seawater.gibbs as gsw
+    >>> SP = [34.5487, 34.7275, 34.8605, 34.6810, 34.5680, 34.5600]
+    >>> p = [10, 50, 125, 250, 600, 1000]
+    >>> lon, lat =  188, 4
+    >>> gsw.Sstar_from_SP(SP, p, lon, lat)
+    array([ 34.7115532 ,  34.89116101,  35.02464926,  34.84359277,
+            34.7290336 ,  34.71967638])
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp. See section 2.5 and appendices A.4 and A.5.
+
+    .. [2] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
+    for estimating Absolute Salinity in the global ocean. Submitted to Ocean
+    Science. A preliminary version is available at Ocean Sci. Discuss.,
+    6, 215-242.
+
+    Modifications:
+    2010-07-23. David Jackett, Trevor McDougall and Paul Barker.
+    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    """
+
+    lon, lat, p, SP = np.broadcast_arrays(lon, lat, p, SP)
+
+    # Check for out of range.
+    SP[(p < 100) & (SP > 120)] = np.NaN
+    SP[(p >= 100) & (SP > 42)] = np.NaN
+
+    # The original also checks for 9999s, not sure why.
+    # TODO: Test these exceptions.
+    if ((p < -1.5) | (p > 12000)).all():
+        raise(Exception, 'Sstar_from_SP: pressure is out of range')
+    if ((lon < 0) | (lon > 360)):
+        raise(Exception, 'Sstar_from_SP: longitude is out of range')
+    if (np.abs(lat) > 90):
+        raise(Exception, 'Sstar_from_SP: latitude is out of range')
+
+    #NOTE: Check which is better: SP[SP < 0] = 0
+    SP.clip(0, np.inf)
+
+    #Iocean = ~np.isnan(SP * p * lat * lon)
+    #SAAR = lib.SAAR(p, lon, lat)
+    SAAR  = lib.delta_SA( p, lon, lat )
+    Sstar = (SSO / 35.) * SP - r1 * SAAR
+
+    # In the Baltic Sea, Sstar==SA.
+    Sstar_baltic = lib.SA_from_SP_Baltic(SP, lon, lat)
+
+    # TODO: Create Baltic and non-Baltic test cases.
+    if Sstar_baltic is not None:
+        Sstar[~Sstar_baltic.mask] = Sstar_baltic[~Sstar_baltic.mask]
+
+    return Sstar
 
 @match_args_return
 def CT_from_t(SA, t, p):
