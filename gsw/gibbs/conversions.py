@@ -690,7 +690,7 @@ def  z_from_p(p, lat, geo_strf_dyn_height=None):
 
 
 @match_args_return
-def  p_from_z(z, lat, geo_strf_dyn_height=None):
+def  p_from_z(z, lat, geo_strf_dyn_height=0):
     r"""
     Calculates sea pressure from height using computationally-efficient 48-term
     expression for density, in terms of SA, CT and p (McDougall et al., 2011).
@@ -705,6 +705,8 @@ def  p_from_z(z, lat, geo_strf_dyn_height=None):
           latitude in decimal degrees north [-90..+90]
     geo_strf_dyn_height : float, optional
                           dynamic height anomaly [ m :sup:`2` s :sup:`-2` ]
+                          The reference pressure (p_ref) of geo_strf_dyn_height
+                          must be zero (0) dbar.
 
     Returns
     -------
@@ -718,12 +720,12 @@ def  p_from_z(z, lat, geo_strf_dyn_height=None):
     Examples
     --------
     >>> import gsw
-    >>> z = [10, 50, 125, 250, 600, 1000]
+    >>> z = [-10., -50., -125., -250., -600., -1000.]
     >>> lat = 4.
     >>> gsw.p_from_z(z, lat)
-    array([  -10.05521794,   -50.2711751 ,  -125.6548857 ,  -251.23284504,
-            -602.44050752, -1003.07609807])
-    >>> z = [-9.94460074, -49.71817465, -124.2728275, -248.47044828, -595.82618014, -992.0931748]
+    array([  10.05521794,   50.2711751,  125.6548857,  251.23284504,
+            602.44050752, 1003.07609807])
+    >>> z = [9.94460074, 49.71817465, 124.2728275, 248.47044828, 595.82618014, 992.0931748]
     >>> gsw.p_from_z(z, lat)
     array([   10.,    50.,   125.,   250.,   600.,  1000.])
 
@@ -752,7 +754,7 @@ def  p_from_z(z, lat, geo_strf_dyn_height=None):
 
     Modifications:
     2010-08-26. Trevor McDougall, Claire Roberts-Thomson and Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-26. Trevor McDougall, Claire Roberts-Thomson and Paul Barker
     """
 
     X = np.sin(lat * rad)
@@ -761,7 +763,7 @@ def  p_from_z(z, lat, geo_strf_dyn_height=None):
 
     # get the first estimate of p from Saunders (1981)
     c1 = 5.25e-3 * sin2 + 5.92e-3
-    p = -2 * z / ((1 - c1) + np.ma.sqrt((1 - c1) * (1 - c1) + 8.84e-6 * z))
+    p = -2 * z / ((1 - c1) + np.sqrt((1 - c1) * (1 - c1) + 8.84e-6 * z))
 
     # FIXME: Implement specvol_SSO_0_p.
     df_dp = db2Pascal * specvol_SSO_0_p(p)  # Initial value for f derivative.
@@ -769,6 +771,7 @@ def  p_from_z(z, lat, geo_strf_dyn_height=None):
     # FIXME: Implement enthalpy_SSO_0_p.
     f = (enthalpy_SSO_0_p(p) + gs * (z - 0.5 * gamma * (z ** 2)) -
                                                           geo_strf_dyn_height)
+
     p_old = p
     p = p_old - f / df_dp
     p_mid = 0.5 * (p + p_old)
