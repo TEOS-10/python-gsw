@@ -4,8 +4,8 @@ from __future__ import division
 
 import numpy as np
 
-from gsw.utilities import match_args_return, strip_mask, read_data
 from constants import sfac, SSO, db2Pascal
+from gsw.utilities import match_args_return, strip_mask, read_data
 
 __all__ = [
            'gibbs',
@@ -1101,7 +1101,7 @@ def SP_from_SA_Baltic_old(SA, lon, lat):
 
 
 def SA_from_SP_Baltic(SP, lon, lat):
-    """Computes absolute salinity from practical in the Baltic Sea
+    r"""Computes absolute salinity from practical in the Baltic Sea
 
     Parameters
     ----------
@@ -1274,9 +1274,7 @@ class SA_table(object):
         return dsa, frac
 
     def delta_SA(self, p, lon, lat):
-        """
-        Table lookup of salinity anomaly, given pressure, lon, and lat.
-        """
+        r"""Table lookup of salinity anomaly, given pressure, lon, and lat."""
 
         p = np.ma.masked_less(p, 0)
         mask_in = np.ma.mask_or(np.ma.getmask(p), np.ma.getmask(lon))
@@ -1293,7 +1291,6 @@ class SA_table(object):
 
         p_orig = p.copy()  # Save for comparison to clipped p.
 
-        lon = lon % 360   # This copies, so we don't modify input array.
 
         ix0, iy0 = self.xy_to_ij(lon, lat)
         i0raw = np.floor(ix0).astype(int)
@@ -1354,11 +1351,14 @@ class SA_table(object):
 
 
 @match_args_return
-def delta_SA(p, lon, lat):
-    r"""
-    Calculates the Absolute Salinity anomaly, SA - SR, in the open ocean by
-    spatially interpolating the global reference data set of delta_SA to the
-    location of the gsw.sample.
+def SAAR(p, lon, lat):
+    r"""Absolute Salinity Anomaly Ratio (excluding the Baltic Sea).
+
+    Calculates the Absolute Salinity Anomaly Ratio, SAAR, in the open ocean
+    by spatially interpolating the global reference data set of SAAR to the
+    location of the seawater sample.
+
+    This function uses version 3.0 of the SAAR look up table.
 
     Parameters
     ----------
@@ -1371,32 +1371,20 @@ def delta_SA(p, lon, lat):
 
     Returns
     -------
-    delta_SA : masked array; masked where no nearby ocean is found in data
-               Absolute Salinity anomaly [g kg :sup:`-1`]
+    SAAR : masked array; masked where no nearby ocean is found in data
+           Absolute Salinity Anomaly Ratio [unitless] FIXME: [g kg :sup:`-1`]?
 
     Notes
     -----
-    The Absolute Salinity Anomaly in the Baltic Sea is evaluated separately,
-    since it is a function of Practical Salinity, not of space. The present
-    function returns a delta_SA of zero for data in the Baltic Sea. The correct
-    way of calculating Absolute Salinity in the Baltic Sea is by calling
-    SA_from_SP.
+    The Absolute Salinity Anomaly Ratio in the Baltic Sea is evaluated
+    separately, since it is a function of Practical Salinity, not of space.
+    The present function returns a SAAR of zero for data in the Baltic Sea.
+    The correct way of calculating Absolute Salinity in the Baltic Sea is by
+    calling SA_from_SP.
 
     The mask is only set when the observation is well and truly on dry
     land; often the warning flag is not set until one is several hundred
     kilometers inland from the coast.
-
-    Examples
-    --------
-    >>> import gsw.library as lib
-    >>> p = [10, 50, 125, 250, 600, 1000]
-    >>> lon, lat = 188, 4
-    >>> lib.delta_SA(p, lon, lat)
-    masked_array(data = [0.000167785807437 0.00026867590804 0.000665539507353 0.00269430342286
-     0.00562666390947 0.00939665321653],
-                 mask = [False False False False False False],
-           fill_value = 1e+20)
-    <BLANKLINE>
 
     References
     ----------
@@ -1414,9 +1402,24 @@ def delta_SA(p, lon, lat):
     The algorithm is taken from the matlab implementation of the references,
     but the numpy implementation here differs substantially from the
     matlab implementation.
-    """
-    return SA_table().delta_SA(p, lon, lat)
 
+    Modifications:
+    2012-04-08. Filipe Fernandes (version 3.0.1).
+    """
+
+    lon = lon % 360  # This copies, so we don't modify input array.
+
+    # FIXME: Test these exceptions, they are probably broken!
+    # The original also checks for 9999s, not sure why.
+    if ((p < -1.5) | (p > 12000)).all():
+        raise(Exception, 'Sstar_from_SP: pressure is out of range')
+    if ((lon < 0) | (lon > 360)).all():
+        raise(Exception, 'Sstar_from_SP: longitude is out of range')
+    if (np.abs(lat) > 90).all():
+        raise(Exception, 'Sstar_from_SP: latitude is out of range')
+
+    #FIXME: Compare old delta_SA with new SAAR.
+    return SA_table().delta_SA(p, lon, lat)
 
 def infunnel(SA, CT, p):
     r"""oceanographic funnel check for the 25-term equation
