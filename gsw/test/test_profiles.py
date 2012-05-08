@@ -114,7 +114,7 @@ function_arguments = {
     #'molality_from_SA': ('SA'),  FIXME: No S_chck_cast.
     #'ionic_strength_from_SA': ('SA'),  FIXME: No S_chck_cast
     #
-    # density_enthalpy_48.py TODO
+    # density_enthalpy_48_ct.py TODO
     #'rho_CT',  TODO
     #'alpha_CT',  TODO
     #'beta_CT',  TODO
@@ -135,7 +135,26 @@ function_arguments = {
     #'CT_from_rho',  TODO
     #'CT_maxdensity', TODO
     #
-    # density_enthalpy_ct.py
+    # density_enthalpy_48.py TODO
+    'rho': ('SA', 'CT', 'p'),
+    #'alpha',  TODO
+    #'beta',  TODO
+    #'rho_alpha_beta',  TODO
+    #'specvol',  TODO
+    #'specvol_anom',  TODO
+    #'sigma0',  TODO
+    #'sigma1',  TODO
+    #'sigma2',  TODO
+    #'sigma3',  TODO
+    #'sigma4',  TODO
+    #'sound_speed',  TODO
+    #'internal_energy',  TODO
+    #'enthalpy',  TODO
+    #'enthalpy_diff',  TODO
+    #'dynamic_enthalpy',  TODO
+    #'SA_from_rho',  TODO
+    #
+    # density_enthalpy_ct_exact.py
     'rho_CT_exact': ('SA', 'CT', 'p'),
     'alpha_CT_exact': ('SA', 'CT', 'p'),
     'beta_CT_exact': ('SA', 'CT', 'p'),
@@ -230,7 +249,10 @@ function_arguments = {
     # steric.py
     # 'steric_height': TODO
     #
-    # water_column_48.py
+    #water_column_48.py
+    'Nsquared': ('SA', 'CT', 'p', 'lat')  #NOTE: Second output is un-tested.
+    #'Turner_Rsubrho',  TODO
+    #'IPV_vs_fNsquared_ratio'  TODO
     #
    }
 
@@ -272,7 +294,7 @@ not_match = {
     #'CT_maxdensity'               : 'CT_maxden',
     #'IPV_vs_fNsquared_ratio_CT25' : 'IPVfN2',
     #'Turner_CT25'                 : 'Tu',
-    #'Nsquared_CT25'               : 'n2',
+    'Nsquared'               : 'n2',
     #'Rsubrho_CT25'                : 'Rsubrho',
     #'alpha_CT'                    : 'alpha_CTrab',
     #'alpha_CT25'                  : 'alpha_CT25rab',
@@ -296,11 +318,14 @@ for f in not_match:
 
 # Generic test method
 def generic_test(self, func=None, argnames=None):
-    """Generic test function, to be spesialized by functools.partial"""
+    """Generic test function, to be specialized by functools.partial"""
     # Transform argument names to name convention in cv dataset
     args = [getattr(cv, a + '_chck_cast') for a in argnames]
     # Perform the function call
     out = getattr(gsw, func)(*args)
+    # FIXME: Testing just the first output!
+    if isinstance(out, tuple):
+        out = out[0]
     # Check that the maximal error is less than the given tolerance
     maxdiff = np.nanmax(abs(out - getattr(cv, func)))
     #print maxdiff, getattr(cv, func+'_ca')
