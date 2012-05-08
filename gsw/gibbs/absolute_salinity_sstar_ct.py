@@ -2,9 +2,12 @@
 
 from __future__ import division
 
+import numpy as np
+
+from constants import SSO, r1
 from gsw.utilities import match_args_return
 from conversions import pt0_from_t, CT_from_pt
-from constants import SSO, r1
+import library as lib
 
 __all__ = [
            'SA_from_SP',  #FIXME: Incomplete and untested. (need lib.SAAR)
@@ -12,6 +15,28 @@ __all__ = [
            'CT_from_t'
            ]
 
+
+def check_input(SP, p, lon, lat):
+    r"""Check for out of range values."""
+    lon, lat, p, SP = np.broadcast_arrays(lon, lat, p, SP)
+
+    SP[(p < 100) & (SP > 120)] = np.NaN
+    SP[(p >= 100) & (SP > 42)] = np.NaN
+
+    lon = lon % 360
+
+    # FIXME: Test these exceptions, they are probably broken!
+    # The original also checks for 9999s, not sure why.
+    if ((p < -1.5) | (p > 12000)).any():
+        raise(Exception, 'Sstar_from_SP: pressure is out of range')
+    if ((lon < 0) | (lon > 360)).any():
+        raise(Exception, 'Sstar_from_SP: longitude is out of range')
+    if (np.abs(lat) > 90).any():
+        raise(Exception, 'Sstar_from_SP: latitude is out of range')
+
+    SP = np.maximum(SP, 0)
+
+    return SP, p, lon, lat
 
 @match_args_return
 def SA_from_SP(SP, p, lon, lat):
@@ -75,30 +100,10 @@ def SA_from_SP(SP, p, lon, lat):
     2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
-    lon, lat, p, SP = np.broadcast_arrays(lon, lat, p, SP)
-
-    #FIXME: Maybe I should put these checks inside SAAR...
-    # Check for out of range.
-    SP[(p < 100) & (SP > 120)] = np.NaN
-    SP[(p >= 100) & (SP > 42)] = np.NaN
-
-    # The original also checks for 9999s, not sure why.
-    # TODO: Test these exceptions.
-    if ((p < -1.5) | (p > 12000)).all():
-        raise(Exception, 'Sstar_from_SP: pressure is out of range')
-    if ((lon < 0) | (lon > 360)):
-        raise(Exception, 'Sstar_from_SP: longitude is out of range')
-    if (np.abs(lat) > 90):
-        raise(Exception, 'Sstar_from_SP: latitude is out of range')
-
-    #NOTE: Check which is better: SP[SP < 0] = 0
-    SP.clip(0, np.inf)
-
-    #SP[SP < 0] = 0
-    SP = np.maximum(SP, 0)
+    SP, p, lon, lat = check_input(SP, p, lon, lat)
 
     SAAR = lib.SAAR(p, lon, lat)
-    #SAAR = lib.delta_SA( p, lon, lat )
+    #SAAR = lib.delta_SA(p, lon, lat)
 
     SA = (SSO / 35 ) * SP + (1 + SAAR)
     SA_baltic = lib.SA_from_SP_Baltic(SP, lon, lat)
@@ -173,27 +178,10 @@ def Sstar_from_SP(SP, p, lon, lat):
     2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
-    lon, lat, p, SP = np.broadcast_arrays(lon, lat, p, SP)
+    SP, p, lon, lat = check_input(SP, p, lon, lat)
 
-    # Check for out of range.
-    SP[(p < 100) & (SP > 120)] = np.NaN
-    SP[(p >= 100) & (SP > 42)] = np.NaN
-
-    # The original also checks for 9999s, not sure why.
-    # TODO: Test these exceptions.
-    if ((p < -1.5) | (p > 12000)).all():
-        raise(Exception, 'Sstar_from_SP: pressure is out of range')
-    if ((lon < 0) | (lon > 360)):
-        raise(Exception, 'Sstar_from_SP: longitude is out of range')
-    if (np.abs(lat) > 90):
-        raise(Exception, 'Sstar_from_SP: latitude is out of range')
-
-    #NOTE: Check which is better: SP[SP < 0] = 0
-    SP.clip(0, np.inf)
-
-    #Iocean = ~np.isnan(SP * p * lat * lon)
-    #SAAR = lib.SAAR(p, lon, lat)
-    SAAR  = lib.delta_SA( p, lon, lat )
+    SAAR  = lib.SAAR( p, lon, lat )
+    #SAAR  = lib.delta_SA( p, lon, lat )
     Sstar = (SSO / 35.) * SP - r1 * SAAR
 
     # In the Baltic Sea, Sstar==SA.
