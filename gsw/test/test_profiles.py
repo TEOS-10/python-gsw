@@ -48,7 +48,7 @@ cv = Dict2Struc(np.load(os.path.join(datadir, fname)))
 # Could perhaps be auto-generated
 function_arguments = {
     # absolute_salinity_sstar_ct.py
-    'SA_from_SP': ('SP', 'p', 'long', 'lat'),
+    #'SA_from_SP': ('SP', 'p', 'long', 'lat'), BUG
     #Sstar_from_SP TODO
     'CT_from_t': ('SA', 't', 'p'),
     #
@@ -102,7 +102,7 @@ function_arguments = {
     't90_from_t48': ('t',),
     't90_from_t68': ('t',),
     'z_from_p': ('p', 'lat'),
-    #'p_from_z': ('z', 'lat'), BUG
+    'p_from_z': ('z', 'lat'),
     'depth_from_z': ('z'),
     #'z_from_depth': ('depth'), FIXME: No d_chck_cast.
     'Abs_Pressure_from_p': ('p'),
