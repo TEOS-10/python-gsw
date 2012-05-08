@@ -4,10 +4,10 @@ _build
 .*swp
 .directory
 *.pyc
+.hgignore
 MANIFEST
 build/*
 dist/*
 gsw.egg-info/*
-gsw/gibbs/MATLAB-TMP/*
-gsw/gibbs/GIBBS2-TMP/*
+gsw/gibbs/gsw_matlab_v3_01/*
 gsw/gibbs/TODO.txt
