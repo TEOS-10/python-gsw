@@ -1406,18 +1406,6 @@ def SAAR(p, lon, lat):
     Modifications:
     2012-04-08. Filipe Fernandes (version 3.0.1).
     """
-
-    lon = lon % 360  # This copies, so we don't modify input array.
-
-    # FIXME: Test these exceptions, they are probably broken!
-    # The original also checks for 9999s, not sure why.
-    if ((p < -1.5) | (p > 12000)).all():
-        raise(Exception, 'Sstar_from_SP: pressure is out of range')
-    if ((lon < 0) | (lon > 360)).all():
-        raise(Exception, 'Sstar_from_SP: longitude is out of range')
-    if (np.abs(lat) > 90).all():
-        raise(Exception, 'Sstar_from_SP: latitude is out of range')
-
     #FIXME: Compare old delta_SA with new SAAR.
     return SA_table().delta_SA(p, lon, lat)
 
