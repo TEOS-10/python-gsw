@@ -37,7 +37,7 @@ def Nsquared(SA, CT, p, lat=None):
     Returns
     -------
     N2 : array_like
-         Brunt-Väisälä frequency squared [1/s :math:`-2`]
+         Brunt-Väisälä frequency squared [1 s :math:`-2`]
     p_mid : array_like
             Mid pressure between p grid
 
