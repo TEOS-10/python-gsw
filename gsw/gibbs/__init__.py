@@ -5,7 +5,8 @@ from basic_thermodynamic_t import *
 from constants import *
 from conversions import *
 from density_enthalpy_48 import *
-from density_enthalpy_ct import *
+from density_enthalpy_48_ct import *
+from density_enthalpy_ct_exact import *
 from derivatives import *
 from earth import *
 from freezing import *
