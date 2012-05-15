@@ -7,6 +7,7 @@ import numpy as np
 from constants import db2Pascal
 from earth import grav
 from density_enthalpy_48 import rho
+from gsw.utilities import match_args_return
 
 __all__ = [
            'Nsquared',
@@ -15,6 +16,7 @@ __all__ = [
            ]
 
 
+#@match_args_return FIXME: Create a test for the match_args_return.
 def Nsquared(SA, CT, p, lat=None):
     r"""Calculates the buoyancy frequency squared (N^2)(i.e. the Brunt-Väisälä
     frequency squared) at the mid pressure from the equation,
