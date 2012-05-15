@@ -14,14 +14,15 @@ __all__ = [
            'strip_mask',
            ]
 
+
 class match_args_return(object):
-    r"""
-    Function decorator to homogenize input arguments and to
-    make the output match the original input with respect to
-    scalar versus array, and masked versus ndarray.
+    r"""Function decorator to homogenize input arguments and to make the output
+    match the original input with respect to scalar versus array, and masked
+    versus ndarray.
     """
     def __init__(self, func):
         self.func = func
+        self.__wrapped__ = func
         self.__doc__ = func.__doc__
         self.__name__ = func.__name__
 
