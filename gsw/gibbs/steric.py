@@ -3,8 +3,8 @@
 from __future__ import division
 
 import numpy as np
-
-from conversions import geo_strf_dyn_height
+from gsw.utilities import match_args_return
+#from conversions import geo_strf_dyn_height
 
 __all__ = ['steric_height']
 
@@ -31,11 +31,12 @@ def steric_height(SA, CT, p, p_ref):
 
     Note however that steric_height is not exactly the height (in meters) of an
     isobaric surface above a geopotential surface.  It is tempting to divide
-    dynamic height anomaly by the local value of the gravitational acceleration,
-    but doing so robs the resulting quantity of either being
+    dynamic height anomaly by the local value of the gravitational
+    acceleration, but doing so robs the resulting quantity of either being
 
     (i)  an exact geostrophic streamfunction, or
-    (ii) exactly the height of an isobaric surface above a geopotential surface.
+    (ii) exactly the height of an isobaric surface above a geopotential
+    surface.
 
     By using a constant value of the gravitational acceleration, we have
     retained the first of these two properties.  So it should be noted that
@@ -73,9 +74,9 @@ def steric_height(SA, CT, p, p_ref):
 
     Notes
     -----
-    If p_ref exceeds the pressure of the deepest "bottle" on a vertical profile,
-    the steric height anomaly for each "bottle" on the whole vertical profile
-    is returned as NaN.
+    If p_ref exceeds the pressure of the deepest "bottle" on a vertical
+    profile, the steric height anomaly for each "bottle" on the whole vertical
+    profile is returned as NaN.
 
     See Also
     --------
@@ -118,7 +119,7 @@ def steric_height(SA, CT, p, p_ref):
 
     # Start of the calculation.
     if p.max() < p_ref.max():
-        raise ValueError('The reference pressure p_ref is deeper than all bottles')
+        raise ValueError('The reference pressure p_ref is deeper than bottles')
 
     dynamic_height_anomaly = geo_strf_dyn_height(SA, CT, p, p_ref)
     const_grav = 9.7963  # Griffies, 2004.
