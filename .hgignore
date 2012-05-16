@@ -11,3 +11,5 @@ dist/*
 gsw.egg-info/*
 gsw/gibbs/gsw_matlab_v3_01/*
 gsw/gibbs/TODO.txt
+gsw/test/quick_test.py
+.hgignore
