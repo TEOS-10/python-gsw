@@ -137,9 +137,9 @@ function_arguments = {
     #
     # density_enthalpy_48.py TODO
     'rho': ('SA', 'CT', 'p'),
-    #'alpha',  TODO
-    #'beta',  TODO
-    #'rho_alpha_beta',  TODO
+    'alpha' : ('SA', 'CT', 'p'),
+    'beta' : ('SA', 'CT', 'p'),
+    #'rho_alpha_beta' : ('SA', 'CT', 'p'), FIXME: no cv.rho_alpha_beta
     #'specvol',  TODO
     #'specvol_anom',  TODO
     #'sigma0',  TODO
@@ -250,8 +250,8 @@ function_arguments = {
     # 'steric_height': TODO
     #
     #water_column_48.py
-    'Nsquared': ('SA', 'CT', 'p', 'lat')  #NOTE: Second output is un-tested.
-    #'Turner_Rsubrho',  TODO
+    'Nsquared': ('SA', 'CT', 'p', 'lat'),  #NOTE: Second output is un-tested.
+    'Turner_Rsubrho': ('SA', 'CT', 'p')
     #'IPV_vs_fNsquared_ratio'  TODO
     #
    }
@@ -294,8 +294,8 @@ not_match = {
     #'CT_maxdensity'               : 'CT_maxden',
     #'IPV_vs_fNsquared_ratio_CT25' : 'IPVfN2',
     #'Turner_CT25'                 : 'Tu',
-    'Nsquared'               : 'n2',
-    #'Rsubrho_CT25'                : 'Rsubrho',
+    'Nsquared'                     : 'n2',
+    'Turner_Rsubrho'               : 'Tu',
     #'alpha_CT'                    : 'alpha_CTrab',
     #'alpha_CT25'                  : 'alpha_CT25rab',
     #'beta_CT'                     : 'beta_CTrab',
