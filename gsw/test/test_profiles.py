@@ -28,6 +28,7 @@ import sys
 import unittest
 import functools  # Requires python 2.5.
 import numpy as np
+
 import gsw
 from gsw.utilities import Dict2Struc
 
@@ -38,12 +39,13 @@ fname = 'gsw_cv_v3_0.npz'
 cv = Dict2Struc(np.load(os.path.join(datadir, fname)))
 
 # Main dictionary of functions with arguments
-# Codes for non-tested functions
 #
+# Codes for non-tested functions
 # TI: Returning a tuple, tested individually
 # NV: No test value
 # NA: Don't fit the testing scheme
 # ERR: Gives error
+# BUG: The function is either not fully implemented or has a bug
 
 # Could perhaps be auto-generated
 function_arguments = {
@@ -70,25 +72,25 @@ function_arguments = {
     'internal_energy_t_exact': ('SA', 't', 'p'),
     'enthalpy_t_exact': ('SA', 't', 'p'),
     'dynamic_enthalpy_t_exact': ('SA', 't', 'p'),
-    #'SA_from_rho_t_exact': ('rho', 't', 'p'), FIXME: No rho_chck_cast.
+    'SA_from_rho_t_exact': ('rho', 't', 'p'),
     #'t_from_rho_exact'  TODO
     't_maxdensity_exact': ('SA', 'p'),
     'entropy_t_exact': ('SA', 't', 'p'),
     'cp_t_exact': ('SA', 't', 'p'),
     'isochoric_heat_cap_t_exact': ('SA', 't', 'p'),
-    #'chem_potential_relative_t_exact': ('SA', 't', 'p'), FIXME: No chem_potential_relative_t_exact.
+    'chem_potential_relative_t_exact': ('SA', 't', 'p'),
     'chem_potential_water_t_exact': ('SA', 't', 'p'),
     'chem_potential_salt_t_exact': ('SA', 't', 'p'),
     'Helmholtz_energy_t_exact': ('SA', 't', 'p'),
     'adiabatic_lapse_rate_t_exact': ('SA', 't', 'p'),
     'osmotic_coefficient_t_exact': ('SA', 't', 'p'),
-    #'osmotic_pressure_t_exact': ('SA', 't', 'pw'), FIXME: No pw_chck_cast.
+    'osmotic_pressure_t_exact': ('SA', 't', 'p'),
     #
     # conversion.py
-    #'deltaSA_from_SP'
-    #'SA_Sstar_from_SP'
-    #'SR_from_SP': ('SP'),  FIXME: No S_chck_cast
-    #'SP_from_SR': ('SR'),  FIXME: No S_chck_cast
+    #'deltaSA_from_SP' TODO
+    #'SA_Sstar_from_SP' TODO
+    'SR_from_SP': ('SP',),
+    'SP_from_SR': ('SR',),
     #'SP_from_SA': ('SA', 'p', 'long', 'lat'),  TODO
     #'Sstar_from_SA': ('SA', 'p', 'long', 'lat'),  TODO
     #'SA_from_Sstar': ('Sstar', 'p', 'long', 'lat'), TODO
@@ -96,7 +98,7 @@ function_arguments = {
     'pt_from_CT': ('SA', 'CT'),
     't_from_CT': ('SA', 'CT', 'p'),
     'CT_from_pt': ('SA', 'pt'),
-    #'pot_enthalpy_from_pt': ('pot_enthalpy'), FIXME: No o_chck_cast.
+    'pot_enthalpy_from_pt': ('SA', 'pt'),
     'pt0_from_t': ('SA', 't', 'p'),
     'pt_from_t': ('SA', 't', 'p', 'pr'),
     't90_from_t48': ('t',),
@@ -104,17 +106,17 @@ function_arguments = {
     'z_from_p': ('p', 'lat'),
     'p_from_z': ('z', 'lat'),
     'depth_from_z': ('z'),
-    #'z_from_depth': ('depth'), FIXME: No d_chck_cast.
-    'Abs_Pressure_from_p': ('p'),
-    #'p_from_Abs_Pressure': ('Absolute_Pressure'),  FIXME: No A_chck_cast.
+    'z_from_depth': ('depth',),
+    'Abs_Pressure_from_p': ('p',),
+    'p_from_Abs_Pressure': ('Abs_Pressure_from_p',),
     'entropy_from_CT': ('SA', 'CT'),
-    #'CT_from_entropy': ('SA', 'entropy'),  FIXME: No entropy_chck_cast.
+    'CT_from_entropy': ('SA', 'entropy'),
     'entropy_from_pt': ('SA', 'pt'),
-    #'pt_from_entropy' : ('SA', 'entropy'), FIXME: No entropy_chck_cast.
-    #'molality_from_SA': ('SA'),  FIXME: No S_chck_cast.
-    #'ionic_strength_from_SA': ('SA'),  FIXME: No S_chck_cast
+    'pt_from_entropy': ('SA', 'entropy'),
+    'molality_from_SA': ('SA',),
+    'ionic_strength_from_SA': ('SA',),
     #
-    # density_enthalpy_48_ct.py TODO
+    # density_enthalpy_48_ct.py
     #'rho_CT',  TODO
     #'alpha_CT',  TODO
     #'beta_CT',  TODO
@@ -137,22 +139,22 @@ function_arguments = {
     #
     # density_enthalpy_48.py TODO
     'rho': ('SA', 'CT', 'p'),
-    'alpha' : ('SA', 'CT', 'p'),
-    'beta' : ('SA', 'CT', 'p'),
-    #'rho_alpha_beta' : ('SA', 'CT', 'p'), FIXME: no cv.rho_alpha_beta
-    #'specvol',  TODO
-    #'specvol_anom',  TODO
-    #'sigma0',  TODO
-    #'sigma1',  TODO
-    #'sigma2',  TODO
-    #'sigma3',  TODO
-    #'sigma4',  TODO
-    #'sound_speed',  TODO
-    #'internal_energy',  TODO
-    #'enthalpy',  TODO
-    #'enthalpy_diff',  TODO
-    #'dynamic_enthalpy',  TODO
-    #'SA_from_rho',  TODO
+    'alpha': ('SA', 'CT', 'p'),
+    'beta': ('SA', 'CT', 'p'),
+    #'rho_alpha_beta': ('SA', 'CT', 'p'),  NOTE: Not tested on matlab.
+    'specvol': ('SA', 'CT', 'p'),
+    'specvol_anom': ('SA', 'CT', 'p'),
+    'sigma0': ('SA', 'CT'),
+    'sigma1': ('SA', 'CT'),
+    'sigma2': ('SA', 'CT'),
+    'sigma3': ('SA', 'CT'),
+    'sigma4': ('SA', 'CT'),
+    'sound_speed': ('SA', 'CT', 'p'),
+    'internal_energy': ('SA', 'CT', 'p'),
+    'enthalpy': ('SA', 'CT', 'p'),
+    'enthalpy_diff': ('SA', 'CT', 'p_shallow', 'p_deep'),
+    'dynamic_enthalpy': ('SA', 'CT', 'p'),
+    #'SA_from_rho': ('rho', 'CT', 'p'),  TODO: Not test on matlab.
     #
     # density_enthalpy_ct_exact.py
     'rho_CT_exact': ('SA', 'CT', 'p'),
@@ -161,7 +163,8 @@ function_arguments = {
     #'rho_alpha_beta_CT_exact': ('SA', 'CT', 'p'),  TODO
     'specvol_CT_exact': ('SA', 'CT', 'p'),
     'specvol_anom_CT_exact': ('SA', 'CT', 'p'),
-    #'sigma0_CT_exact': ('SA', 'CT'),  FIXME: No sigma0_pt0_exact.
+    # FIXME: NameError: 'sigma0_pt0_exact' not defined
+    #'sigma0_CT_exact': ('SA', 'CT'),
     'sigma1_CT_exact': ('SA', 'CT'),
     'sigma2_CT_exact': ('SA', 'CT'),
     'sigma3_CT_exact': ('SA', 'CT'),
@@ -169,15 +172,17 @@ function_arguments = {
     'sound_speed_CT_exact': ('SA', 'CT', 'p'),
     'internal_energy_CT_exact': ('SA', 'CT', 'p'),
     'enthalpy_CT_exact': ('SA', 'CT', 'p'),
-    #'enthalpy_diff_CT_exact': ('SA', 'CT', 'p_shallow', 'p_deep'),  FIXME: No p_shallow_chck_cast
+    'enthalpy_diff_CT_exact': ('SA', 'CT', 'p_shallow', 'p_deep'),
     'dynamic_enthalpy_CT_exact': ('SA', 'CT', 'p'),
-    #'SA_from_rho_CT_exact': ('rho', 'CT', 'p'),  FIXME: No rho_chck_cast
-    #'CT_from_rho_exact': ('rho', 'SA', 'p'),  FIXME: No rho_chck_cast
+    # FIXME: NameError: 'rho_alpha_beta_CT_exact' not defined
+    #'SA_from_rho_CT_exact': ('rho', 'CT', 'p'),
+    # FIXME: NameError: 't_from_rho_exact' not defined
+    #'CT_from_rho_exact': ('rho', 'SA', 'p'),
     'CT_maxdensity_exact': ('SA', 'p'),
     #
     # derivatives.py
-    #'CT_first_derivatives': ('SA', 'pt'),  #NOTE: TI, FIXME name match
-    #'CT_second_derivatives': ('SA', 'pt'),  #NOTE: TI FIXME name match
+    'CT_first_derivatives': ('SA', 'pt'),  # NOTE: TI, BUG
+    'CT_second_derivatives': ('SA', 'pt'),  # NOTE: TI FIXME BUG
     #'enthalpy_first_derivatives': ('SA', 'CT', 'p'), FIXME name match
     #'enthalpy_second_derivatives': ('SA', 'CT', 'p'), FIXME name match
     #'entropy_first_derivatives': ('SA', 'CT'),  #NOTE: TI FIXME name match
@@ -217,15 +222,15 @@ function_arguments = {
     #'SAAR'  TODO
     #'Fdelta'  TODO
     #'delta_SA_ref': ('p', 'long', 'lat'), TODO
-    #'SA_from_SP_Baltic': ('SP', 'long', 'lat'),  FIXME: No SA_from_SP_Baltic
-    #'SP_from_SA_Baltic' : ('SA', 'long', 'lat'),  FIXME: No SP_from_SA_Baltic.
-    #'infunnel': ('SA', 'CT', 'p'),  FIXME: No infunnel.
-    #'entropy_part': ('SA', 'CT', 'p'),  FIXME: No entropy_part
-    #'entropy_part_zerop': ('SA', 'pt0'),  FIXME: No pt0_chck_cast.
-    #'interp_ref_cast': ('spycnl', 'gn'),  FIXME: No spycnl_chck_cast.
-    #'interp_SA_CT': ('SA', 'CT', 'p', 'p_i'),  FIXME: No p_i_chck_cast.
-    #'gibbs_pt0_pt0': ('SA', 'pt0'),  FIXME: No pt0_chck_cast.
-    #'specvol_SSO_0_p': ('p'),  FIXME: No specvol_SSO_0_p.
+    #'SA_from_SP_Baltic': ('SP', 'long', 'lat'),  NOTE: Not tested on matlab.
+    #'SP_from_SA_Baltic': ('SA', 'long', 'lat'),  NOTE: Not tested on matlab.
+    #'infunnel': ('SA', 'CT', 'p'),  NOTE: Not tested on matlab.
+    #'entropy_part': ('SA', 'CT', 'p'),  NOTE: Not tested on matlab.
+    #'entropy_part_zerop': ('SA', 'pt0'),  NOTE: Not tested on matlab.
+    #'interp_ref_cast': ('spycnl', 'gn'),  NOTE: Not tested on matlab.
+    #'interp_SA_CT': ('SA', 'CT', 'p', 'p_i'),  NOTE: Not tested on matlab.
+    #'gibbs_pt0_pt0': ('SA', 'pt0'),  NOTE: Not tested on matlab.
+    #'specvol_SSO_0_p': ('p'),  NOTE: Not tested on matlab.
     #'enthalpy_SSO_0_p': ('p',),  FIXME: No enthalpy_SSO_0_p.
     #'Hill_ratio_at_SP2':  ('t'),  FIXME: No Hill_ratio_at_SP2.
     #
@@ -240,7 +245,8 @@ function_arguments = {
     #
     # practical_salinity.py
     'SP_from_C': ('C', 't', 'p'),
-    #'C_from_SP': ('SP', 't', 'p'),  BUG: line 447 could not be broadcast shapes (45,3) (21)
+    # BUG: line 447 could not be broadcast shapes (45,3) (21)
+    #'C_from_SP': ('SP', 't', 'p'),
     #'SP_from_R':  TODO
     #'R_from_SP': TODO
     'SP_salinometer': ('Rt', 't'),
@@ -250,8 +256,8 @@ function_arguments = {
     # 'steric_height': TODO
     #
     #water_column_48.py
-    'Nsquared': ('SA', 'CT', 'p', 'lat'),  #NOTE: Second output is un-tested.
-    'Turner_Rsubrho': ('SA', 'CT', 'p')
+    'Nsquared': ('SA', 'CT', 'p', 'lat'),  # NOTE: Second output is un-tested.
+    #'Turner_Rsubrho': ('SA', 'CT', 'p') # BUG
     #'IPV_vs_fNsquared_ratio'  TODO
     #
    }
@@ -272,42 +278,38 @@ function_arguments = {
 #cv.specvol_CT = cv.specvol
 
 # Arguments with "wrong" names
-cv.C_chck_cast = cv.C_from_SP
-#cv.SA_chck_cast      = cv.SA_from_SP
-#cv.CT_chck_cast      = cv.CT_from_t
-cv.pt_chck_cast      = cv.pt_from_t
-#cv.Sstar_chck_cast   = cv.Sstar_from_SA
+#cv.SA_chck_cast = cv.SA_from_SP
+#cv.CT_chck_cast = cv.CT_from_t
+#cv.Sstar_chck_cast = cv.Sstar_from_SA
 #cv.entropy_chck_cast = cv.entropy
-cv.z_chck_cast       = cv.z_from_p
-#cv.rho_chck_cast     = cv.rho
-#cv.R_chck_cast       = cv.cndr
-cv.pr_chck_cast      = cv.pr
-#cv.p0_chck_cast      = cv.p_chck_cast_shallow
-#cv.p1_chck_cast      = cv.p_chck_cast_deep
+#cv.R_chck_cast = cv.cndr
+cv.entropy_chck_cast = cv.entropy_from_CT
+cv.Abs_Pressure_from_p_chck_cast = cv.Abs_Pressure_from_p
+cv.depth_chck_cast = cv.depth_from_z
+cv.C_chck_cast = cv.C_from_SP
+cv.pt_chck_cast = cv.pt_from_t
+cv.z_chck_cast = cv.z_from_p
+cv.SR_chck_cast = cv.SR_from_SP
+cv.pr_chck_cast = cv.pr
+cv.p_shallow_chck_cast = cv.p_chck_cast_shallow
+cv.p_deep_chck_cast = cv.p_chck_cast_deep
+cv.rho_chck_cast = cv.rho_CT_exact
 
 # Functions and targets which does not follow the naming convention.
 not_match = {
-    #'CT_first_derivatives'        : 'CT_SA',
-    #'CT_second_derivatives'       : 'CT_SA_SA',
-    #'enthalpy_first_derivatives'  : 'CT_SA_pt',
-    #
-    #'CT_maxdensity'               : 'CT_maxden',
-    #'IPV_vs_fNsquared_ratio_CT25' : 'IPVfN2',
-    #'Turner_CT25'                 : 'Tu',
-    'Nsquared'                     : 'n2',
-    'Turner_Rsubrho'               : 'Tu',
-    #'alpha_CT'                    : 'alpha_CTrab',
-    #'alpha_CT25'                  : 'alpha_CT25rab',
-    #'beta_CT'                     : 'beta_CTrab',
-    #'beta_CT25'                   : 'beta_CT25rab',
-    #'chem_potential_relative'     : 'chem_potential',
-    #'cndr_from_SP'                : 'cndr',
-    #'isopycnal_vs_ntp_CT_ratio_CT25' : 'G_CT_CT25',
-    #'ntp_pt_vs_CT_ratio_CT25'     : 'ntpptCT_CT25',
-    #'pt0_from_t'                  : 'pt0',
-    #'pt_from_CT'                  : 'pt',
-    #'pt_maxdensity'               : 'pt_maxden',
-    #'t_maxdensity'                : 't_maxden',
+    'CT_first_derivatives': 'CT_SA',  # FIXME: Tupled with CT_pt
+    'CT_second_derivatives': 'CT_SA_SA',  # FIXME: Tupled with CT_SA_pt
+    #'enthalpy_first_derivatives': 'CT_SA_pt',
+    #'CT_maxdensity': 'CT_maxden',
+    #'alpha_CT': 'alpha_CTrab',
+    #'beta_CT': 'beta_CTrab',
+    #'cndr_from_SP': 'cndr',
+    #'pt0_from_t': 'pt0',
+    #'pt_from_CT': 'pt',
+    #'pt_maxdensity': 'pt_maxden',
+    #'t_maxdensity': 't_maxden',
+    'Nsquared': 'n2',
+    'chem_potential_relative_t_exact': 'chem_potential_t_exact',
     }
 
 # Add target aliases to cv
@@ -324,12 +326,15 @@ def generic_test(self, func=None, argnames=None):
     # Perform the function call
     out = getattr(gsw, func)(*args)
     # FIXME: Testing just the first output!
+    # TODO: Create the tuples and compare all together.
+    # Check that the maximal error is less than the given tolerance
     if isinstance(out, tuple):
         out = out[0]
-    # Check that the maximal error is less than the given tolerance
     maxdiff = np.nanmax(abs(out - getattr(cv, func)))
-    #print maxdiff, getattr(cv, func+'_ca')
-    self.assertTrue(maxdiff < getattr(cv, func + '_ca'))
+    try:
+        self.assertTrue(maxdiff < getattr(cv, func + '_ca'))
+    except AssertionError, e:
+        raise AssertionError("Error in %s %s" % (func, e.args))
 
 
 # Dictionary of functions with corresponding test methods
