@@ -725,7 +725,8 @@ def  p_from_z(z, lat, geo_strf_dyn_height=0):
     >>> gsw.p_from_z(z, lat)
     array([  10.05521794,   50.2711751,  125.6548857,  251.23284504,
             602.44050752, 1003.07609807])
-    >>> z = [9.94460074, 49.71817465, 124.2728275, 248.47044828, 595.82618014, 992.0931748]
+    >>> z = [9.94460074, 49.71817465, 124.2728275, 248.47044828, 595.82618014,
+    ...      992.0931748]
     >>> gsw.p_from_z(z, lat)
     array([   10.,    50.,   125.,   250.,   600.,  1000.])
 
@@ -963,7 +964,7 @@ def p_from_Abs_Pressure(Absolute_Pressure):
     2011-03-29. Trevor McDougall & Paul Barker
     """
 
-    return (Absolute_Pressure - P0) * db2Pascal
+    return (Absolute_Pressure - P0) * 1. / db2Pascal
 
 
 @match_args_return
