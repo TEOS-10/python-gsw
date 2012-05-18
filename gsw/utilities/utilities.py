@@ -46,9 +46,7 @@ class match_args_return(object):
 
 
 class Dict2Struc(object):
-    r"""
-    Open variables from a dictionary in a "matlab-like-structure"
-    """
+    r"""Open variables from a dictionary in a "matlab-like-structure"."""
     def __init__(self, adict):
         for k in adict.files:
             self.__dict__[k] = adict[k]
@@ -76,18 +74,13 @@ _npz_cache = Cache_npz()
 
 
 def read_data(fname, datadir=None):
-    r"""
-    Read variables from a numpy '.npz' file into a minimal
-    class providing attribute access.
-
-    A cache is used to avoid re-reading the same file.
-    """
+    r"""Read variables from a numpy '.npz' file into a minimal class providing
+    attribute access.  A cache is used to avoid re-reading the same file."""
     return _npz_cache(fname, datadir=datadir)
 
 
 def strip_mask(*args):
-    r"""
-    Process the standard arguments for efficient calculation.
+    r"""Process the standard arguments for efficient calculation.
 
     Return unmasked arguments, plus a mask.
 
