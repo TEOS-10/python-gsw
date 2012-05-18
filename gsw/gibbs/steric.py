@@ -89,13 +89,13 @@ def steric_height(SA, CT, p, p_ref):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 3.27.
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
     computationally efficient 48-term expression for the density of seawater
-    in terms of Conservative Temperature, and related properties of gsw.
+    in terms of Conservative Temperature, and related properties of seawater.
 
     .. [3] Griffies, S. M., 2004: Fundamentals of Ocean Climate Models.
     Princeton, NJ: Princeton University Press, 518 pp + xxxiv.
