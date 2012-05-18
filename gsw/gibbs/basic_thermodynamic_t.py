@@ -45,10 +45,9 @@ __all__ = [
 
 @match_args_return
 def Helmholtz_energy_t_exact(SA, t, p):
-    r"""
-    Calculates the Helmholtz energy of gsw.
+    r"""Calculates the Helmholtz energy of seawater.
 
-    The specific Helmholtz energy of gsw.:math:`f` is given by:
+    The specific Helmholtz energy of seawater :math:`f` is given by:
 
     .. math::
         f(SA, t, p) = g - (p + P_0) \nu =
@@ -89,13 +88,12 @@ def Helmholtz_energy_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 2.13.
 
     Modifications:
-    2010-08-26. Trevor McDougall
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. Trevor McDougall
     """
 
     n0, n1 = 0, 1
@@ -106,9 +104,8 @@ def Helmholtz_energy_t_exact(SA, t, p):
 
 @match_args_return
 def rho_t_exact(SA, t, p):
-    r"""
-    Calculates in situ density of gsw.from Absolute Salinity and in situ
-    temperature.
+    r"""Calculates in situ density of seawater from Absolute Salinity and in
+    situ temperature.
 
     Parameters
     ----------
@@ -145,13 +142,12 @@ def rho_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 2.8.
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall & Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. Paul Barker, David Jackett and Trevor McDougal
     """
 
     n0, n1 = 0, 1
@@ -162,10 +158,9 @@ def rho_t_exact(SA, t, p):
 
 @match_args_return
 def enthalpy_t_exact(SA, t, p):
-    r"""
-    Calculates the specific enthalpy of gsw.
+    r"""Calculates the specific enthalpy of seawater.
 
-    The specific enthalpy of gsw.:math:`h` is given by:
+    The specific enthalpy of seawater :math:`h` is given by:
 
     .. math::
         h(SA, t, p) = g + (T_0 + t)\eta =
@@ -206,13 +201,12 @@ def enthalpy_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See appendix A.11.
 
     Modifications:
-    2010-08-26. David Jackett, Trevor McDougall and Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. David Jackett, Trevor McDougall and Paul Barker.
     """
 
     n0, n1 = 0, 1
@@ -223,8 +217,7 @@ def enthalpy_t_exact(SA, t, p):
 
 @match_args_return
 def specvol_t_exact(SA, t, p):
-    r"""
-    Calculates the specific volume of gsw.
+    r"""Calculates the specific volume of seawater.
 
     Parameters
     ----------
@@ -261,13 +254,12 @@ def specvol_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 2.7.
 
     Modifications:
-    2010-08-26. David Jackett & Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-23. David Jackett and Paul Barker.
     """
 
     n0, n1 = 0, 1
@@ -276,10 +268,9 @@ def specvol_t_exact(SA, t, p):
 
 @match_args_return
 def entropy_t_exact(SA, t, p):
-    r"""
-    Calculates specific entropy of gsw.
+    r"""Calculates specific entropy of seawater.
 
-    The specific entropy of gsw.:math:`\eta` is given by:
+    The specific entropy of seawater :math:`\eta` is given by:
 
     .. math::
         \eta(SA, t, p) = -g_T = \frac{\partial g}{\partial T}\Big|_{SA,p}
@@ -323,13 +314,12 @@ def entropy_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall and Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. David Jackett, Trevor McDougall and Paul Barker.
     """
 
     n0, n1 = 0, 1
@@ -338,8 +328,7 @@ def entropy_t_exact(SA, t, p):
 
 @match_args_return
 def cp_t_exact(SA, t, p):
-    r"""
-    Calculates the isobaric heat capacity of gsw.
+    r"""Calculates the isobaric heat capacity of seawater.
 
     Parameters
     ----------
@@ -353,7 +342,7 @@ def cp_t_exact(SA, t, p):
     Returns
     -------
     cp_t_exact : array_like
-        heat capacity of gsw.[J kg :sup:`-1` K :sup:`-1`]
+        heat capacity of seawater [J kg :sup:`-1` K :sup:`-1`]
 
     See Also
     --------
@@ -374,7 +363,7 @@ def cp_t_exact(SA, t, p):
             3973.59384348,  3960.18408479])
 
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
@@ -389,10 +378,9 @@ def cp_t_exact(SA, t, p):
 
 @match_args_return
 def sound_speed_t_exact(SA, t, p):
-    r"""
-    Calculates the speed of sound in gsw.
+    r"""Calculates the speed of sound in seawater.
 
-    The speed of sound in gsw.:math:`c` is given by:
+    The speed of sound in seawater :math:`c` is given by:
 
     .. math::
         c(SA, t, p) = \sqrt{ \partial P  / \partial \rho |_{SA,\eta}} =
@@ -418,7 +406,7 @@ def sound_speed_t_exact(SA, t, p):
     Returns
     -------
     sound_speed : array_like
-                  speed of sound in gsw.[m s :sup:`-1`]
+                  speed of sound in seawater [m s :sup:`-1`]
 
     See Also
     --------
@@ -441,13 +429,12 @@ def sound_speed_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.17.1)
 
     Modifications:
-    2010-07-23. David Jackett, Paul Barker and Trevor McDougall.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. David Jackett, Paul Barker and Trevor McDougall.
     """
 
     n0, n1, n2 = 0, 1, 2
@@ -460,8 +447,7 @@ def sound_speed_t_exact(SA, t, p):
 
 @match_args_return
 def specvol_anom_t_exact(SA, t, p):
-    r"""
-    Calculates specific volume anomaly from Absolute Salinity, in situ
+    r"""Calculates specific volume anomaly from Absolute Salinity, in situ
     temperature and pressure, using the full TEOS-10 Gibbs function.
 
     The reference value of Absolute Salinity is SSO and the reference value of
@@ -502,13 +488,12 @@ def specvol_anom_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (3.7.3)
 
     Modifications:
-    2010-08-26. Trevor McDougall & Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-23. Trevor McDougall and Paul Barker
     """
 
     n0, n1 = 0, 1
@@ -522,8 +507,7 @@ def specvol_anom_t_exact(SA, t, p):
 
 @match_args_return
 def chem_potential_relative_t_exact(SA, t, p):
-    r"""
-    Calculates the adiabatic lapse rate of sea water.
+    r"""Calculates the adiabatic lapse rate of seawater.
 
     Parameters
     ----------
@@ -560,13 +544,12 @@ def chem_potential_relative_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
     Modifications:
-    2010-08-26. Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. Trevor McDougall and Paul Barker
     """
 
     n0, n1 = 0, 1
@@ -575,10 +558,9 @@ def chem_potential_relative_t_exact(SA, t, p):
 
 @match_args_return
 def internal_energy_t_exact(SA, t, p):
-    r"""
-    Calculates the Helmholtz energy of gsw.
+    r"""Calculates the Helmholtz energy of seawater.
 
-    The specific internal energy of gsw.:math:`u` is given by:
+    The specific internal energy of seawater :math:`u` is given by:
 
     .. math::
         u(SA, t, p) = g + (T_0 + t)\eta - (p + P_0)\nu =
@@ -623,13 +605,12 @@ def internal_energy_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.11.1)
 
     Modifications:
-    2010-08-22. Trevor McDougall
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. Trevor McDougall
     """
 
     n0, n1 = 0, 1
@@ -641,8 +622,7 @@ def internal_energy_t_exact(SA, t, p):
 
 @match_args_return
 def kappa_const_t_exact(SA, t, p):
-    r"""
-    Calculates isothermal compressibility of gsw.at constant in situ
+    r"""Calculates isothermal compressibility of seawater at constant in situ
     temperature.
 
     .. math::
@@ -671,7 +651,7 @@ def kappa_const_t_exact(SA, t, p):
 
     Notes
     -----
-    This is the compressibility of gsw.at constant in situ temperature.
+    This is the compressibility of seawater at constant in situ temperature.
 
     Examples
     --------
@@ -686,13 +666,12 @@ def kappa_const_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.15.1)
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. David Jackett, Trevor McDougall and Paul Barker
     """
 
     n0, n1, n2 = 0, 1, 2
@@ -703,9 +682,8 @@ def kappa_const_t_exact(SA, t, p):
 
 @match_args_return
 def alpha_wrt_t_exact(SA, t, p):
-    r"""
-    Calculates the thermal expansion coefficient of gsw.with respect to in
-    situ temperature.
+    r"""Calculates the thermal expansion coefficient of seawater with respect
+    to in situ temperature.
 
     Parameters
     ----------
@@ -742,7 +720,7 @@ def alpha_wrt_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.18.1)
 
@@ -752,8 +730,7 @@ def alpha_wrt_t_exact(SA, t, p):
     6, 215-242.
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. David Jackett, Trevor McDougall and Paul Barker
     """
 
     n0, n1 = 0, 1
@@ -765,8 +742,7 @@ def alpha_wrt_t_exact(SA, t, p):
 
 @match_args_return
 def isochoric_heat_cap_t_exact(SA, t, p):
-    r"""
-    Calculates the isochoric heat capacity of gsw.
+    r"""Calculates the isochoric heat capacity of seawater.
 
     Parameters
     ----------
@@ -803,13 +779,12 @@ def isochoric_heat_cap_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 2.21.
 
     Modifications:
-    2010-08-26. Trevor McDougall
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. Trevor McDougall
     """
 
     n0, n1, n2 = 0, 1, 2
@@ -823,8 +798,7 @@ def isochoric_heat_cap_t_exact(SA, t, p):
 
 @match_args_return
 def kappa_t_exact(SA, t, p):
-    r"""
-    Calculates the isentropic compressibility of gsw.
+    r"""Calculates the isentropic compressibility of seawater.
 
     When the entropy and Absolute Salinity are held constant while the pressure
     is changed, the isentropic and isohaline compressibility
@@ -878,14 +852,13 @@ def kappa_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqns. (2.16.1) and the row for kappa in
     Table P.1 of appendix P
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-23. David Jackett, Trevor McDougall and Paul Barker
     """
 
     n0, n1, n2 = 0, 1, 2
@@ -900,12 +873,11 @@ def kappa_t_exact(SA, t, p):
 
 @match_args_return
 def SA_from_rho_t_exact(rho, t, p):
-    r"""
-    Calculates the Absolute Salinity of a gsw.sample, for given values of
-    its density, in situ temperature and sea pressure (in dbar).
+    r"""Calculates the Absolute Salinity of a seawater sample, for given values
+    of its density, in situ temperature and sea pressure (in dbar).
 
     One use for this function is in the laboratory where a measured value of
-    the in situ density :math:`\rho` of a gsw.sample may have been made at
+    the in situ density :math:`\rho` of a seawater sample may have been made at
     the laboratory temperature :math:`t` and at atmospheric pressure :math:`p`.
     The present function will return the Absolute Salinity SA of this seawater
     sample.
@@ -950,7 +922,7 @@ def SA_from_rho_t_exact(rho, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 2.5.
 
@@ -959,9 +931,9 @@ def SA_from_rho_t_exact(rho, t, p):
     Reference-Composition Salinity Scale, Deep-Sea Res. I, 55, 50-72.
 
     Modifications:
-    2010-08-23. Trevor McDougall & Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-28. Trevor McDougall and Paul Barker.
     """
+
     n0, n1 = 0, 1
     v_lab = np.ones(rho.shape) / rho
     v_0 = gibbs(n0, n0, n1, 0, t, p)
@@ -986,8 +958,7 @@ def SA_from_rho_t_exact(rho, t, p):
 
 @match_args_return
 def pot_rho_t_exact(SA, t, p, p_ref=0):
-    r"""
-    Calculates potential density of gsw.
+    r"""Calculates potential density of seawater.
 
     Parameters
     ----------
@@ -1029,13 +1000,12 @@ def pot_rho_t_exact(SA, t, p, p_ref=0):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 3.4.
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. David Jackett, Trevor McDougall and Paul Barker
     """
 
     pt = pt_from_t(SA, t, p, p_ref=p_ref)
@@ -1045,9 +1015,8 @@ def pot_rho_t_exact(SA, t, p, p_ref=0):
 
 @match_args_return
 def alpha_wrt_CT_t_exact(SA, t, p):
-    r"""
-    Calculates the thermal expansion coefficient of gsw.with respect to
-    Conservative Temperature.
+    r"""Calculates the thermal expansion coefficient of seawater with respect
+    to Conservative Temperature.
 
     Parameters
     ----------
@@ -1084,13 +1053,12 @@ def alpha_wrt_CT_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.18.3).
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. Trevor McDougall and Paul Barker
     """
 
     n0, n1, n2 = 0, 1, 2
@@ -1107,9 +1075,8 @@ def alpha_wrt_CT_t_exact(SA, t, p):
 
 @match_args_return
 def alpha_wrt_pt_t_exact(SA, t, p):
-    r"""
-    Calculates the thermal expansion coefficient of gsw.with respect to
-    potential temperature, with a reference pressure of zero.
+    r"""Calculates the thermal expansion coefficient of seawater with respect
+    to potential temperature, with a reference pressure of zero.
 
     Parameters
     ----------
@@ -1146,13 +1113,12 @@ def alpha_wrt_pt_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.18.2).
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. David Jackett, Trevor McDougall and Paul Barker
     """
 
     n0, n1, n2 = 0, 1, 2
@@ -1168,9 +1134,8 @@ def alpha_wrt_pt_t_exact(SA, t, p):
 
 @match_args_return
 def beta_const_CT_t_exact(SA, t, p):
-    r"""
-    Calculates the saline (i.e. haline) contraction coefficient of gsw.at
-    constant Conservative Temperature.
+    r"""Calculates the saline (i.e. haline) contraction coefficient of seawater
+    at constant Conservative Temperature.
 
     Parameters
     ----------
@@ -1207,13 +1172,12 @@ def beta_const_CT_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.19.3)
 
     Modifications:
     2010-07-23. David Jackett, Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
     # TODO: Original GSW-V3 re-implements gibbs, check what to do here!
@@ -1238,9 +1202,8 @@ def beta_const_CT_t_exact(SA, t, p):
 
 @match_args_return
 def beta_const_pt_t_exact(SA, t, p):
-    r"""
-    Calculates the saline (i.e. haline) contraction coefficient of gsw.at
-    constant potential temperature with a reference pressure of 0 dbar.
+    r"""Calculates the saline (i.e. haline) contraction coefficient of seawater
+    at constant potential temperature with a reference pressure of 0 dbar.
 
     Parameters
     ----------
@@ -1277,15 +1240,13 @@ def beta_const_pt_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.19.2)
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-04-10. Trevor McDougall and Paul Barker
     """
-
     # TODO: Original GSW-V3 re-implements gibbs, check what to do here!
 
     n0, n1, n2 = 0, 1, 2
@@ -1307,9 +1268,8 @@ def beta_const_pt_t_exact(SA, t, p):
 
 @match_args_return
 def beta_const_t_exact(SA, t, p):
-    r"""
-    Calculates the saline (i.e. haline) contraction coefficient of gsw.at
-    constant in situ temperature.
+    r"""Calculates the saline (i.e. haline) contraction coefficient of seawater
+    at constant in situ temperature.
 
     Parameters
     ----------
@@ -1346,13 +1306,12 @@ def beta_const_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.19.1)
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. David Jackett, Trevor McDougall and Paul Barker
     """
 
     n0, n1 = 0, 1
@@ -1364,8 +1323,7 @@ def beta_const_t_exact(SA, t, p):
 
 @match_args_return
 def chem_potential_water_t_exact(SA, t, p):
-    r"""
-    Calculates the chemical potential of water in gsw.
+    r"""Calculates the chemical potential of water in seawater.
 
     Parameters
     ----------
@@ -1403,18 +1361,16 @@ def chem_potential_water_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
     Modifications:
-    2010-09-28. Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. Trevor McDougall and Paul Barker
     """
     SA, t, p, mask = strip_mask(SA, t, p)
 
     # FIXME: Ugly copy from gibbs, why?
-
     x2 = sfac * SA
 
     x = np.sqrt(x2)
@@ -1492,8 +1448,7 @@ def chem_potential_water_t_exact(SA, t, p):
 
 @match_args_return
 def chem_potential_salt_t_exact(SA, t, p):
-    r"""
-    Calculates the chemical potential of salt in gsw.
+    r"""Calculates the chemical potential of salt in seawater.
 
     Parameters
     ----------
@@ -1507,7 +1462,7 @@ def chem_potential_salt_t_exact(SA, t, p):
     Returns
     -------
     chem_potential_salt : array_like
-        chemical potential of salt in gsw.[J kg :sup:`-1`]
+        chemical potential of salt in seawater [J kg :sup:`-1`]
 
     See Also
     --------
@@ -1530,23 +1485,21 @@ def chem_potential_salt_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 2.9.
 
     Modifications:
-    2010-09-28. Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2010-03-29. Trevor McDougall and Paul Barker
     """
 
     return (chem_potential_relative_t_exact(SA, t, p) +
-                                        chem_potential_water_t_exact(SA, t, p))
+                                       chem_potential_water_t_exact(SA, t, p))
 
 
 @match_args_return
 def adiabatic_lapse_rate_t_exact(SA, t, p):
-    r"""
-    Calculates the adiabatic lapse rate of sea water.
+    r"""Calculates the adiabatic lapse rate of seawater.
 
     Parameters
     ----------
@@ -1584,13 +1537,12 @@ def adiabatic_lapse_rate_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.22.1).
 
     Modifications:
-    2010-08-26. Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. Trevor McDougall and Paul Barker
     """
 
     n0, n1, n2 = 0, 1, 2
@@ -1601,8 +1553,7 @@ def adiabatic_lapse_rate_t_exact(SA, t, p):
 
 @match_args_return
 def osmotic_coefficient_t_exact(SA, t, p):
-    r"""
-    Calculates the osmotic coefficient of gsw.
+    r"""Calculates the osmotic coefficient of seawater.
 
     Parameters
     ----------
@@ -1616,7 +1567,7 @@ def osmotic_coefficient_t_exact(SA, t, p):
     Returns
     -------
     osmotic_coefficient : array_like
-                          osmotic coefficient of gsw.[unitless]
+                          osmotic coefficient of seawater [unitless]
 
     See Also
     --------
@@ -1639,20 +1590,17 @@ def osmotic_coefficient_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
     Modifications:
-    2010-09-28. Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-04-01. Trevor McDougall and Paul Barker
     """
-
-    # TODO: Original GSW-V3 re-implements gibbs, check what to do here!
 
     n0 = 0
 
-    # Molality of gsw.in mol/kg
+    # Molality of seawater in mol/kg.
     molal = molality_from_SA(SA)
     part = molal * R * (Kelvin + t)
 
@@ -1663,10 +1611,9 @@ def osmotic_coefficient_t_exact(SA, t, p):
 
 @match_args_return
 def dynamic_enthalpy_t_exact(SA, t, p):
-    r"""
-    Calculates the dynamic enthalpy of gsw.from Absolute Salinity, in situ
-    temperature and pressure.  Dynamic enthalpy was defined by Young (2010) as
-    the difference between enthalpy and potential enthalpy. Note that this
+    r"""Calculates the dynamic enthalpy of seawater from Absolute Salinity, in
+    situ temperature and pressure.  Dynamic enthalpy was defined by Young (2010)
+    as the difference between enthalpy and potential enthalpy. Note that this
     function uses the full TEOS-10 Gibbs function (i.e. the sum of the IAPWS-09
     and IAPWS-08 Gibbs functions, see the TEOS-10 Manual, IOC et al. (2010)).
 
@@ -1699,12 +1646,12 @@ def dynamic_enthalpy_t_exact(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
     .. [2] Young, W.R., 2010: Dynamic enthalpy, Conservative Temperature, and
-    the gsw.Boussinesq approximation. Journal of Physical Oceanography,
+    the seawater. Boussinesq approximation. Journal of Physical Oceanography,
     40, 394-400.
 
     Modifications:
@@ -1718,11 +1665,10 @@ def dynamic_enthalpy_t_exact(SA, t, p):
 
 @match_args_return
 def t_maxdensity_exact(SA, p):
-    r"""
-    Calculates the in-situ temperature of maximum density of gsw. This
-    function returns the in-situ temperature at which the density of seawater
-    is a maximum, at given Absolute Salinity, SA, and sea pressure, p (in
-    dbar).
+    r"""Calculates the in-situ temperature of maximum density of seawater.
+    This function returns the in-situ temperature at which the density of
+    seawater is a maximum, at given Absolute Salinity, SA, and sea pressure, p
+    (in dbar).
 
     Parameters
     ----------
@@ -1751,7 +1697,7 @@ def t_maxdensity_exact(SA, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 3.42.
 
@@ -1783,8 +1729,7 @@ def t_maxdensity_exact(SA, p):
 
 @match_args_return
 def osmotic_pressure_t_exact(SA, t, pw):
-    r"""
-    Calculates the osmotic pressure of gsw.
+    r"""Calculates the osmotic pressure of seawater.
 
     Parameters
     ----------
@@ -1798,7 +1743,7 @@ def osmotic_pressure_t_exact(SA, t, pw):
     Returns
     -------
     osmotic_pressure_t_exact : array_like
-        dynamic osmotic pressure of gsw.[dbar]
+        dynamic osmotic pressure of seawater [dbar]
 
 
     See Also
@@ -1815,7 +1760,7 @@ def osmotic_pressure_t_exact(SA, t, pw):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 3.41.
 
@@ -1845,7 +1790,7 @@ def osmotic_pressure_t_exact(SA, t, pw):
     # After two iterations though the modified Newton-Raphson technique the
     # maximum error is 6x10^-12 dbar.
 
-    # Osmotic pressure of gsw. in dbar.
+    # Osmotic pressure of seawater in dbar.
     return p - pw
 
 
