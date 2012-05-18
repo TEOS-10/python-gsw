@@ -115,12 +115,12 @@ def SP_from_C(C, t, p):
     109 - 112.
 
     .. [3] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.  Appendix E.
 
     .. [4] Unesco, 1983: Algorithms for computation of fundamental properties
-    of gsw. Unesco Technical Papers in Marine Science, 44, 53 pp.
+    of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
 
     Modifications:
     2011-04-01. Paul Barker, Trevor McDougall and Rich Pawlowicz.
@@ -179,7 +179,7 @@ def C_from_SP(SP, t, p):
     The conductivity ratio returned by this function is consistent with the
     input value of Practical Salinity, SP, to 2x10^-14 psu over the full range
     of input parameters (from pure fresh water up to SP = 42 psu). This error
-    of 2x10^-14 psu is machine precision at typical gsw.salinities. This
+    of 2x10^-14 psu is machine precision at typical seawater salinities.  This
     accuracy is achieved by having four different polynomials for the starting
     value of Rtx (the square root of Rt) in four different ranges of SP, and by
     using one and a half iterations of a computationally efficient modified
@@ -222,12 +222,12 @@ def C_from_SP(SP, t, p):
     OE-11, 1, 109 - 112.
 
     .. [2] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See appendix E.
 
     .. [3] Unesco, 1983: Algorithms for computation of fundamental properties
-    of gsw. Unesco Technical Papers in Marine Science, 44, 53 pp.
+    of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
     """
 
     C = 42.9140 * R_from_SP(SP, t, p)
@@ -284,12 +284,12 @@ def SP_from_R(R, t, p):
     11, 109 - 112.
 
     .. [3] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.  Appendix E.
 
     .. [4] Unesco, 1983: Algorithms for computation of fundamental properties
-    of gsw. Unesco Technical Papers in Marine Science, 44, 53 pp.
+    of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
 
     Modifications:
     2011-04-01. Paul Barker, Trevor McDougall and Rich Pawlowicz.
@@ -391,12 +391,12 @@ def R_from_SP(SP, t, p):
     11, 109 - 112.
 
     .. [3] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.  Appendix E.
 
     .. [4] Unesco, 1983: Algorithms for computation of fundamental properties
-    of gsw. Unesco Technical Papers in Marine Science, 44, 53 pp.
+    of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
 
     Modifications:
     2011-04-06. Paul Barker, Trevor McDougall and Rich Pawlowicz.
@@ -622,21 +622,12 @@ def SP_salinometer(Rt, t):
 
     Examples
     --------
-    FIXME
-
-    Data from UNESCO 1983 p9
-
-    >>> import gsw.csiro as sw
-    >>> t = T90conv([15, 20, 5])
-    >>> rt   = [  1, 1.0568875, 0.81705885]
-    >>> sw.sals(rt, t)
-    array([ 35.        ,  37.24562718,  27.99534701])
-
+    TODO
 
     References
     -----------
     ..[1] Fofonoff, P. and R.C. Millard Jr. 1983: Algorithms for computation of
-    fundamental properties of gsw. Unesco Tech. Pap. in Mar. Sci., 44,
+    fundamental properties of seawater.  Unesco Tech. Pap. in Mar. Sci., 44,
     53 pp.
 
     ..[2] Hill, K.D., T.M. Dauphinee & D.J. Woods, 1986: The extension of the
@@ -644,7 +635,7 @@ def SP_salinometer(Rt, t):
     109 - 112.
 
     .. [3] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See appendix E of this TEOS-10 Manual, and in
     particular, Eqns. (E.2.1) and (E.2.6).
@@ -713,7 +704,7 @@ def SP_from_SK(SK):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.  See Appendix A.3.
 
@@ -754,7 +745,7 @@ def SK_from_SP(SP):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.  See Appendix A.3.
 
