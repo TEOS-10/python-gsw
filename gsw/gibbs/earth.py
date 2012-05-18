@@ -4,7 +4,7 @@ from __future__ import division
 
 import numpy as np
 
-from constants import gamma, earth_radius
+from constants import gamma, earth_radius, OMEGA
 from gsw.utilities import match_args_return
 from conversions import z_from_p
 
@@ -17,8 +17,7 @@ RAD = np.pi / 180.0
 
 
 def f(lat):
-    r"""
-    Calculates the Coriolis parameter (f) defined by:
+    r"""Calculates the Coriolis parameter (f) defined by:
         f = 2*omega*sin(lat)
     where,
         omega = 7.292115e-5 (Groten, 2004) [radians s :sup:`-1`]
@@ -40,7 +39,7 @@ def f(lat):
     Geodynamics. Journal of Geodesy, 77, pp. 724-797.
 
     .. [2] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater -  2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
@@ -50,16 +49,13 @@ def f(lat):
     """
 
     lat = np.asanyarray(lat)
-    OMEGA = 7.292115e-5
-
     return 2 * OMEGA * np.sin(lat * RAD)
 
 
 @match_args_return
 def grav(lat, p=0):
-    r"""
-    Calculates acceleration due to gravity as a function of latitude and as a
-    function of pressure in the ocean.
+    r"""Calculates acceleration due to gravity as a function of latitude and as
+    a function of pressure in the ocean.
 
     Parameters
     ----------
@@ -94,7 +90,7 @@ def grav(lat, p=0):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater -  2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
@@ -105,8 +101,7 @@ def grav(lat, p=0):
     depth in the ocean. Deep-Sea Res.,pp. 109 - 111.
 
     Modifications:
-    2010-07-23. Trevor McDougall & Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. Trevor McDougall & Paul Barker
     """
 
     X = np.sin(lat * RAD)
@@ -121,12 +116,11 @@ def grav(lat, p=0):
 
 @match_args_return
 def distance(lon, lat, p=0):
-    r"""
-    Calculates the distance in met res between successive points in the vectors
-    lon and lat, computed using the Haversine formula on a spherical earth of
-    radius 6,371 km, being the radius of a sphere having the same volume as
-    Earth. For a spherical Earth of radius 6,371,000 m, one nautical mile is
-    1,853.2488 m, thus one degree of latitude is 111,194.93 m.
+    r"""Calculates the distance in met res between successive points in the
+    vectors lon and lat, computed using the Haversine formula on a spherical
+    earth of radius 6,371 km, being the radius of a sphere having the same
+    volume as Earth.  For a spherical Earth of radius 6,371,000 m, one nautical
+    mile is 1,853.2488 m, thus one degree of latitude is 111,194.93 m.
 
     Haversine formula:
         R = earth's radius (mean radius = 6,371 km)
@@ -185,8 +179,7 @@ def distance(lon, lat, p=0):
 
     Modifications:
     2000-11-06. Rich Pawlowicz
-    2010-07-28. Paul Barker and Trevor McDougall
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-04-04. Paul Barker and Trevor McDougall
     """
     #FIXME? The argument handling seems much too complicated.
     # Maybe we can come up with some simple specifications of
