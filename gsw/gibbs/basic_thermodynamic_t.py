@@ -1612,10 +1612,11 @@ def osmotic_coefficient_t_exact(SA, t, p):
 @match_args_return
 def dynamic_enthalpy_t_exact(SA, t, p):
     r"""Calculates the dynamic enthalpy of seawater from Absolute Salinity, in
-    situ temperature and pressure.  Dynamic enthalpy was defined by Young (2010)
-    as the difference between enthalpy and potential enthalpy. Note that this
-    function uses the full TEOS-10 Gibbs function (i.e. the sum of the IAPWS-09
-    and IAPWS-08 Gibbs functions, see the TEOS-10 Manual, IOC et al. (2010)).
+    situ temperature and pressure.  Dynamic enthalpy was defined by Young
+    (2010) as the difference between enthalpy and potential enthalpy. Note that
+    this function uses the full TEOS-10 Gibbs function (i.e. the sum of the
+    IAPWS-09 and IAPWS-08 Gibbs functions, see the TEOS-10 Manual, IOC et al.
+    (2010)).
 
     Parameters
     ----------

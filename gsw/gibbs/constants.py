@@ -37,8 +37,8 @@ Estimates of the Parameters of Common Relevance to Astronomy, Geodesy, and
 Geodynamics. Journal of Geodesy, 77, pp. 724-797."""
 
 gdef = 9.8
-r"""Acceleration of gravity [m s :sup:`2`] used by sw.swvel and bfrq without lat
-info."""
+r"""Acceleration of gravity [m s :sup:`2`] used by sw.swvel and bfrq without
+lat info."""
 
 DEG2NM, NM2KM = 60., 1.8520
 r"""1 nm = 1.8520 km

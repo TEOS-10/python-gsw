@@ -23,8 +23,9 @@ __all__ = [
 
 @match_args_return
 def pt_first_derivatives(SA, CT):
-    r"""Calculates the following two partial derivatives of potential temperature
-    (the regular potential temperature whose reference sea pressure is 0 dbar)
+    r"""Calculates the following two partial derivatives of potential
+    temperature (the regular potential temperature whose reference sea
+    pressure is 0 dbar)
     (1) pt_SA, the derivative with respect to Absolute Salinity at
         constant Conservative Temperature, and
     (2) pt_CT, the derivative with respect to Conservative Temperature at
@@ -237,8 +238,8 @@ def CT_first_derivatives(SA, pt):
 
     .. [2] McDougall T. J., D. R. Jackett, P. M. Barker, C. Roberts-Thomson, R.
     Feistel and R. W. Hallberg, 2010:  A computationally efficient 25-term
-    expression for the density of seawater in terms of Conservative Temperature,
-    and related properties of seawater.
+    expression for the density of seawater in terms of Conservative
+    Temperature, and related properties of seawater.
 
     Modifications:
     2010-08-05. Trevor McDougall and Paul Barker.
@@ -265,8 +266,8 @@ def CT_first_derivatives(SA, pt):
 
 @match_args_return
 def CT_second_derivatives(SA, pt):
-    r"""Calculates the following three, second-order derivatives of Conservative
-    Temperature
+    r"""Calculates the following three, second-order derivatives of
+    Conservative Temperature
     (1) CT_SA_SA, the second derivative with respect to Absolute Salinity at
         constant potential temperature (with p_ref = 0 dbar),
     (2) CT_SA_pt, the derivative with respect to potential temperature (the
@@ -365,7 +366,8 @@ def CT_second_derivatives(SA, pt):
 
 @match_args_return
 def entropy_first_derivatives(SA, CT):
-    r"""Calculates the following two partial derivatives of specific entropy (eta)
+    r"""Calculates the following two partial derivatives of specific entropy
+    (eta)
     (1) eta_SA, the derivative with respect to Absolute Salinity at constant
         Conservative Temperature, and
     (2) eta_CT, the derivative with respect to Conservative Temperature at
@@ -432,8 +434,8 @@ def entropy_first_derivatives(SA, CT):
 
 @match_args_return
 def entropy_second_derivatives(SA, CT):
-    r"""Calculates the following three second-order partial derivatives of specific
-    entropy (eta)
+    r"""Calculates the following three second-order partial derivatives of
+    specific entropy (eta)
     (1) eta_SA_SA, the second derivative with respect to Absolute Salinity at
         constant Conservative Temperature, and
     (2) eta_SA_CT, the derivative with respect to Absolute Salinity and
@@ -637,8 +639,8 @@ def enthalpy_second_derivatives(SA, CT, p):
     2011-03-29. Trevor McDougall.
     """
 
-    # NOTE: The Matlab version 3.0 mentions that this function is unchanged, but
-    # that's not true!
+    # NOTE: The Matlab version 3.0 mentions that this function is unchanged,
+    # but that's not true!
 
     n0, n1, n2 = 0, 1, 2
     pt0 = pt_from_CT(SA, CT)

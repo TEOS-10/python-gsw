@@ -10,8 +10,8 @@ from conversions import pt0_from_t, CT_from_pt
 import library as lib
 
 __all__ = [
-           'SA_from_SP',  #FIXME: Incomplete and untested. (need lib.SAAR)
-           'Sstar_from_SP',  #FIXME: Incomplete and untested. (need lib.SAAR)
+           'SA_from_SP',  # FIXME: Incomplete and untested. (need lib.SAAR)
+           'Sstar_from_SP',  # FIXME: Incomplete and untested. (need lib.SAAR)
            'CT_from_t'
            ]
 
@@ -37,6 +37,7 @@ def check_input(SP, p, lon, lat):
     SP = np.maximum(SP, 0)
 
     return SP, p, lon, lat
+
 
 @match_args_return
 def SA_from_SP(SP, p, lon, lat):
@@ -104,7 +105,7 @@ def SA_from_SP(SP, p, lon, lat):
     SAAR = lib.SAAR(p, lon, lat)
     #SAAR = lib.delta_SA(p, lon, lat)
 
-    SA = (SSO / 35 ) * SP + (1 + SAAR)
+    SA = (SSO / 35) * SP + (1 + SAAR)
     SA_baltic = lib.SA_from_SP_Baltic(SP, lon, lat)
 
     # The following function (SAAR) finds SAAR in the non-Baltic parts of
@@ -115,6 +116,7 @@ def SA_from_SP(SP, p, lon, lat):
         SA[~SA_baltic.mask] = SA_baltic[~SA_baltic.mask]
 
     return SA
+
 
 @match_args_return
 def Sstar_from_SP(SP, p, lon, lat):
@@ -178,8 +180,8 @@ def Sstar_from_SP(SP, p, lon, lat):
 
     SP, p, lon, lat = check_input(SP, p, lon, lat)
 
-    SAAR  = lib.SAAR( p, lon, lat )
-    #SAAR  = lib.delta_SA( p, lon, lat )
+    SAAR = lib.SAAR(p, lon, lat)
+    #SAAR = lib.delta_SA(p, lon, lat)
     Sstar = (SSO / 35.) * SP - r1 * SAAR
 
     # In the Baltic Sea, Sstar==SA.
@@ -190,6 +192,7 @@ def Sstar_from_SP(SP, p, lon, lat):
         Sstar[~Sstar_baltic.mask] = Sstar_baltic[~Sstar_baltic.mask]
 
     return Sstar
+
 
 @match_args_return
 def CT_from_t(SA, t, p):

@@ -12,7 +12,7 @@ from basic_thermodynamic_t import rho_t_exact, alpha_wrt_CT_t_exact
 from basic_thermodynamic_t import beta_const_CT_t_exact, specvol_t_exact
 from basic_thermodynamic_t import specvol_anom_t_exact, sound_speed_t_exact
 from basic_thermodynamic_t import t_maxdensity_exact, enthalpy_t_exact
-from basic_thermodynamic_t import internal_energy_t_exact  #, t_from_rho_exact
+from basic_thermodynamic_t import internal_energy_t_exact  # t_from_rho_exact
 
 __all__ = [
            'rho_CT_exact',
