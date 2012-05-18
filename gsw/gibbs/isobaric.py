@@ -15,11 +15,10 @@ __all__ = [
 
 @match_args_return
 def latentheat_evap_t(SA, t):
-    r"""
-    Calculates latent heat, or enthalpy, of evaporation at p = 0 (the surface).
-    It is defined as a function of Absolute Salinity, SA, and in-situ
-    temperature, t, and is valid in the ranges 0 < SA < 40 g/kg and 0 < CT <
-    42 deg C. The errors range between -0.4 and 0.6 J/kg.
+    r"""Calculates latent heat, or enthalpy, of evaporation at p = 0 (the
+    surface).  It is defined as a function of Absolute Salinity, SA, and
+    in-situ temperature, t, and is valid in the ranges 0 < SA < 40 g/kg and
+    0 < CT < 42 deg C.  The errors range between -0.4 and 0.6 J/kg.
 
     Parameters
     ----------
@@ -48,7 +47,7 @@ def latentheat_evap_t(SA, t):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
     See section 3.39.
