@@ -37,6 +37,7 @@ from gsw.utilities import Dict2Struc
 datadir = os.path.join(os.path.dirname(gsw.utilities.__file__), 'data')
 fname = 'gsw_cv_v3_0.npz'
 cv = Dict2Struc(np.load(os.path.join(datadir, fname)))
+cf = Dict2Struc(np.load(os.path.join(datadir, 'gsw_cf_.npz')))
 
 # Main dictionary of functions with arguments
 #
@@ -181,8 +182,8 @@ function_arguments = {
     'CT_maxdensity_exact': ('SA', 'p'),
     #
     # derivatives.py
-    'CT_first_derivatives': ('SA', 'pt'),  # NOTE: TI, BUG
-    'CT_second_derivatives': ('SA', 'pt'),  # NOTE: TI FIXME BUG
+    #'CT_first_derivatives': ('SA', 'pt'),  # NOTE: TI, BUG
+    #'CT_second_derivatives': ('SA', 'pt'),  # NOTE: TI FIXME BUG
     #'enthalpy_first_derivatives': ('SA', 'CT', 'p'), FIXME name match
     #'enthalpy_second_derivatives': ('SA', 'CT', 'p'), FIXME name match
     #'entropy_first_derivatives': ('SA', 'CT'),  #NOTE: TI FIXME name match
@@ -245,12 +246,12 @@ function_arguments = {
     #
     # practical_salinity.py
     'SP_from_C': ('C', 't', 'p'),
-    # BUG: line 447 could not be broadcast shapes (45,3) (21)
-    #'C_from_SP': ('SP', 't', 'p'),
-    #'SP_from_R':  TODO
-    #'R_from_SP': TODO
+    'C_from_SP': ('SP', 't', 'p'),
+    'SP_from_R':  ('R', 't', 'p'),
+    'R_from_SP':  ('SP', 't', 'p'),
     'SP_salinometer': ('Rt', 't'),
-    #'SP_from_SK':  TODO
+    #'SP_from_SK': ('SK',),  NOTE: Not tested on matlab.
+    #'SK_from_SP': ('SP',),  NOTE: Not tested on matlab.
     #
     # steric.py
     # 'steric_height': TODO
@@ -282,7 +283,7 @@ function_arguments = {
 #cv.CT_chck_cast = cv.CT_from_t
 #cv.Sstar_chck_cast = cv.Sstar_from_SA
 #cv.entropy_chck_cast = cv.entropy
-#cv.R_chck_cast = cv.cndr
+cv.R_chck_cast = cf.R
 cv.entropy_chck_cast = cv.entropy_from_CT
 cv.Abs_Pressure_from_p_chck_cast = cv.Abs_Pressure_from_p
 cv.depth_chck_cast = cv.depth_from_z
