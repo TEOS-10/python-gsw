@@ -1267,9 +1267,9 @@ def dynamic_enthalpy(SA, CT, p):
     dynamic_enthalpy = dynamic_enthalpy_CT_exact(SA, CT, p)
     """
 
-    return (db2Pascal * (p * (a2 - 2 * a3 * b1 / b2 + 0.5 * a3 * p) / b2 +
+    return db2Pascal * (p * (a2 - 2 * a3 * b1 / b2 + 0.5 * a3 * p) / b2 +
            (M / (2 * b2)) * np.log(1 + p * (2 * b1 + b2 * p) / b0) + part *
-           np.log(1 + (b2 * p * (B - A)) / (A * (B + b2 * p)))))
+           np.log(1 + (b2 * p * (B - A)) / (A * (B + b2 * p))))
 
 
 @match_args_return
@@ -1343,7 +1343,7 @@ def SA_from_rho(rho, CT, p):
     Ior = (SA < 0) | (SA > 50)
     SA[Ior] = np.NaN
 
-    v_SA = (v_50 - v_0) / 50  # Initial v_SA estimate (SA derivative of v).
+    v_SA = (v_50 - v_0) / 50.  # Initial v_SA estimate (SA derivative of v).
 
     # Begin the modified Newton-Raphson iterative procedure.
     for Number_of_iterations in range(0, 3):
