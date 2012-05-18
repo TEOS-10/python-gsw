@@ -26,13 +26,12 @@ __all__ = [
           ]
 
 def gibbs(ns, nt, npr, SA, t, p):
-    r"""
-    Calculates specific Gibbs energy and its derivatives up to order 2 for
-    gsw.
+    r"""Calculates specific Gibbs energy and its derivatives up to order 2 for
+    seawater.
 
     The Gibbs function approach allows the calculation of internal energy,
     entropy, enthalpy, potential enthalpy and the chemical potentials of
-    gsw.as well as the freezing temperature, and the latent heats of
+    seawater as well as the freezing temperature, and the latent heats of
     freezing and of evaporation. These quantities were not available from
     EOS-80 but are essential for the accurate accounting of heat in the ocean
     and for the consistent and accurate treatment of air-sea and ice-sea heat
@@ -76,7 +75,7 @@ def gibbs(ns, nt, npr, SA, t, p):
 
     Notes
     -----
-    The Gibbs function for gsw.is that of TEOS-10 (IOC et al., 2010),
+    The Gibbs function for seawater is that of TEOS-10 (IOC et al., 2010),
     being the sum of IAPWS-08 for the saline part and IAPWS-09 for the pure
     water part. These IAPWS releases are the officially blessed IAPWS
     descriptions of Feistel (2008) and the pure water part of Feistel (2003).
@@ -90,9 +89,9 @@ def gibbs(ns, nt, npr, SA, t, p):
     References
     ----------
     .. [1] Feistel, R., 2003: A new extended Gibbs thermodynamic potential of
-    gsw. Progr. Oceanogr., 58, 43-114.
+    seawater Progr. Oceanogr., 58, 43-114.
 
-    .. [2] Feistel, R., 2008: A Gibbs function for gsw.thermodynamics
+    .. [2] Feistel, R., 2008: A Gibbs function for seawater thermodynamics
     for -6 to 80 :math:`^\circ` C and salinity up to 120 g kg :sup:`-1`,
     Deep-Sea Res. I, 55, 1639-1671.
 
@@ -108,7 +107,7 @@ def gibbs(ns, nt, npr, SA, t, p):
     This Release is referred to as IAPWS-09.
 
     .. [5] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 2.6 and appendices A.6,  G and H.
 
@@ -118,7 +117,6 @@ def gibbs(ns, nt, npr, SA, t, p):
 
     Modifications:
     2010-09-24. David Jackett, Paul Barker and Trevor McDougall
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
     SA, t, p = np.asanyarray(SA), np.asanyarray(t), np.asanyarray(p)
@@ -590,8 +588,7 @@ def gibbs(ns, nt, npr, SA, t, p):
 
 
 def entropy_part(SA, t, p):
-    r"""
-    Calculates entropy, except that it does not evaluate any terms that are
+    r"""Calculates entropy, except that it does not evaluate any terms that are
     functions of Absolute Salinity alone.
 
     Parameters
@@ -618,7 +615,6 @@ def entropy_part(SA, t, p):
     in situ temperature.
 
     Modifications:
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
     SA, t, p, mask = strip_mask(SA, t, p)
@@ -677,8 +673,7 @@ def entropy_part(SA, t, p):
 
 
 def gibbs_pt0_pt0(SA, pt0):
-    r"""
-    Calculates the second derivative of the specific Gibbs function with
+    r"""Calculates the second derivative of the specific Gibbs function with
     respect to temperature at zero sea pressure or _gibbs(0,2,0,SA,t,0).
 
     Parameters
@@ -700,7 +695,6 @@ def gibbs_pt0_pt0(SA, pt0):
     and "pt0_from_t(SA,t,p)".
 
     Modifications:
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
     SA, pt0, mask = strip_mask(SA, pt0)
@@ -728,9 +722,8 @@ def gibbs_pt0_pt0(SA, pt0):
 
 
 def entropy_part_zerop(SA, pt0):
-    r"""
-    Calculates entropy at a sea surface (p = 0 dbar), except that it does not
-    evaluate any terms that are functions of Absolute Salinity alone.
+    r"""Calculates entropy at a sea surface (p = 0 dbar), except that it does
+    not evaluate any terms that are functions of Absolute Salinity alone.
 
     Parameters
     ----------
@@ -753,7 +746,6 @@ def entropy_part_zerop(SA, pt0):
     in situ temperature.
 
     Modifications:
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
     SA, pt0, mask = strip_mask(SA, pt0)
@@ -782,8 +774,7 @@ def entropy_part_zerop(SA, pt0):
 
 # FIXME: Check if this is still used and remove it.
 def enthalpy_SSO_0_CT25(p):
-    r"""
-    Calculates enthalpy at the Standard Ocean Salinity (SSO) and at a
+    r"""Calculates enthalpy at the Standard Ocean Salinity (SSO) and at a
     Conservative Temperature of zero degrees C (CT=0), as a function of
     pressure (p [dbar]) or enthalpy_CT25(35.16504,0,p).
 
@@ -804,7 +795,6 @@ def enthalpy_SSO_0_CT25(p):
     that is, a streamlined version of the code "enthalpy_CT25(SA,CT,p)"
 
     Modifications:
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
     p = np.asanyarray(p)
@@ -832,8 +822,7 @@ def enthalpy_SSO_0_CT25(p):
 
 # FIXME: Check if this is still used and remove it.
 def specvol_SSO_0_CT25(p):
-    r"""
-    Calculates specific volume at the Standard Ocean Salinity (SSO) and
+    r"""Calculates specific volume at the Standard Ocean Salinity (SSO) and
     Conservative Temperature of zero degrees C (CT=0), as a function of
     pressure (p [dbar]) or spec_vol_CT25(35.16504,0,p).
 
@@ -854,7 +843,6 @@ def specvol_SSO_0_CT25(p):
     that is, a streamlined version of the code "rho_alpha_beta_CT25(SA,CT,p)"
 
     Modifications
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
     p = np.asanyarray(p)
@@ -930,8 +918,7 @@ def in_Baltic(lon, lat):
 
 
 def SP_from_SA_Baltic(SA, lon, lat):
-    r"""
-    Calculates Practical Salinity (SP) for the Baltic Sea, from a value
+    r"""Calculates Practical Salinity (SP) for the Baltic Sea, from a value
     computed analytically from Absolute Salinity.
 
     Parameters
@@ -978,7 +965,7 @@ def SP_from_SA_Baltic(SA, lon, lat):
     http://www.ocean-sci.net/6/3/2010/os-6-3-2010.pdf
 
     .. [2] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
@@ -990,7 +977,6 @@ def SP_from_SA_Baltic(SA, lon, lat):
 
     Modifications:
     2010-07-23. David Jackett, Trevor McDougall & Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
     SA, lon, lat = map(np.ma.masked_invalid, (SA, lon, lat))
     lon, lat, SA = np.broadcast_arrays(lon, lat, SA)
@@ -1010,8 +996,7 @@ def SP_from_SA_Baltic(SA, lon, lat):
 
 # FIXME: Check if this is still used and remove it.
 def SP_from_SA_Baltic_old(SA, lon, lat):
-    r"""
-    Calculates Practical Salinity (SP) for the Baltic Sea, from a value
+    r"""Calculates Practical Salinity (SP) for the Baltic Sea, from a value
     computed analytically from Absolute Salinity.
 
     Parameters
@@ -1058,7 +1043,7 @@ def SP_from_SA_Baltic_old(SA, lon, lat):
     http://www.ocean-sci.net/6/3/2010/os-6-3-2010.pdf
 
     .. [2] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
@@ -1070,7 +1055,6 @@ def SP_from_SA_Baltic_old(SA, lon, lat):
 
     Modifications:
     2010-07-23. David Jackett, Trevor McDougall & Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
     SA, lon, lat = map(np.ma.masked_invalid, (SA, lon, lat))
     lon, lat, SA = np.broadcast_arrays(lon, lat, SA)
@@ -1101,7 +1085,7 @@ def SP_from_SA_Baltic_old(SA, lon, lat):
 
 
 def SA_from_SP_Baltic(SP, lon, lat):
-    r"""Computes absolute salinity from practical in the Baltic Sea
+    r"""Computes absolute salinity from practical in the Baltic Sea.
 
     Parameters
     ----------
@@ -1389,7 +1373,7 @@ def SAAR(p, lon, lat):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
@@ -1404,13 +1388,13 @@ def SAAR(p, lon, lat):
     matlab implementation.
 
     Modifications:
-    2012-04-08. Filipe Fernandes (version 3.0.1).
     """
+
     #FIXME: Compare old delta_SA with new SAAR.
     return SA_table().delta_SA(p, lon, lat)
 
 def infunnel(SA, CT, p):
-    r"""oceanographic funnel check for the 25-term equation
+    r"""Oceanographic funnel check for the 25-term equation
 
     Parameters
     ----------
@@ -1435,7 +1419,7 @@ def infunnel(SA, CT, p):
     (McDougall et al., 2010).
 
     author:
-    Trevor McDougall and Paul Barker    [ help_gsw@csiro.au ]
+    Trevor McDougall and Paul Barker
     2011-02-27: Bjørn Ådlandsvik, python version
     """
 
@@ -1464,13 +1448,12 @@ def infunnel(SA, CT, p):
 
 @match_args_return
 def Hill_ratio_at_SP2(t):
-
     r"""TODO: Write docstring
     Hill ratio at SP = 2
     """
 
     # USAGE:
-    #  Hill_ratio = gsw_Hill_ratio_at_SP2(t)
+    #  Hill_ratio = Hill_ratio_at_SP2(t)
     #
     # DESCRIPTION:
     #  Calculates the Hill ratio, which is the adjustment needed to apply for
@@ -1569,8 +1552,7 @@ def Hill_ratio_at_SP2(t):
 
 
 def interp_S_T(S, T, z, znew, P=None):
-    r"""
-    Linear interpolation of ndarrays *S* and *T* from *z* to *znew*.
+    r"""Linear interpolation of ndarrays *S* and *T* from *z* to *znew*.
     Optionally interpolate a third ndarray, *P*.
 
     *z* must be strictly increasing or strictly decreasing.  It must
@@ -1649,8 +1631,8 @@ def interp_S_T(S, T, z, znew, P=None):
 
 def interp_SA_CT(SA, CT, p, p_i):
     r"""TODO: Write docstring.
-    function [SA_i, CT_i] = gsw_interp_SA_CT(SA,CT,p,p_i)
-    gsw_interp_SA_CT                    linear interpolation to p_i on a cast
+    function [SA_i, CT_i] = interp_SA_CT(SA,CT,p,p_i)
+    interp_SA_CT                    linear interpolation to p_i on a cast
     ==========================================================================
     This function interpolates the cast with respect to the interpolating
     variable p. This function finds the values of SA, CT at p_i on this cast.
@@ -1659,13 +1641,11 @@ def interp_SA_CT(SA, CT, p, p_i):
 
 
 def interp_ref_cast(spycnl, A="gn"):
+    r"""Translation of:
 
-    r"""
-    Translation of:
+    [SA_iref_cast, CT_iref_cast, p_iref_cast] = interp_ref_cast(spycnl, A)
 
-    [SA_iref_cast, CT_iref_cast, p_iref_cast] = gsw_interp_ref_cast(spycnl, A)
-
-    gsw_interp_ref_cast            linear interpolation of the reference cast
+    interp_ref_cast            linear interpolation of the reference cast
     ==========================================================================
     This function interpolates the reference cast with respect to the
     interpolating variable "spycnl".  This reference cast is at the location
@@ -1673,7 +1653,7 @@ def interp_ref_cast(spycnl, A="gn"):
     McDougall (1997) Neutral Density computer code.  This function finds the
     values of SA, CT and p on this reference cast which correspond to the
     value of isopycnal which is passed to this function from the function
-    "gsw_geo_strf_isopycnal_CT".  The isopycnal could be either gamma_n or
+    "geo_strf_isopycnal_CT".  The isopycnal could be either gamma_n or
     sigma_2. If A is set to any of the following 's2','S2','sigma2','sigma_2'
     the interpolation will take place in sigma 2 space, any other input
     will result in the programme working in gamma_n space.
@@ -1715,15 +1695,13 @@ def interp_ref_cast(spycnl, A="gn"):
 
 
 def enthalpy_SSO_0_p(p):
-    r"""
-    This function calculates enthalpy at the Standard Ocean Salinty, SSO,
+    r"""This function calculates enthalpy at the Standard Ocean Salinty, SSO,
     and at a Conservative Temperature of zero degrees C, as a function of
     pressure, p, in dbar, using a streamlined version of the 48-term CT
     version of the Gibbs function, that is, a streamlined version of the
     code "enthalpy(SA,CT,p).
 
     Modifications:
-    2011-03-29. Filipe Fernandes (version 3.0).
     """
 
     v01 = 9.998420897506056e+2
@@ -1776,15 +1754,13 @@ def enthalpy_SSO_0_p(p):
 
 
 def specvol_SSO_0_p(p):
-    r"""
-    This function calculates specific volume at the Standard Ocean Salinity,
+    r"""This function calculates specific volume at the Standard Ocean Salinity,
     SSO, and at a Conservative Temperature of zero degrees C, as a function
     of pressure, p, in dbar, using a streamlined version of the 48-term CT
     version of specific volume, that is, a streamlined version of the code
     "specvol(SA, CT, p)".
 
     Modifications:
-    2011-03-29. Filipe Fernandes (version 3.0).
     """
 
     v01 = 9.998420897506056e+2
