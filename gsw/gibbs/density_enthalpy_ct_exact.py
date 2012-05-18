@@ -12,13 +12,13 @@ from basic_thermodynamic_t import rho_t_exact, alpha_wrt_CT_t_exact
 from basic_thermodynamic_t import beta_const_CT_t_exact, specvol_t_exact
 from basic_thermodynamic_t import specvol_anom_t_exact, sound_speed_t_exact
 from basic_thermodynamic_t import t_maxdensity_exact, enthalpy_t_exact
-from basic_thermodynamic_t import internal_energy_t_exact
+from basic_thermodynamic_t import internal_energy_t_exact  #, t_from_rho_exact
 
 __all__ = [
            'rho_CT_exact',
            'alpha_CT_exact',
            'beta_CT_exact',
-           #'rho_alpha_beta_CT_exact',  TODO
+           'rho_alpha_beta_CT_exact',
            'specvol_CT_exact',
            'specvol_anom_CT_exact',
            'sigma0_CT_exact',
@@ -36,7 +36,7 @@ __all__ = [
            'CT_maxdensity_exact'
            ]
 
-@match_args_return
+
 def rho_CT_exact(SA, CT, p):
     r"""Calculates in-situ density from Absolute Salinity and Conservative
     Temperature.
@@ -92,7 +92,6 @@ def rho_CT_exact(SA, CT, p):
     return rho_t_exact(SA, t, p)
 
 
-@match_args_return
 def alpha_CT_exact(SA, CT, p):
     r"""Calculates the thermal expansion coefficient of seawater with respect
     to Conservative Temperature from Absolute Salinity and Conservative
@@ -147,11 +146,9 @@ def alpha_CT_exact(SA, CT, p):
     return alpha_wrt_CT_t_exact(SA, t, p)
 
 
-@match_args_return
 def beta_CT_exact(SA, CT, p):
-    r"""
-    Calculates the saline (i.e. haline) contraction coefficient of seawater at
-    constant Conservative Temperature.
+    r"""Calculates the saline (i.e. haline) contraction coefficient of seawater
+    at constant Conservative Temperature.
 
     Parameters
     ----------
@@ -201,8 +198,7 @@ def beta_CT_exact(SA, CT, p):
     return beta_const_CT_t_exact(SA, t, p)
 
 
-@match_args_return
-def rho_alpha_beta_CT(SA, CT, p):
+def rho_alpha_beta_CT_exact(SA, CT, p):
     r"""Calculates in-situ density, the appropriate thermal expansion
     coefficient and the appropriate saline contraction coefficient of seawater
     from Absolute Salinity and Conservative Temperature.
@@ -221,7 +217,6 @@ def rho_alpha_beta_CT(SA, CT, p):
             beta_CT_exact)
 
 
-@match_args_return
 def specvol_CT_exact(SA, CT, p):
     r"""Calculates specific volume from Absolute Salinity, Conservative
     Temperature and pressure.
@@ -277,7 +272,6 @@ def specvol_CT_exact(SA, CT, p):
     return specvol_t_exact(SA, t, p)
 
 
-@match_args_return
 def specvol_anom_CT_exact(SA, CT, p):
     r"""Calculates specific volume anomaly from Absolute Salinity, Conservative
     Temperature and pressure.  The reference value of Absolute Salinity is SSO
@@ -332,7 +326,6 @@ def specvol_anom_CT_exact(SA, CT, p):
     return specvol_anom_t_exact(SA, t, p)
 
 
-@match_args_return
 def sigma0_CT_exact(SA, CT):
     r"""Calculates potential density anomaly with reference pressure of 0 dbar,
     this being this particular potential density minus 1000 kg/m^3.  This
@@ -384,47 +377,34 @@ def sigma0_CT_exact(SA, CT):
     return sigma0_pt0_exact(SA, pt0)
 
 
-@match_args_return
 def sigma1_CT_exact(SA, CT):
     r"""Calculates potential density anomaly with reference pressure of
-    1000 dbar.
-    """
-
+    1000 dbar."""
     t = t_from_CT(SA, CT, 1000.)
     return rho_t_exact(SA, t, 1000.) - 1000
 
 
-@match_args_return
 def sigma2_CT_exact(SA, CT):
     r"""Calculates potential density anomaly with reference pressure of
-    2000 dbar.
-    """
-
+    2000 dbar."""
     t = t_from_CT(SA, CT, 2000.)
     return rho_t_exact(SA, t, 2000.) - 1000
 
 
-@match_args_return
 def sigma3_CT_exact(SA, CT):
     r"""Calculates potential density anomaly with reference pressure of
-    3000 dbar.
-    """
-
+    3000 dbar."""
     t = t_from_CT(SA, CT, 3000.)
     return rho_t_exact(SA, t, 3000.) - 1000
 
 
-@match_args_return
 def sigma4_CT_exact(SA, CT):
     r"""Calculates potential density anomaly with reference pressure of
-    4000 dbar.
-    """
-
+    4000 dbar."""
     t = t_from_CT(SA, CT, 4000.)
     return rho_t_exact(SA, t, 4000.) - 1000
 
 
-@match_args_return
 def sound_speed_CT_exact(SA, CT, p):
     r"""Calculates the speed of sound in seawater from Absolute Salinity and
     Conservative Temperature and pressure.
@@ -471,11 +451,9 @@ def sound_speed_CT_exact(SA, CT, p):
     return  sound_speed_t_exact(SA, t, p)
 
 
-@match_args_return
 def internal_energy_CT_exact(SA, CT, p):
-    r"""
-    Calculates the specific internal energy of seawater from Absolute Salinity,
-    Conservative Temperature and pressure.
+    r"""Calculates the specific internal energy of seawater from Absolute
+    Salinity, Conservative Temperature and pressure.
 
     Parameters
     ----------
@@ -518,7 +496,6 @@ def internal_energy_CT_exact(SA, CT, p):
     return internal_energy_t_exact(SA, t, p)
 
 
-@match_args_return
 def enthalpy_CT_exact(SA, CT, p):
     r"""Calculates specific enthalpy of seawater from Absolute Salinity and
     Conservative Temperature and pressure.
@@ -572,7 +549,6 @@ def enthalpy_CT_exact(SA, CT, p):
     return enthalpy_t_exact(SA, t, p)
 
 
-@match_args_return
 def enthalpy_diff_CT_exact(SA, CT, p_shallow, p_deep):
     r"""Calculates the difference of the specific enthalpy of seawater between
     two different pressures, p_deep (the deeper pressure) and p_shallow (the
@@ -636,7 +612,6 @@ def enthalpy_diff_CT_exact(SA, CT, p_shallow, p_deep):
             enthalpy_t_exact(SA, t_shallow, p_shallow))
 
 
-@match_args_return
 def dynamic_enthalpy_CT_exact(SA, CT, p):
     r"""Calculates the dynamic enthalpy of seawater from Absolute Salinity and
     Conservative Temperature and pressure.  Dynamic enthalpy is defined as
@@ -767,15 +742,15 @@ def SA_from_rho_CT_exact(rho, CT, p):
         v_SA = -beta / rho
         SA = SA_old - delta_v / v_SA
         Ior = (SA < 0) | (SA > 120)
-        SA[Ior] = np.NaN
+        SA[Ior] = np.ma.masked
 
-    # After two iterations of this modified Newton-Raphson iteration,
-    # the error in SA is no larger than 8x10^-13 g kg^-1, which
-    # is machine precision for this calculation.
+    """After two iterations of this modified Newton-Raphson iteration, the
+    error in SA is no larger than 8x10^-13 g kg^-1, which is machine precision
+    for this calculation."""
+
     return SA
 
 
-@match_args_return
 def CT_from_rho_exact(rho, SA, p):
     r"""Calculates the in-situ temperature of a seawater sample, for given
     values of its density, Absolute Salinity and sea pressure (in dbar).
@@ -830,7 +805,6 @@ def CT_from_rho_exact(rho, SA, p):
             CT_from_t(SA, t_multiple, p))
 
 
-@match_args_return
 def CT_maxdensity_exact(SA, p):
     r"""Calculates the Conservative Temperature of maximum density of seawater.
     This function returns the Conservative temperature at which the density of
