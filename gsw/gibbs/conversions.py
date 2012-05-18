@@ -64,7 +64,7 @@ def pt_from_entropy(SA, entropy):
 
     See Also
     --------
-    _gibbs_pt0_pt0
+    TODO
 
     Notes
     -----
@@ -87,8 +87,7 @@ def pt_from_entropy(SA, entropy):
     UNESCO (English), 196 pp. See appendix  A.10.
 
     Modifications:
-    2010-10-13. Trevor McDougall and Paul Barker.
-    2011-04-03. Trevor McDougall and Paul Barker. (version 3.0)
+    2011-04-03. Trevor McDougall and Paul Barker.
     """
 
     SA.clip(0, np.inf)
@@ -110,16 +109,17 @@ def pt_from_entropy(SA, entropy):
         dentropy_dt = -gibbs_pt0_pt0(SA, ptm)
         pt = pt_old - dentropy / dentropy_dt
 
-    #maximum error of 2.2x10^-6 degrees C for one iteration.
-    #maximum error is 1.4x10^-14 degrees C for two iterations
-    #(two iterations is the default, "for Number_of_iterations = 1:2").
+    """maximum error of 2.2x10^-6 degrees C for one iteration. maximum error is
+    1.4x10^-14 degrees C for two iterations (two iterations is the default,
+    "for Number_of_iterations = 1:2")."""
+
     return pt
 
 
 @match_args_return
 def t_from_CT(SA, CT, p):
-    r"""
-    Calculates *in-situ* temperature from Conservative Temperature of gsw.
+    r"""Calculates *in-situ* temperature from Conservative Temperature of
+    seawater.
 
     Parameters
     ----------
@@ -156,13 +156,12 @@ def t_from_CT(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See sections 3.1 and 3.3.
 
     Modifications:
-    2010-08-26. Trevor McDougall & Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. Trevor McDougall and Paul Barker
     """
 
     pt0 = pt_from_CT(SA, CT)
@@ -174,9 +173,8 @@ def t_from_CT(SA, CT, p):
 
 @match_args_return
 def pt_from_t(SA, t, p, p_ref=0):
-    r"""
-    Calculates potential temperature with the general reference pressure, pr,
-    from in situ temperature.
+    r"""Calculates potential temperature with the general reference pressure,
+    pr, from in situ temperature.
 
     Parameters
     ----------
@@ -196,7 +194,7 @@ def pt_from_t(SA, t, p, p_ref=0):
 
     See Also
     --------
-    _entropy_part
+    TODO
 
     Notes
     -----
@@ -220,18 +218,17 @@ def pt_from_t(SA, t, p, p_ref=0):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 3.1.
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
     computationally efficient 48-term expression for the density of seawater
-    in terms of Conservative Temperature, and related properties of gsw.
+    in terms of Conservative Temperature, and related properties of seawater.
 
     Modifications:
-    2010-08-26. Trevor McDougall, David Jackett, Claire Roberts-Thomson and
+    2011-03-29. Trevor McDougall, David Jackett, Claire Roberts-Thomson and
     Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
     p_ref = np.asanyarray(p_ref)
@@ -263,20 +260,19 @@ def pt_from_t(SA, t, p, p_ref=0):
         dentropy_dt = -gibbs(n0, n2, n0, SA, ptm, p_ref)
         pt = pt_old - dentropy / dentropy_dt
 
-    # maximum error of 6.3x10^-9 degrees C for one iteration.
-    # maximum error is 1.8x10^-14 degrees C for two iterations (two iterations
-    # is the default, "for Number_of_iterations = 1:2).
-    # These errors are over the full "oceanographic funnel" of
-    # McDougall et al. (2010), which reaches down to p = 8000 dbar.
+    """maximum error of 6.3x10^-9 degrees C for one iteration.  maximum error
+    is 1.8x10^-14 degrees C for two iterations (two iterations is the default,
+    "for Number_of_iterations = 1:2).  These errors are over the full
+    "oceanographic funnel" of McDougall et al. (2010), which reaches down to
+    p = 8000 dbar."""
 
     return pt
 
 
 @match_args_return
 def CT_from_pt(SA, pt):
-    r"""
-    Calculates Conservative Temperature of gsw.from potential temperature
-    (whose reference sea pressure is zero dbar).
+    r"""Calculates Conservative Temperature of seawater from potential
+    temperature (whose reference sea pressure is zero dbar).
 
     Parameters
     ----------
@@ -311,13 +307,12 @@ def CT_from_pt(SA, pt):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 3.3.
 
     Modifications:
-    2010-08-05. David Jackett, Trevor McDougall and Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. David Jackett, Trevor McDougall and Paul Barker.
     """
 
     SA, pt, mask = strip_mask(SA, pt)
@@ -331,9 +326,8 @@ def CT_from_pt(SA, pt):
 
 @match_args_return
 def pot_enthalpy_from_pt(SA, pt):
-    r"""
-    Calculates the potential enthalpy of gsw.from potential temperature
-    (whose reference sea pressure is zero dbar).
+    r"""Calculates the potential enthalpy of seawater from potential
+    temperature (whose reference sea pressure is zero dbar).
 
     Parameters
     ----------
@@ -368,13 +362,12 @@ def pot_enthalpy_from_pt(SA, pt):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 3.2.
 
     Modifications:
-    2010-08-26. David Jackett, Trevor McDougall and Paul Barker
-    2011-02-16. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. David Jackett, Trevor McDougall and Paul Barker
     """
 
     SA, pt, mask = strip_mask(SA, pt)
@@ -400,11 +393,9 @@ def pot_enthalpy_from_pt(SA, pt):
     y * (-942.7827304544439 + y * (369.4389437509002 +
     (-33.83664947895248 - 9.987880382780322 * y) * y)))))))
 
-    """
-    The above polynomial for pot_enthalpy is the full expression for potential
-    enthalpy in terms of SA and pt, obtained from the Gibbs function as below.
-
-    It has simply collected like powers of x and y so that it is
+    """The above polynomial for pot_enthalpy is the full expression for
+    potential enthalpy in terms of SA and pt, obtained from the Gibbs function
+    as below.  It has simply collected like powers of x and y so that it is
     computationally faster than calling the Gibbs function twice as is done in
     the commented code below. When this code below is run, the results are
     identical to calculating pot_enthalpy as above, to machine precision.
@@ -425,8 +416,7 @@ def pot_enthalpy_from_pt(SA, pt):
 
 @match_args_return
 def pt0_from_t(SA, t, p):
-    r"""
-    Calculates potential temperature with reference pressure, pr = 0 dbar.
+    r"""Calculates potential temperature with reference pressure, pr = 0 dbar.
     The present routine is computationally faster than the more general
     function "pt_from_t(SA, t, p, pr)" which can be used for any reference
     pressure value.
@@ -466,19 +456,18 @@ def pt0_from_t(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 3.1.
 
     .. [2] McDougall T. J., D. R. Jackett, P. M. Barker, C. Roberts-Thomson,
     R. Feistel and R. W. Hallberg, 2010:  A computationally efficient 25-term
-    expression for the density of gsw.in terms of Conservative
-    Temperature, and related properties of gsw.
+    expression for the density of seawater in terms of Conservative
+    Temperature, and related properties of seawater.
 
     Modifications:
-    2010-08-26. Trevor McDougall, David Jackett, Claire Roberts-Thomson and
+    2011-03-29. Trevor McDougall, David Jackett, Claire Roberts-Thomson and
     Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
     s1 = SA * (35. / SSO)
@@ -504,20 +493,18 @@ def pt0_from_t(SA, t, p):
         dentropy_dt = -gibbs_pt0_pt0(SA, pt0m)
         pt0 = pt0_old - dentropy / dentropy_dt
 
-    #maximum error of 6.3x10^-9 degrees C for one iteration.
-    #maximum error is 1.8x10^-14 degrees C for two iterations (two iterations
-    #is the default, "for Number_of_iterations = 1:2")
-
-    #These errors are over the full "oceanographic funnel" of McDougall et al.
-    #(2010), which reaches down to p = 8000 dbar.
+    """maximum error of 6.3x10^-9 degrees C for one iteration. maximum error is
+    1.8x10^-14 degrees C for two iterations (two iterations is the default,
+    "for Number_of_iterations = 1:2").  These errors are over the full
+    "oceanographic funnel" of McDougall et al. (2010), which reaches down to
+    p = 8000 dbar."""
 
     return pt0
 
 
 @match_args_return
 def pt_from_CT(SA, CT):
-    r"""
-    Calculates potential temperature (with a reference sea pressure of zero
+    r"""Calculates potential temperature (with a reference sea pressure of zero
     dbar) from Conservative Temperature.
 
     Parameters
@@ -555,19 +542,18 @@ def pt_from_CT(SA, CT):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See sections 3.1 and 3.3.
 
     .. [2] McDougall T. J., D. R. Jackett, P. M. Barker, C. Roberts-Thomson,
     R. Feistel and R. W. Hallberg, 2010:  A computationally efficient 25-term
-    expression for the density of gsw.in terms of Conservative
-    Temperature, and related properties of gsw.
+    expression for the density of seawater in terms of Conservative
+    Temperature, and related properties of seawater.
 
     Modifications:
-    2010-08-26. Trevor McDougall, David Jackett, Claire Roberts-Thomson and
+    2011-03-29. Trevor McDougall, David Jackett, Claire Roberts-Thomson and
     Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
     """
 
     SA, CT, mask = strip_mask(SA, CT)
@@ -614,9 +600,8 @@ def pt_from_CT(SA, CT):
 
 
 @match_args_return
-def  z_from_p(p, lat, geo_strf_dyn_height=None):
-    r"""
-    Calculates height from sea pressure using the computationally-efficient
+def z_from_p(p, lat, geo_strf_dyn_height=None):
+    r"""Calculates height from sea pressure using the computationally-efficient
     48-term expression for density in terms of SA, CT and p (McDougall et
     al., 2011).  Dynamic height anomaly, geo_strf_dyn_height, if provided, must
     be computed with its pr=0 (the surface.)
@@ -658,21 +643,19 @@ def  z_from_p(p, lat, geo_strf_dyn_height=None):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
     computationally efficient 48-term expression for the density of seawater
-    in terms of Conservative Temperature, and related properties of gsw.
-    To be submitted to Ocean Science Discussions.
+    in terms of Conservative Temperature, and related properties of seawater.
 
     .. [3] Moritz (2000) Goedetic reference system 1980. J. Geodesy, 74,
     128-133.
 
     Modifications:
-    2010-08-26. Trevor McDougall, Claire Roberts-Thomson & Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-26. Trevor McDougall, Claire Roberts-Thomson and Paul Barker.
     """
 
     if not geo_strf_dyn_height:
@@ -682,7 +665,6 @@ def  z_from_p(p, lat, geo_strf_dyn_height=None):
     sin2 = X ** 2
     B = 9.780327 * (1.0 + (5.2792e-3 + (2.32e-5 * sin2)) * sin2)
     A = -0.5 * gamma * B
-    # FIXME: Implement enthalpy_SSO_0_p.
     C = enthalpy_SSO_0_p(p) - geo_strf_dyn_height
     z = -2 * C / (B + np.sqrt(B ** 2 - 4 * A * C))
 
@@ -691,11 +673,10 @@ def  z_from_p(p, lat, geo_strf_dyn_height=None):
 
 @match_args_return
 def  p_from_z(z, lat, geo_strf_dyn_height=0):
-    r"""
-    Calculates sea pressure from height using computationally-efficient 48-term
-    expression for density, in terms of SA, CT and p (McDougall et al., 2011).
-    Dynamic height anomaly, geo_strf_dyn_height, if provided, must be computed
-    with its pr=0 (the surface.)
+    r"""Calculates sea pressure from height using computationally-efficient
+    48-term expression for density, in terms of SA, CT and p (McDougall et al.,
+    2011).  Dynamic height anomaly, geo_strf_dyn_height, if provided, must be
+    computed with its pr=0 (the surface.)
 
     Parameters
     ----------
@@ -738,14 +719,13 @@ def  p_from_z(z, lat, geo_strf_dyn_height=0):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011: A
     computationally efficient 48-term expression for the density of seawater
-    in terms of Conservative Temperature, and related properties of gsw.
-    To be submitted to Ocean Science Discussions.
+    in terms of Conservative Temperature, and related properties of seawater.
 
     .. [3] Moritz (2000) Goedetic reference system 1980. J. Geodesy, 74,
     128-133.
@@ -766,10 +746,8 @@ def  p_from_z(z, lat, geo_strf_dyn_height=0):
     c1 = 5.25e-3 * sin2 + 5.92e-3
     p = -2 * z / ((1 - c1) + np.sqrt((1 - c1) * (1 - c1) + 8.84e-6 * z))
 
-    # FIXME: Implement specvol_SSO_0_p.
     df_dp = db2Pascal * specvol_SSO_0_p(p)  # Initial value for f derivative.
 
-    # FIXME: Implement enthalpy_SSO_0_p.
     f = (enthalpy_SSO_0_p(p) + gs * (z - 0.5 * gamma * (z ** 2)) -
                                                           geo_strf_dyn_height)
 
@@ -788,10 +766,9 @@ def  p_from_z(z, lat, geo_strf_dyn_height=0):
 
 @match_args_return
 def t90_from_t48(t48):
-    r"""
-    Converts IPTS-48 temperature to International Temperature Scale 1990
-    (ITS-90) temperature. This conversion should be applied to all in-situ data
-    collected prior to 31/12/1967.
+    r"""Converts IPTS-48 temperature to International Temperature Scale 1990
+    (ITS-90) temperature.  This conversion should be applied to all in-situ
+    data collected prior to 31/12/1967.
 
     Parameters
     ---------
@@ -805,8 +782,11 @@ def t90_from_t48(t48):
 
     References
     ----------
-    International Temperature Scales of 1948, 1968 and 1990, an ICES note,
-    available from http://www.ices.dk/ocean/procedures/its.htm
+    .. [1] International Temperature Scales of 1948, 1968 and 1990, an ICES
+    note, available from http://www.ices.dk/ocean/procedures/its.htm
+
+    Modifications:
+    2011-03-29. Paul Barker and Trevor McDougall.
     """
 
     return (t48 - (4.4e-6) * t48 * (100 - t48)) / 1.00024
@@ -814,10 +794,9 @@ def t90_from_t48(t48):
 
 @match_args_return
 def t90_from_t68(t68):
-    r"""
-    Converts IPTS-68 temperature to International Temperature Scale 1990
-    (ITS-90) temperature. This conversion should be applied to all in-situ data
-    collected between 1/1/1968 and 31/12/1989.
+    r"""Converts IPTS-68 temperature to International Temperature Scale 1990
+    (ITS-90) temperature.  This conversion should be applied to all in-situ
+    data collected between 1/1/1968 and 31/12/1989.
 
     Parameters
     ---------
@@ -831,8 +810,11 @@ def t90_from_t68(t68):
 
     References
     ----------
-    International Temperature Scales of 1948, 1968 and 1990, an ICES note,
-    available from http://www.ices.dk/ocean/procedures/its.htm
+    .. [1] International Temperature Scales of 1948, 1968 and 1990, an ICES
+    note, available from http://www.ices.dk/ocean/procedures/its.htm
+
+    Modifications:
+    2011-03-29. Paul Barker and Trevor McDougall.
     """
 
     # t90 = t68 / 1.00024
@@ -840,9 +822,8 @@ def t90_from_t68(t68):
 
 
 def depth_from_z(z):
-    r"""
-    Calculates depth from height, z.  Note that in general height is negative
-    in the ocean.
+    r"""Calculates depth from height, z.  Note that in general height is
+    negative in the ocean.
 
     Parameters
     ---------
@@ -862,9 +843,8 @@ def depth_from_z(z):
 
 
 def z_from_depth(depth):
-    r"""
-    Calculates height, z, from depth.  Note that in general height is negative
-    in the ocean.
+    r"""Calculates height, z, from depth.  Note that in general height is
+    negative in the ocean.
 
     Parameters
     ---------
@@ -885,8 +865,7 @@ def z_from_depth(depth):
 
 @match_args_return
 def Abs_Pressure_from_p(p):
-    r"""
-    Calculates Absolute Pressure from sea pressure.  Note that Absolute
+    r"""Calculates Absolute Pressure from sea pressure.  Note that Absolute
     Pressure is in Pa NOT dbar.
 
     Parameters
@@ -914,7 +893,7 @@ def Abs_Pressure_from_p(p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.2.1).
 
@@ -927,8 +906,7 @@ def Abs_Pressure_from_p(p):
 
 @match_args_return
 def p_from_Abs_Pressure(Absolute_Pressure):
-    r"""
-    Calculates sea pressure from Absolute Pressure. Note that Absolute
+    r"""Calculates sea pressure from Absolute Pressure. Note that Absolute
     Pressure is in Pa NOT dbar.
 
     Parameters
@@ -956,7 +934,7 @@ def p_from_Abs_Pressure(Absolute_Pressure):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.2.1).
 
@@ -969,8 +947,7 @@ def p_from_Abs_Pressure(Absolute_Pressure):
 
 @match_args_return
 def SR_from_SP(SP):
-    r"""
-    Calculates Reference Salinity from Practical Salinity.
+    r"""Calculates Reference Salinity from Practical Salinity.
 
     Parameters
     ---------
@@ -997,7 +974,7 @@ def SR_from_SP(SP):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
@@ -1010,8 +987,7 @@ def SR_from_SP(SP):
 
 @match_args_return
 def SP_from_SR(SR):
-    r"""
-    Calculates Practical Salinity from Reference Salinity.
+    r"""Calculates Practical Salinity from Reference Salinity.
 
     Parameters
     ---------
@@ -1038,7 +1014,7 @@ def SP_from_SR(SR):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
@@ -1051,8 +1027,7 @@ def SP_from_SR(SR):
 
 @match_args_return
 def ionic_strength_from_SA(SA):
-    r"""
-    Calculates the ionic strength of gsw.from Absolute Salinity.
+    r"""Calculates the ionic strength of seawater from Absolute Salinity.
 
     Parameters
     ----------
@@ -1062,7 +1037,7 @@ def ionic_strength_from_SA(SA):
     Returns
     -------
     ionic_strength : array_like
-                     ionic strength of gsw.[mol kg :sup:`-1`]
+                     ionic strength of seawater [mol kg :sup:`-1`]
 
     See Also
     --------
@@ -1083,7 +1058,7 @@ def ionic_strength_from_SA(SA):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Table L.1.
 
@@ -1093,11 +1068,10 @@ def ionic_strength_from_SA(SA):
     See Eqns. 5.9 and 5.12.
 
     Modifications:
-    2010-09-28. Trevor McDougall & Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-29. Trevor McDougall and Paul Barker
     """
 
-    # Molality of gsw.in mol kg :sup:`-1`
+    # Molality of seawater in mol kg :sup:`-1`
     molality = molality_from_SA(SA)
 
     return 0.5 * valence_factor * molality
@@ -1105,8 +1079,7 @@ def ionic_strength_from_SA(SA):
 
 @match_args_return
 def molality_from_SA(SA):
-    r"""
-    Calculates the molality of gsw.from Absolute Salinity.
+    r"""Calculates the molality of seawater from Absolute Salinity.
 
     Parameters
     ----------
@@ -1116,7 +1089,7 @@ def molality_from_SA(SA):
     Returns
     -------
     molality : array_like
-            gsw.molality [mol kg :sup:`-1`]
+            seawater molality [mol kg :sup:`-1`]
 
     See Also
     --------
@@ -1137,16 +1110,15 @@ def molality_from_SA(SA):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
 
     Modifications:
-    2010-09-28. Trevor McDougall & Paul Barker
     2011-03-29. Trevor McDougall & Paul Barker
     """
 
-    # Molality of gsw.in mol kg :sup:`-1`
+    # Molality of seawater in mol kg :sup:`-1`.
     molality = SA / (M_S * (1000 - SA))
     molality[SA < 0] = np.ma.masked
 
@@ -1155,8 +1127,7 @@ def molality_from_SA(SA):
 
 @match_args_return
 def entropy_from_pt(SA, pt):
-    r"""
-    Calculates specific entropy of gsw.
+    r"""Calculates specific entropy of seawater.
 
     Parameters
     ----------
@@ -1190,13 +1161,12 @@ def entropy_from_pt(SA, pt):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See appendix A.10.
 
     Modifications:
-    2010-10-13. Trevor McDougall & Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-04-03. Trevor McDougall & Paul Barker
     """
 
     SA.clip(0, np.inf)
@@ -1210,8 +1180,7 @@ def entropy_from_pt(SA, pt):
 
 @match_args_return
 def entropy_from_CT(SA, CT):
-    r"""
-    Calculates specific entropy of gsw.
+    r"""Calculates specific entropy of seawater.
 
     Parameters
     ----------
@@ -1245,13 +1214,12 @@ def entropy_from_CT(SA, CT):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See appendix A.10.
 
     Modifications:
-    2010-10-13. Trevor McDougall & Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-04-04. Trevor McDougall & Paul Barker
     """
 
     SA.clip(0, np.inf)
@@ -1259,16 +1227,14 @@ def entropy_from_CT(SA, CT):
     n0, n1 = 0, 1
 
     pt0 = pt_from_CT(SA, CT)
-    entropy = -gibbs(n0, n1, n0, SA, pt0, 0)  # V3
-    #entropy = entropy_from_pt(SA, pt0) V2
+    entropy = -gibbs(n0, n1, n0, SA, pt0, 0)
 
     return entropy
 
 
 @match_args_return
 def CT_from_entropy(SA, entropy):
-    r"""
-    Calculates Conservative Temperature with entropy as an input variable.
+    r"""Calculates Conservative Temperature with entropy as an input variable.
 
     Parameters
     ----------
@@ -1284,7 +1250,7 @@ def CT_from_entropy(SA, entropy):
 
     See Also
     --------
-    _gibbs_pt0_pt0
+    TODO
 
     Notes
     -----
@@ -1302,13 +1268,12 @@ def CT_from_entropy(SA, entropy):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See appendix  A.10.
 
     Modifications:
-    2010-10-13. Trevor McDougall and Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-03. Trevor McDougall and Paul Barker.
     """
 
     SA.clip(0, np.inf)
