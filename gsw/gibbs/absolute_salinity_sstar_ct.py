@@ -96,8 +96,7 @@ def SA_from_SP(SP, p, lon, lat):
     http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall & Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-05-31. David Jackett, Trevor McDougall & Paul Barker.
     """
 
     SP, p, lon, lat = check_input(SP, p, lon, lat)
@@ -174,8 +173,7 @@ def Sstar_from_SP(SP, p, lon, lat):
     6, 215-242.
 
     Modifications:
-    2010-07-23. David Jackett, Trevor McDougall and Paul Barker.
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-27. David Jackett, Trevor McDougall and Paul Barker.
     """
 
     SP, p, lon, lat = check_input(SP, p, lon, lat)
@@ -195,8 +193,8 @@ def Sstar_from_SP(SP, p, lon, lat):
 
 @match_args_return
 def CT_from_t(SA, t, p):
-    r"""
-    Calculates Conservative Temperature of gsw.from in situ temperature.
+    r"""Calculates Conservative Temperature of seawater from in situ
+    temperature.
 
     Parameters
     ----------
@@ -233,13 +231,12 @@ def CT_from_t(SA, t, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of gsw.- 2010: Calculation and use of thermodynamic properties.
+    of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 3.3.
 
     Modifications:
-    2010-08-26. David Jackett, Trevor McDougall and Paul Barker
-    2010-12-09. Filipe Fernandes, Python translation from gsw toolbox.
+    2011-03-27. David Jackett, Trevor McDougall and Paul Barker
     """
 
     pt0 = pt0_from_t(SA, t, p)
