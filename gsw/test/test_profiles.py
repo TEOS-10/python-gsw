@@ -161,7 +161,7 @@ function_arguments = dict(
     rho_CT_exact=('SA', 'CT', 'p'),
     alpha_CT_exact=('SA', 'CT', 'p'),
     beta_CT_exact=('SA', 'CT', 'p'),
-    #rho_alpha_beta_CT_exact=('SA', 'CT', 'p'),  TODO
+    #rho_alpha_beta_CT_exact=('SA', 'CT', 'p'),  # FIXME: Tuple
     specvol_CT_exact=('SA', 'CT', 'p'),
     specvol_anom_CT_exact=('SA', 'CT', 'p'),
     # FIXME: NameError: 'sigma0_pt0_exact' not defined
@@ -175,8 +175,7 @@ function_arguments = dict(
     enthalpy_CT_exact=('SA', 'CT', 'p'),
     enthalpy_diff_CT_exact=('SA', 'CT', 'p_shallow', 'p_deep'),
     dynamic_enthalpy_CT_exact=('SA', 'CT', 'p'),
-    # FIXME: NameError: 'rho_alpha_beta_CT_exact' not defined
-    #SA_from_rho_CT_exact=('rho', 'CT', 'p'),
+    SA_from_rho_CT_exact=('rho', 'CT', 'p'),
     # FIXME: NameError: 't_from_rho_exact' not defined
     #CT_from_rho_exact=('rho', 'SA', 'p'),
     CT_maxdensity_exact=('SA', 'p'),
@@ -274,7 +273,6 @@ cv.pr_chck_cast = cv.pr
 cv.p_shallow_chck_cast = cv.p_chck_cast_shallow
 cv.p_deep_chck_cast = cv.p_chck_cast_deep
 cv.rho_chck_cast = cv.rho_CT_exact
-
 cv.R_cf_chck_cast = cf.R
 cv.rho_cf_chck_cast = cf.rho
 
