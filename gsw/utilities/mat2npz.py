@@ -8,7 +8,7 @@
 # e-mail:   ocefpaf@gmail
 # web:      http://ocefpaf.tiddlyspot.com/
 # created:  06-Jun-2011
-# modified: Wed 02 May 2012 04:29:32 PM EDT
+# modified: Fri 18 May 2012 12:19:59 PM EDT
 #
 # obs:
 #
@@ -45,3 +45,19 @@ for k in gsw_data:
         ref_table.update({name: var})
 
 np.savez("gsw_data_" + data_ver, **ref_table)
+
+
+# This is a saved result for gsw_check_function.m.  The matlab version relies
+# on the result of some of its functions to test others.
+gsw_cf = sio.loadmat('gsw_cf.mat', squeeze_me=True)
+
+# Save compare values in a separate file.
+gsw_cf = gsw_cf['gsw_cf']
+
+cf_vars = {}
+for name in gsw_cf.dtype.names:
+    var = np.atleast_1d(gsw_cf[name])[0]
+    cf_vars.update({name: var})
+
+# Check values.
+np.savez("gsw_cf_", **cf_vars)
