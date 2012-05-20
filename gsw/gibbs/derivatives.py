@@ -428,8 +428,7 @@ def entropy_first_derivatives(SA, CT):
     def entropy_derivative_CT(SA, CT):
         return cp0 / (Kelvin + pt)
 
-    return (entropy_derivative_SA(SA, CT),
-            entropy_derivative_CT(SA, CT))
+    return entropy_derivative_SA(SA, CT), entropy_derivative_CT(SA, CT)
 
 
 @match_args_return
