@@ -12,7 +12,7 @@ from absolute_salinity_sstar_ct import CT_from_t
 __all__ = [
            'rho_t_exact',
            'pot_rho_t_exact',
-           #'sigma0_pt0_exact',  TODO
+           'sigma0_pt0_exact',
            'alpha_wrt_CT_t_exact',
            'alpha_wrt_pt_t_exact',
            'alpha_wrt_t_exact',
@@ -28,7 +28,7 @@ __all__ = [
            'enthalpy_t_exact',
            'dynamic_enthalpy_t_exact',
            'SA_from_rho_t_exact',
-           #'t_from_rho_exact',  TODO
+           #'t_from_rho_exact',
            't_maxdensity_exact',
            'entropy_t_exact',
            'cp_t_exact',
@@ -155,6 +155,89 @@ def rho_t_exact(SA, t, p):
 
     return rho
 
+
+@match_args_return
+def sigma0_pt0_exact(SA, pt0):
+    r"""Calculates potential density anomaly with reference sea pressure of
+    zero (0) dbar.  The temperature input to this function is potential
+    temperature referenced to zero dbar.
+
+    Parameters
+    ----------
+    SA : array_like
+         Absolute salinity [g kg :sup:`-1`]
+    pt0 : array_like
+          potential temperature [:math:`^\circ` C (ITS-90)]
+          with respect to a reference sea pressure of 0 dbar
+
+    Returns
+    -------
+    sigma0_pt0_exact : array_like
+                       potential density anomaly [kg m :sup:`-3`]
+                       respect to a reference pressure of 0 dbar
+
+    See Also
+    --------
+    TODO
+
+    Notes
+    -----
+    TODO
+
+    Examples
+    --------
+    >>> import gsw
+    >>> SA = [34.7118, 34.8915, 35.0256, 34.8472, 34.7366, 34.7324]
+    >>> t = [28.7856, 28.4329, 22.8103, 10.2600, 6.8863, 4.4036]
+    >>> p = [10, 50, 125, 250, 600, 1000]
+    >>> gsw.rho(SA, t, p)
+    array([ 1021.84017319,  1022.26268993,  1024.42771594,  1027.79020181,
+            1029.83771473,  1032.00240412])
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp. See Eqn. (3.6.1).
+
+    Modifications:
+    2011-03-29. Trevor McDougal and Paul Barker.
+    """
+    SA = np.maximum(SA, 0)  # Ensure that SA is non-negative.
+
+    x2 = sfac * SA
+    x = np.sqrt(x2)
+    y = pt0 * 0.025
+
+    g03 = (100015.695367145 +
+          y * (-270.983805184062 +
+          y * (1455.0364540468 +
+          y * (-672.50778314507 +
+          y * (397.968445406972 +
+          y * (-194.618310617595 +
+          y * (63.5113936641785 -
+          y * 9.63108119393062)))))))
+
+    g08 = x2 * (-3310.49154044839 +
+          x * (199.459603073901 +
+          x * (-54.7919133532887 +
+          x *  36.0284195611086 -
+          y *  22.6683558512829) +
+          y * (-175.292041186547 +
+          y * (383.058066002476 +
+          y * (-460.319931801257 +
+          y *  234.565187611355)))) +
+          y * (729.116529735046 +
+          y * (-860.764303783977 +
+          y * (694.244814133268 +
+          y * (-297.728741987187)))))
+
+    """The above code is exactly the same as the following two lines of code.
+    sigma0_pt_exact = rho_t_exact(SA, pt0, 0.) - 1000
+    """
+
+    return 100000000. / (g03 + g08) - 1000.0
 
 @match_args_return
 def enthalpy_t_exact(SA, t, p):
@@ -935,7 +1018,7 @@ def SA_from_rho_t_exact(rho, t, p):
     """
 
     n0, n1 = 0, 1
-    v_lab = np.ones(rho.shape) / rho
+    v_lab = np.ones_like(rho) / rho
     v_0 = gibbs(n0, n0, n1, 0, t, p)
     v_120 = gibbs(n0, n0, n1, 120, t, p)
     SA = 120 * (v_lab - v_0) / (v_120 - v_0)  # Initial estimate of SA.
@@ -955,6 +1038,176 @@ def SA_from_rho_t_exact(rho, t, p):
 
     return SA
 
+
+@match_args_return
+def t_from_rho_exact(rho, SA, p):
+    r"""Calculates the in-situ temperature of a seawater sample, for given
+    values of its density, Absolute Salinity and sea pressure (in dbar).
+
+
+    Parameters
+    ----------
+    rho : array_like
+          in situ density [kg m :sup:`-3`]
+    SA : array_like
+         Absolute salinity [g kg :sup:`-1`]
+    p : array_like
+        pressure [dbar]
+
+    Returns
+    -------
+    t : array_like
+        in situ temperature [:math:`^\circ` C (ITS-90)]
+    t_multiple : array_like
+                 in situ temperature [:math:`^\circ` C (ITS-90)]
+
+    See Also
+    --------
+    TODO
+
+    Notes
+    -----
+    At low salinities, in brackish water, there are two possible temperatures
+    for a single density.  This program will output both valid solutions
+    (t, t_multiple), if there is only one possible solution the second variable
+    will be set to NaN.
+
+
+    Examples
+    --------
+    TODO
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp.
+
+    Modifications:
+    2011-04-21. Trevor McDougall and Paul Barker.
+    """
+
+    """alpha_limit is the positive value of the thermal expansion coefficient
+    which is used at the freezing temperature to distinguish between I_salty
+    and I_fresh."""
+    alpha_limit = 1e-5
+
+    """rec_half_rho_TT is a constant representing the reciprocal of half the
+    second derivative of density with respect to temperature near the
+    temperature of maximum density."""
+    rec_half_rho_TT = -110.0
+
+    t = np.zeros_like(SA) + np.NaN
+    t_multiple = np.zeros_like(SA) + np.NaN
+
+    I_SA = np.logical_or(SA < 0, SA > 42)
+    I_p = np.logical_or(p < -1.5, p > 12000)
+    I_SA_p = np.logical_or(I_SA, I_p)
+
+    SA[I_SA_p] = np.ma.masked
+
+    rho_40 = rho_t_exact(SA, 40 * np.ones_like(SA), p)
+
+    I_rho_light = (rho - rho_40) < 0
+
+    SA[I_rho_light] = np.ma.masked
+
+    t_max_rho = t_maxdensity_exact(SA, p)
+    rho_max = rho_t_exact(SA, t_max_rho, p)
+    rho_extreme = rho_max
+    t_freezing = t_freezing(SA, p)  # Assumes seawater is saturated with air.
+    rho_freezing = rho_t_exact(SA, t_freezing, p)
+
+    I_fr_gr_max = (t_freezing - t_max_rho) > 0
+    rho_extreme[I_fr_gr_max] = rho_freezing[I_fr_gr_max]
+
+    I_rho_dense = rho > rho_extreme
+    SA[I_rho_dense] = np.ma.masked
+
+    # FIXME: Is this needed?
+    I_bad = np.isnan(SA * p * rho)
+    SA[I_bad] = np.ma.masked
+
+    alpha_freezing = alpha_wrt_t_exact(SA, t_freezing, p)
+
+    I_salty = alpha_freezing > alpha_limit
+
+    t_diff = 40*ones(size(I_salty)) - t_freezing(I_salty);
+
+    top = (rho_40[I_salty] - rho_freezing[I_salty] +
+    rho_freezing[I_salty] * alpha_freezing[I_salty] * t_diff)
+
+    a   = top / (t_diff ** 2)
+    b = -rho_freezing[I_salty] * alpha_freezing[I_salty]
+    c = rho_freezing[I_salty] - rho[I_salty]
+    sqrt_disc = np.sqrt(b ** 2 - 4 * a * c)
+    # The value of t[I_salty] is the initial guess `t` in the range of I_salty.
+    t[I_salty] = t_freezing[I_salty] + 0.5 * (-b - sqrt_disc) / a
+
+    I_fresh = alpha_freezing <= alpha_limit
+    t_diff = 40 * np.ones_like[I_fresh] - t_max_rho[I_fresh]
+    factor = ((rho_max[I_fresh] - rho[I_fresh]) /
+             (rho_max[I_fresh] - rho_40[I_fresh]))
+    delta_t = t_diff * np.sqrt(factor)
+
+    I_fresh_NR = delta_t > 5
+    t[I_fresh[I_fresh_NR]] = (t_max_rho[I_fresh[I_fresh_NR]] +
+                              delta_t[I_fresh_NR])
+
+    I_quad = delta_t <= 5
+    t_a = np.zeros_like(SA) + np.NaN
+    # Set the initial value of the quadratic solution roots.
+    t_a[I_fresh[I_quad]] = (t_max_rho[I_fresh[I_quad]] +
+                           np.sqrt(rec_half_rho_TT * (rho[I_fresh[I_quad]] -
+                           rho_max[I_fresh[I_quad]])))
+
+    for Number_of_iterations in range(0, 5):
+        t_old = t_a
+        rho_old = rho_t_exact(SA, t_old, p)
+        factorqa = (rho_max - rho) / (rho_max - rho_old)
+        t_a = t_max_rho + (t_old - t_max_rho) * np.sqrt(factorqa)
+
+        t_a[t_freezing - t_a < 0] = np.ma.masked
+
+    t_b = np.zeros_like(SA) + np.NaN
+    # Set the initial value of the quadratic solution routes.
+    t_b[I_fresh[I_quad]] = (t_max_rho[I_fresh[I_quad]] -
+                           np.sqrt(rec_half_rho_TT * (rho[I_fresh[I_quad]] -
+                           rho_max[I_fresh[I_quad]])))
+    for Number_of_iterations in range(0, 6):
+        t_old = t_b
+        rho_old = rho_t_exact(SA, t_old, p)
+        factorqb = (rho_max - rho) / (rho_max - rho_old)
+        t_b = t_max_rho + (t_old - t_max_rho) * np.sqrt(factorqb)
+
+    # After seven iterations of this quadratic iterative procedure,
+    # the error in rho is no larger than 4.6x10^-13 kg/m^3.
+    t_b[t_freezing - t_b < 0] = np.ma.masked
+
+    # Begin the modified Newton-Raphson iterative method, which will only
+    # operate on non-masked data.
+
+    v_lab = np.ones_like(rho) / rho
+    v_t = gibbs(0, 1, 1, SA, t, p)
+    for Number_of_iterations in range(0, 3):
+        t_old = t
+        delta_v = gibbs(0, 0, 1, SA, t_old, p) - v_lab
+        t = t_old - delta_v / v_t  # Half way through the modified N-R method.
+        t_mean = 0.5 * (t + t_old)
+        v_t = gibbs(0, 1, 1, SA, t_mean, p)
+        t = t_old - delta_v / v_t
+
+        I_quad = ~np.isnan(t_a)
+        t[I_quad] = t_a[I_quad]
+
+    I_quad = ~isnan(t_b)
+    t_multiple[I_quad] = t_b[I_quad]
+
+    # After three iterations of this modified Newton-Raphson iteration,
+    # the error in rho is no larger than 4.6x10^-13 kg/m^3.
+
+    return t, t_multiple
 
 @match_args_return
 def pot_rho_t_exact(SA, t, p, p_ref=0):
