@@ -253,7 +253,7 @@ def rho(SA, CT, p):
 
     or call the following, it is identical to the lines above.
 
-    [rho, ~, ~] = rho_alpha_beta_CT_exact(SA, CT, p)
+    rho,_ ,_ = rho_alpha_beta_CT_exact(SA, CT, p)
     """
 
     return v_hat_denominator(SA, CT, p) / v_hat_numerator(SA, CT, p)
@@ -405,7 +405,6 @@ def beta(SA, CT, p):
             v_hat_numerator(SA, CT, p))
 
 
-@match_args_return
 def rho_alpha_beta(SA, CT, p):
     r"""Calculates in-situ density, the appropriate thermal expansion
     coefficient and the appropriate saline contraction coefficient of seawater
