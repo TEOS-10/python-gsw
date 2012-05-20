@@ -33,7 +33,7 @@ def Nsquared(SA, CT, p, lat=None):
     SA : array_like
          Absolute Salinity  [g/kg]
     CT : array_like
-         Conservative Temperature [deg C]
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         sea pressure  [dbar]
     lat : array_like, optional
@@ -127,7 +127,7 @@ def Turner_Rsubrho(SA, CT, p):
     SA : array_like
          Absolute Salinity  [g/kg]
     CT : array_like
-         Conservative Temperature [deg C]
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         sea pressure  [dbar]
 
@@ -232,7 +232,7 @@ def IPV_vs_fNsquared_ratio(SA, CT, p, p_ref=0):
     SA : array_like
          Absolute Salinity  [g/kg]
     CT : array_like
-         Conservative Temperature [deg C]
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         sea pressure  [dbar]
     p_ref : int, float, optional
