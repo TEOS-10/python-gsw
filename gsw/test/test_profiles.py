@@ -48,7 +48,7 @@ function_arguments = dict(
     # basic_thermodynamic_t.py
     rho_t_exact=('SA', 't', 'p'),
     pot_rho_t_exact=('SA', 't', 'p', 'pr'),
-    #sigma0_pt0_exact  TODO
+    sigma0_pt0_exact=('SA', 'pt0'),
     alpha_wrt_CT_t_exact=('SA', 't', 'p'),
     alpha_wrt_pt_t_exact=('SA', 't', 'p'),
     alpha_wrt_t_exact=('SA', 't', 'p'),
@@ -64,7 +64,7 @@ function_arguments = dict(
     enthalpy_t_exact=('SA', 't', 'p'),
     dynamic_enthalpy_t_exact=('SA', 't', 'p'),
     SA_from_rho_t_exact=('rho', 't', 'p'),
-    #t_from_rho_exact  TODO
+    #t_from_rho_exact=('rho', 'SA', 'p'),
     t_maxdensity_exact=('SA', 'p'),
     entropy_t_exact=('SA', 't', 'p'),
     cp_t_exact=('SA', 't', 'p'),
@@ -154,8 +154,7 @@ function_arguments = dict(
     rho_alpha_beta_CT_exact=('SA', 'CT', 'p'),
     specvol_CT_exact=('SA', 'CT', 'p'),
     specvol_anom_CT_exact=('SA', 'CT', 'p'),
-    # FIXME: NameError: 'sigma0_pt0_exact' not defined
-    #'sigma0_CT_exact=('SA', 'CT'),
+    sigma0_CT_exact=('SA', 'CT'),
     sigma1_CT_exact=('SA', 'CT'),
     sigma2_CT_exact=('SA', 'CT'),
     sigma3_CT_exact=('SA', 'CT'),
@@ -186,7 +185,9 @@ function_arguments = dict(
     distance=('long', 'lat', 'p'),
     #
     # freezing.py
-    #CT_freezing   TODO
+    # NOTE: The matlab test does not use saturation_fraction=1 which is the
+    # default!  It uses saturation_fraction=0.
+    CT_freezing=('SA', 'p', 'saturation_fraction'),
     #t_freezing  TODO
     #brineSA_CT  TODO
     #brineSA_t  TODO
@@ -263,9 +264,11 @@ cv.p_shallow_chck_cast = cv.p_chck_cast_shallow
 cv.p_deep_chck_cast = cv.p_chck_cast_deep
 cv.rho_chck_cast = cv.rho_CT_exact
 cv.rho_CTrab_exact_ca = cv.rho_CT_exact_rab_ca
+cv.saturation_fraction_chck_cast = 0
 # Aliases from computed values.
 cv.R_cf_chck_cast = cf.R
 cv.rho_cf_chck_cast = cf.rho
+cv.pt0_chck_cast = cf.pt0_from_t
 
 # Functions and targets which does not follow the naming convention.
 not_match = {
