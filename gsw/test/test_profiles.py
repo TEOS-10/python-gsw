@@ -33,25 +33,15 @@ import gsw
 from gsw.utilities import Dict2Struc
 
 
-# Read data file with check value profiles
+# Read data file with check value profiles.
 datadir = os.path.join(os.path.dirname(gsw.utilities.__file__), 'data')
-fname = 'gsw_cv_v3_0.npz'
-cv = Dict2Struc(np.load(os.path.join(datadir, fname)))
-cf = Dict2Struc(np.load(os.path.join(datadir, 'gsw_cf_.npz')))
+cv = Dict2Struc(np.load(os.path.join(datadir, 'gsw_cv_v3_0.npz')))
+cf = Dict2Struc(np.load(os.path.join(datadir, 'gsw_cf.npz')))
 
-# Main dictionary of functions with arguments
-#
-# Codes for non-tested functions
-# TI: Returning a tuple, tested individually
-# NV: No test value
-# NA: Don't fit the testing scheme
-# ERR: Gives error
-# BUG: The function is either not fully implemented or has a bug
-
-# Could perhaps be auto-generated
+# Main dictionary of functions with arguments. Could perhaps be auto-generated.
 function_arguments = dict(
     # absolute_salinity_sstar_ct.py
-    #SA_from_SP=('SP', 'p', 'long', 'lat'), BUG
+    #SA_from_SP=('SP', 'p', 'long', 'lat'), BUG on SAAR
     #Sstar_from_SP  TODO
     CT_from_t=('SA', 't', 'p'),
     #
@@ -142,7 +132,7 @@ function_arguments = dict(
     rho=('SA', 'CT', 'p'),
     alpha=('SA', 'CT', 'p'),
     beta=('SA', 'CT', 'p'),
-    #rho_alpha_beta=('SA', 'CT', 'p'),  # FIXME: TI
+    rho_alpha_beta=('SA', 'CT', 'p'),
     specvol=('SA', 'CT', 'p'),
     specvol_anom=('SA', 'CT', 'p'),
     sigma0=('SA', 'CT'),
@@ -161,7 +151,7 @@ function_arguments = dict(
     rho_CT_exact=('SA', 'CT', 'p'),
     alpha_CT_exact=('SA', 'CT', 'p'),
     beta_CT_exact=('SA', 'CT', 'p'),
-    #rho_alpha_beta_CT_exact=('SA', 'CT', 'p'),  # FIXME: Tuple
+    rho_alpha_beta_CT_exact=('SA', 'CT', 'p'),
     specvol_CT_exact=('SA', 'CT', 'p'),
     specvol_anom_CT_exact=('SA', 'CT', 'p'),
     # FIXME: NameError: 'sigma0_pt0_exact' not defined
@@ -181,14 +171,14 @@ function_arguments = dict(
     CT_maxdensity_exact=('SA', 'p'),
     #
     # derivatives.py
-    #CT_first_derivatives=('SA', 'pt'),  # NOTE: TI, BUG
-    #CT_second_derivatives=('SA', 'pt'),  # NOTE: TI FIXME BUG
-    #enthalpy_first_derivatives=('SA', 'CT', 'p'), FIXME name match
-    #enthalpy_second_derivatives=('SA', 'CT', 'p'), FIXME name match
-    #entropy_first_derivatives=('SA', 'CT'),  #NOTE: TI FIXME name match
-    #entropy_second_derivatives=('SA', 'pt'),  #NOTE: TI FIXME name match
-    #pt_first_derivatives':,  #NOTE: TI FIXME name match
-    #pt_second_derivatives= #NOTE: TI FIXME name match
+    #CT_first_derivatives=('SA', 'pt'),  FIXME: output should be a tuple.
+    #CT_second_derivatives=('SA', 'pt'),  FIXME: output should be a tuple.
+    #enthalpy_first_derivatives=('SA', 'CT', 'p'),  FIXME: output should be a tuple.
+    #enthalpy_second_derivatives=('SA', 'CT', 'p'),  FIXME: output should be a tuple.
+    #entropy_first_derivatives=('SA', 'CT'),  FIXME: output should be a tuple.
+    #entropy_second_derivatives=('SA', 'CT'),  FIXME: output should be a tuple.
+    #pt_first_derivatives=('SA', 'CT'),  FIXME: output should be a tuple.
+    #pt_second_derivatives=('SA', 'CT'),  FIXME: output should be a tuple.
     #
     # earth.py
     f=('lat',),
@@ -254,10 +244,9 @@ function_arguments = dict(
     #steric_height=TODO
     #
     # water_column_48.py
-    Nsquared=('SA', 'CT', 'p', 'lat'),  # NOTE: Second output is un-tested.
-    #Turner_Rsubrho=('SA', 'CT', 'p')  # BUG
-    #IPV_vs_fNsquared_ratio  TODO
-    #
+    Nsquared=('SA', 'CT', 'p', 'lat'),
+    Turner_Rsubrho=('SA', 'CT', 'p'),
+    IPV_vs_fNsquared_ratio=('SA', 'CT', 'p')
    )
 
 
@@ -273,44 +262,47 @@ cv.pr_chck_cast = cv.pr
 cv.p_shallow_chck_cast = cv.p_chck_cast_shallow
 cv.p_deep_chck_cast = cv.p_chck_cast_deep
 cv.rho_chck_cast = cv.rho_CT_exact
+cv.rho_CTrab_exact_ca = cv.rho_CT_exact_rab_ca
+# Aliases from computed values.
 cv.R_cf_chck_cast = cf.R
 cv.rho_cf_chck_cast = cf.rho
 
 # Functions and targets which does not follow the naming convention.
 not_match = {
-    'CT_first_derivatives': 'CT_SA',  # FIXME: Tupled with CT_pt
-    'CT_second_derivatives': 'CT_SA_SA',  # FIXME: Tupled with CT_SA_pt
-    #'enthalpy_first_derivatives': 'CT_SA_pt',
-    #'CT_maxdensity': 'CT_maxden',
-    #'alpha_CT': 'alpha_CTrab',
-    #'beta_CT': 'beta_CTrab',
-    #'cndr_from_SP': 'cndr',
-    #'pt0_from_t': 'pt0',
-    #'pt_from_CT': 'pt',
-    #'pt_maxdensity': 'pt_maxden',
-    #'t_maxdensity': 't_maxden',
+    'CT_first_derivatives': 'CT_SA',
+    'CT_second_derivatives': 'CT_SA_SA',
+    'enthalpy_first_derivatives': 'h_SA',
+    'enthalpy_second_derivatives': 'h_SA_SA',
+    'entropy_first_derivatives': 'eta_SA',
+    'entropy_second_derivatives': 'eta_SA_SA',
+    'pt_first_derivatives': 'pt_SA',
+    'pt_second_derivatives': 'pt_SA_SA',
+    'Turner_Rsubrho': 'Tu',
+    'IPV_vs_fNsquared_ratio': 'IPVfN2',
     'Nsquared': 'n2',
     'chem_potential_relative_t_exact': 'chem_potential_t_exact',
+    'rho_alpha_beta_CT_exact': 'rho_CTrab_exact',
+    'rho_alpha_beta': 'rho_rab',
     }
 
-# Add target aliases to cv
+# Add target aliases to cv.
 for f in not_match:
     setattr(cv, f, getattr(cv, not_match[f]))
     setattr(cv, f + '_ca', getattr(cv, not_match[f] + '_ca'))
 
 
-# Generic test method
+# Generic test method.
 def generic_test(self, func=None, argnames=None):
-    """Generic test function, to be specialized by functools.partial"""
-    # Transform argument names to name convention in cv dataset
+    """Generic test function, to be specialized by functools.partial."""
+    # Transform argument names to name convention in cv dataset.
     args = [getattr(cv, a + '_chck_cast') for a in argnames]
     # Perform the function call
     out = getattr(gsw, func)(*args)
     # FIXME: Testing just the first output!
-    # TODO: Create the tuples and compare all together.
     # Check that the maximal error is less than the given tolerance
     if isinstance(out, tuple):
         out = out[0]
+        #print("""%s returns a tuple.""" % func)
     maxdiff = np.nanmax(abs(out - getattr(cv, func)))
     try:
         self.assertTrue(maxdiff < getattr(cv, func + '_ca'))
@@ -318,27 +310,21 @@ def generic_test(self, func=None, argnames=None):
         raise AssertionError("Error in %s %s" % (func, e.args))
 
 
-# Dictionary of functions with corresponding test methods
+# Dictionary of functions with corresponding test methods.
 function_test = {}
 for f in function_arguments:
     function_test[f] = functools.partial(generic_test,
                       func=f, argnames=function_arguments[f])
 
 
-# Auto-generated TestCase
+# Auto-generated TestCase.
 class Test_profiles(unittest.TestCase):
 
     for f in function_test:
         method_def = ("test_" + f +
             " = lambda self: function_test['" + f + "'](self)")
-        #print method_def
         exec(method_def)
 
 
 if __name__ == '__main__':
-    # A more verbose output
-    suite = unittest.TestLoader().loadTestsFromTestCase(Test_profiles)
-    a = unittest.TextTestRunner(verbosity=2).run(suite)
-    if a.errors or a.failures:
-        sys.exit(256)
-    #unittest.main()
+    unittest.main(verbosity=2)
