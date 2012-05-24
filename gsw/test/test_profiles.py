@@ -24,7 +24,6 @@
 # 2011-03-03
 
 import os
-import sys
 import unittest
 import functools  # Requires python 2.5.
 import numpy as np
@@ -170,14 +169,14 @@ function_arguments = dict(
     CT_maxdensity_exact=('SA', 'p'),
     #
     # derivatives.py
-    #CT_first_derivatives=('SA', 'pt'),  FIXME: output should be a tuple.
-    #CT_second_derivatives=('SA', 'pt'),  FIXME: output should be a tuple.
-    #enthalpy_first_derivatives=('SA', 'CT', 'p'),  FIXME: output should be a tuple.
-    #enthalpy_second_derivatives=('SA', 'CT', 'p'),  FIXME: output should be a tuple.
-    #entropy_first_derivatives=('SA', 'CT'),  FIXME: output should be a tuple.
-    #entropy_second_derivatives=('SA', 'CT'),  FIXME: output should be a tuple.
-    #pt_first_derivatives=('SA', 'CT'),  FIXME: output should be a tuple.
-    #pt_second_derivatives=('SA', 'CT'),  FIXME: output should be a tuple.
+    #CT_first_derivatives=('SA', 'pt'),  FIXME: out should tuple.
+    #CT_second_derivatives=('SA', 'pt'),  FIXME: out should tuple.
+    #enthalpy_first_derivatives=('SA', 'CT', 'p'),  FIXME: out should tuple.
+    #enthalpy_second_derivatives=('SA', 'CT', 'p'),  FIXME: out should tuple.
+    #entropy_first_derivatives=('SA', 'CT'),  FIXME: out should tuple.
+    #entropy_second_derivatives=('SA', 'CT'),  FIXME: out should tuple.
+    #pt_first_derivatives=('SA', 'CT'),  FIXME: out should tuple.
+    #pt_second_derivatives=('SA', 'CT'),  FIXME: out should tuple.
     #
     # earth.py
     f=('lat',),
@@ -188,7 +187,7 @@ function_arguments = dict(
     # NOTE: The matlab test does not use saturation_fraction=1 which is the
     # default!  It uses saturation_fraction=0.
     CT_freezing=('SA', 'p', 'saturation_fraction'),
-    #t_freezing  TODO
+    t_freezing=('SA', 'p', 'saturation_fraction'),
     #brineSA_CT  TODO
     #brineSA_t  TODO
     #
@@ -235,8 +234,8 @@ function_arguments = dict(
     # practical_salinity.py
     SP_from_C=('C', 't', 'p'),
     C_from_SP=('SP', 't', 'p'),
-    SP_from_R= ('R_cf', 't', 'p'),
-    R_from_SP= ('SP', 't', 'p'),
+    SP_from_R=('R_cf', 't', 'p'),
+    R_from_SP=('SP', 't', 'p'),
     SP_salinometer=('Rt', 't'),
     #SP_from_SK=('SK',),  NOTE: Not tested on Matlab.
     #SK_from_SP=('SP',),  NOTE: Not tested on Matlab.
