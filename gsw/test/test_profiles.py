@@ -186,10 +186,10 @@ function_arguments = dict(
     # freezing.py
     # NOTE: The matlab test does not use saturation_fraction=1 which is the
     # default!  It uses saturation_fraction=0.
-    CT_freezing=('SA', 'p', 'saturation_fraction'),
-    t_freezing=('SA', 'p', 'saturation_fraction'),
-    #brineSA_CT  TODO
-    #brineSA_t  TODO
+    CT_freezing=('SA', 'p', 'sat0'),
+    t_freezing=('SA', 'p', 'sat0'),
+    brineSA_CT=('CT_freezing', 'p', 'sat05'),
+    brineSA_t=('t_freezing', 'p', 'sat05'),
     #
     # geostrophic.py
     #geostrophic_velocity  TODO
@@ -263,7 +263,11 @@ cv.p_shallow_chck_cast = cv.p_chck_cast_shallow
 cv.p_deep_chck_cast = cv.p_chck_cast_deep
 cv.rho_chck_cast = cv.rho_CT_exact
 cv.rho_CTrab_exact_ca = cv.rho_CT_exact_rab_ca
-cv.saturation_fraction_chck_cast = 0
+cv.CT_freezing_chck_cast = cv.CT_freezing
+cv.t_freezing_chck_cast = cv.t_freezing
+cv.sat0_chck_cast = 0
+cv.sat05_chck_cast = 0.5
+
 # Aliases from computed values.
 cv.R_cf_chck_cast = cf.R
 cv.rho_cf_chck_cast = cf.rho
