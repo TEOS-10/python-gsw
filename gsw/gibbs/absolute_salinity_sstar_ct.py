@@ -203,15 +203,13 @@ def CT_from_t(SA, t, p):
     ----------
     SA : array_like
          Absolute salinity [g kg :sup:`-1`]
-    t : array_like
-        in situ temperature [:math:`^\circ` C (ITS-90)]
+    CT : array_like
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
 
     Returns
     -------
-    CT : array_like
-         Conservative Temperature [:math:`^\circ` C (ITS-90)]
 
     See Also
     --------
@@ -223,13 +221,7 @@ def CT_from_t(SA, t, p):
 
     Examples
     --------
-    >>> import gsw
-    >>> SA = [34.7118, 34.8915, 35.0256, 34.8472, 34.7366, 34.7324]
-    >>> t = [28.7856, 28.4329, 22.8103, 10.2600, 6.8863, 4.4036]
-    >>> p = [10, 50, 125, 250, 600, 1000]
-    >>> gsw.CT_from_t(SA, t, p)
-    array([ 28.80991983,  28.43922782,  22.78617689,  10.22618927,
-             6.82721363,   4.32357575])
+    TODO
 
     References
     ----------
@@ -247,6 +239,43 @@ def CT_from_t(SA, t, p):
 
     return CT
 
+
+@match_args_return
+def SA_CT_plot(SA, CT, isopycs, title_string):
+    r"""Calculates Conservative Temperature of seawater from in situ
+    temperature.
+
+    Parameters
+    ----------
+    SA : array_like
+         Absolute salinity [g kg :sup:`-1`]
+    CT : array_like
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
+
+    See Also
+    --------
+    TODO
+
+    Notes
+    -----
+    TODO
+
+    Examples
+    --------
+    TODO
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp. See section 3.3.
+
+    Modifications:
+    2011-03-27. David Jackett, Trevor McDougall and Paul Barker
+    """
+
+    return None
 
 if __name__ == '__main__':
     import doctest
