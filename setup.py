@@ -60,11 +60,13 @@ Topic :: Software Development :: Libraries :: Python Modules
 
 config = dict(name='gsw',
               version='3.0.1',
-              packages=['gsw', 'gsw/gibbs']
-              package_data={'': ['gsw/data/*.npz']},
+              packages=['gsw',
+                        'gsw/gibbs',
+                        'gsw/utilities'],
+              package_data={'': ['gsw/utilities/data/*.npz']},
               license=open('LICENSE.txt').read(),
               description='Gibbs SeaWater Oceanographic Package of TEOS-10',
-              long_description=open('README.txt').read(),
+              long_description=open('README.rst').read(),
               author='Filipe Fernandes, Eric Firing, Ådlandsvik Bjørn',
               author_email='ocefpaf@gmail.com',
               maintainer='Filipe Fernandes',
