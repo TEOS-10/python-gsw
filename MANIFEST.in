@@ -1,9 +1,9 @@
 include README.rst
 include LICENSE.txt
 include CHANGES.txt
-include docs/sphinx/conf.py
-include docs/sphinx/index.rst
-include docs/sphinx/Makefile
+include docs/conf.py
+include docs/index.rst
+include docs/Makefile
 include gsw/*.py
 include gsw/gibbs/*.py
 include gsw/test/*.py
