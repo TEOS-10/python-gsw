@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import codecs
 
 try:
     from setuptools import setup
@@ -18,13 +19,9 @@ except ImportError:  # Python 2
 
 
 class sdist_hg(sdist):
-    """
-    Automatically generate the latest development version when creating a
-    source distribution.
-    """
-    user_options = sdist.user_options + [
-            ('dev', None, "Add a dev marker")
-            ]
+    """Automatically generate the latest development version when creating a
+    source distribution."""
+    user_options = sdist.user_options + [('dev', None, "Add a dev marker")]
 
     def initialize_options(self):
         sdist.initialize_options(self)
@@ -58,6 +55,7 @@ Topic :: Education
 Topic :: Software Development :: Libraries :: Python Modules
 """
 
+readme = codecs.open('README.rst', encoding='utf-8')
 config = dict(name='gsw',
               version='3.0.1',
               packages=['gsw',
@@ -66,7 +64,7 @@ config = dict(name='gsw',
               package_data={'': ['gsw/utilities/data/*.npz']},
               license=open('LICENSE.txt').read(),
               description='Gibbs SeaWater Oceanographic Package of TEOS-10',
-              long_description=open('README.rst').read(),
+              long_description=readme.read(),
               author='Filipe Fernandes, Eric Firing, Ådlandsvik Bjørn',
               author_email='ocefpaf@gmail.com',
               maintainer='Filipe Fernandes',
