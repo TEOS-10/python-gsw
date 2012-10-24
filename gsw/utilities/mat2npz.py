@@ -18,7 +18,7 @@ import numpy as np
 import scipy.io as sio
 
 data_ver = 'v3_0'
-gsw_data = sio.loadmat('gsw_data_' + data_ver + '.mat', squeeze_me=True)
+gsw_data = sio.loadmat('gsw_data_%s.mat' % data_ver, squeeze_me=True)
 
 # Save compare values in a separate file.
 gsw_cv = gsw_data['gsw_cv']
@@ -30,7 +30,7 @@ for name in gsw_cv.dtype.names:
     cv_vars.update({name: var})
 
 # Check values.
-np.savez("gsw_cv_" + data_ver, **cv_vars)
+np.savez("gsw_cv_%s" % data_ver, **cv_vars)
 
 # Delta SA Atlas.
 ref_table = {}
@@ -44,11 +44,12 @@ for k in gsw_data:
         var = np.atleast_1d(gsw_data[k])
         ref_table.update({name: var})
 
-np.savez("gsw_data_" + data_ver, **ref_table)
+np.savez("gsw_data_%s" % data_ver, **ref_table)
 
 
-# This is a saved result for gsw_check_function.m.  The matlab version relies
-# on the result of some of its functions to test others.
+# This is a saved result of a modified version of `gsw_check_functions.m`
+# where the structure variable gsw_cf was saved.  The matlab version relies
+# on the result of some of its functions to test others, so we need this file.
 gsw_cf = sio.loadmat('gsw_cf.mat', squeeze_me=True)
 
 # Save compare values in a separate file.
@@ -60,4 +61,4 @@ for name in gsw_cf.dtype.names:
     cf_vars.update({name: var})
 
 # Check values.
-np.savez("gsw_cf_", **cf_vars)
+np.savez("gsw_cf", **cf_vars)
