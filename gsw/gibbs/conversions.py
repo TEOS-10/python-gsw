@@ -165,10 +165,7 @@ def t_from_CT(SA, CT, p):
     """
 
     pt0 = pt_from_CT(SA, CT)
-
-    t = pt_from_t(SA, pt0, 0, p)
-
-    return t
+    return pt_from_t(SA, pt0, 0, p)
 
 
 @match_args_return
@@ -672,7 +669,7 @@ def z_from_p(p, lat, geo_strf_dyn_height=None):
 
 
 @match_args_return
-def  p_from_z(z, lat, geo_strf_dyn_height=0):
+def p_from_z(z, lat, geo_strf_dyn_height=0):
     r"""Calculates sea pressure from height using computationally-efficient
     48-term expression for density, in terms of SA, CT and p (McDougall et al.,
     2011).  Dynamic height anomaly, geo_strf_dyn_height, if provided, must be
@@ -912,7 +909,7 @@ def p_from_Abs_Pressure(Absolute_Pressure):
     Parameters
     ---------
     Absolute_Pressure : array_like
-        Absolute Pressure [Pa]
+                        Absolute Pressure [Pa]
 
     Returns
     -------
@@ -1119,8 +1116,8 @@ def molality_from_SA(SA):
     """
 
     # Molality of seawater in mol kg :sup:`-1`.
+    SA = np.maximum(SA, 0)
     molality = SA / (M_S * (1000 - SA))
-    molality[SA < 0] = np.ma.masked
 
     return molality
 
@@ -1169,13 +1166,9 @@ def entropy_from_pt(SA, pt):
     2011-04-03. Trevor McDougall & Paul Barker
     """
 
-    SA.clip(0, np.inf)
-
+    SA = np.maximum(SA, 0)
     n0, n1 = 0, 1
-
-    entropy = -gibbs(n0, n1, n0, SA, pt, 0)
-
-    return entropy
+    return -gibbs(n0, n1, n0, SA, pt, 0)
 
 
 @match_args_return
@@ -1222,14 +1215,10 @@ def entropy_from_CT(SA, CT):
     2011-04-04. Trevor McDougall & Paul Barker
     """
 
-    SA.clip(0, np.inf)
-
+    SA = np.maximum(SA, 0)
     n0, n1 = 0, 1
-
     pt0 = pt_from_CT(SA, CT)
-    entropy = -gibbs(n0, n1, n0, SA, pt0, 0)
-
-    return entropy
+    return -gibbs(n0, n1, n0, SA, pt0, 0)
 
 
 @match_args_return
@@ -1276,8 +1265,7 @@ def CT_from_entropy(SA, entropy):
     2011-03-03. Trevor McDougall and Paul Barker.
     """
 
-    SA.clip(0, np.inf)
-
+    SA = np.maximum(SA, 0)
     pt = pt_from_entropy(SA, entropy)
     return CT_from_pt(SA, pt)
 
