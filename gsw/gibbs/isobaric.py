@@ -57,7 +57,4 @@ def latentheat_evap_t(SA, t):
     """
 
     CT = CT_from_pt(SA, t)
-
-    latentheat_evap_t = latentheat_evap_CT(SA, CT)
-
-    return latentheat_evap_t
+    return latentheat_evap_CT(SA, CT)
