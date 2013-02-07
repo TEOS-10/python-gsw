@@ -5,10 +5,11 @@ from __future__ import division
 import numpy as np
 
 from library import gibbs
+from absolute_salinity_sstar_ct import CT_from_t
 from gsw.utilities import match_args_return, strip_mask
 from constants import Kelvin, db2Pascal, P0, SSO, cp0, R, sfac
 from conversions import pt_from_CT, pt_from_t, pt0_from_t, molality_from_SA
-from absolute_salinity_sstar_ct import CT_from_t
+
 __all__ = [
            'rho_t_exact',
            'pot_rho_t_exact',
@@ -41,6 +42,8 @@ __all__ = [
            'osmotic_coefficient_t_exact',
            'osmotic_pressure_t_exact'
           ]
+
+n0, n1, n2 = 0, 1, 2
 
 
 @match_args_return
@@ -96,10 +99,8 @@ def Helmholtz_energy_t_exact(SA, t, p):
     2011-03-29. Trevor McDougall
     """
 
-    n0, n1 = 0, 1
-    g000 = gibbs(n0, n0, n0, SA, t, p)
-    g001 = gibbs(n0, n0, n1, SA, t, p)
-    return (g000 - (db2Pascal * p + P0) * g001)
+    return (gibbs(n0, n0, n0, SA, t, p) -
+            (db2Pascal * p + P0) * gibbs(n0, n0, n1, SA, t, p))
 
 
 @match_args_return
@@ -150,10 +151,7 @@ def rho_t_exact(SA, t, p):
     2011-03-29. Paul Barker, David Jackett and Trevor McDougal
     """
 
-    n0, n1 = 0, 1
-    rho = 1. / gibbs(n0, n0, n1, SA, t, p)
-
-    return rho
+    return 1. / gibbs(n0, n0, n1, SA, t, p)
 
 
 @match_args_return
@@ -293,7 +291,6 @@ def enthalpy_t_exact(SA, t, p):
     2011-03-29. David Jackett, Trevor McDougall and Paul Barker.
     """
 
-    n0, n1 = 0, 1
     return (gibbs(n0, n0, n0, SA, t, p) -
             (t + Kelvin) * gibbs(n0, n1, n0, SA, t, p))
 
@@ -345,7 +342,6 @@ def specvol_t_exact(SA, t, p):
     2011-03-23. David Jackett and Paul Barker.
     """
 
-    n0, n1 = 0, 1
     return gibbs(n0, n0, n1, SA, t, p)
 
 
@@ -405,7 +401,6 @@ def entropy_t_exact(SA, t, p):
     2011-03-29. David Jackett, Trevor McDougall and Paul Barker.
     """
 
-    n0, n1 = 0, 1
     return -gibbs(n0, n1, n0, SA, t, p)
 
 
@@ -453,8 +448,6 @@ def cp_t_exact(SA, t, p):
     Modifications:
     2011-03-29. David Jackett, Trevor McDougall and Paul Barker
     """
-
-    n0, n2 = 0, 2
 
     return -(t + Kelvin) * gibbs(n0, n2, n0, SA, t, p)
 
@@ -520,12 +513,9 @@ def sound_speed_t_exact(SA, t, p):
     2011-03-29. David Jackett, Paul Barker and Trevor McDougall.
     """
 
-    n0, n1, n2 = 0, 1, 2
-    g020 = gibbs(n0, n2, n0, SA, t, p)
-    g011 = gibbs(n0, n1, n1, SA, t, p)
-    g001 = gibbs(n0, n0, n1, SA, t, p)
-    g002 = gibbs(n0, n0, n2, SA, t, p)
-    return g001 * np.sqrt(g020 / (g011 ** 2 - g020 * g002))
+    return (gibbs(n0, n0, n1, SA, t, p) * np.sqrt(gibbs(n0, n2, n0, SA, t, p) /
+            (gibbs(n0, n1, n1, SA, t, p) ** 2 - gibbs(n0, n2, n0, SA, t, p) *
+            gibbs(n0, n0, n2, SA, t, p))))
 
 
 @match_args_return
@@ -579,13 +569,10 @@ def specvol_anom_t_exact(SA, t, p):
     2011-03-23. Trevor McDougall and Paul Barker
     """
 
-    n0, n1 = 0, 1
-
     pt_zero = pt_from_CT(SSO, 0)
-
     t_zero = pt_from_t(SSO, pt_zero, 0, p)
-
-    return (gibbs(n0, n0, n1, SA, t, p) - gibbs(n0, n0, n1, SSO, t_zero, p))
+    return (gibbs(n0, n0, n1, SA, t, p) -
+            gibbs(n0, n0, n1, SSO, t_zero, p))
 
 
 @match_args_return
@@ -635,7 +622,6 @@ def chem_potential_relative_t_exact(SA, t, p):
     2011-03-29. Trevor McDougall and Paul Barker
     """
 
-    n0, n1 = 0, 1
     return gibbs(n1, n0, n0, SA, t, p)
 
 
@@ -696,11 +682,9 @@ def internal_energy_t_exact(SA, t, p):
     2011-03-29. Trevor McDougall
     """
 
-    n0, n1 = 0, 1
-    g000 = gibbs(n0, n0, n0, SA, t, p)
-    g010 = gibbs(n0, n1, n0, SA, t, p)
-    g001 = gibbs(n0, n0, n1, SA, t, p)
-    return g000 - (Kelvin + t) * g010 - (db2Pascal * p + P0) * g001
+    return (gibbs(n0, n0, n0, SA, t, p) -
+            (Kelvin + t) * gibbs(n0, n1, n0, SA, t, p) -
+            (db2Pascal * p + P0) * gibbs(n0, n0, n1, SA, t, p))
 
 
 @match_args_return
@@ -757,10 +741,7 @@ def kappa_const_t_exact(SA, t, p):
     2011-03-29. David Jackett, Trevor McDougall and Paul Barker
     """
 
-    n0, n1, n2 = 0, 1, 2
-    g002 = gibbs(n0, n0, n2, SA, t, p)
-    g001 = gibbs(n0, n0, n1, SA, t, p)
-    return -g002 / g001
+    return -gibbs(n0, n0, n2, SA, t, p) / gibbs(n0, n0, n1, SA, t, p)
 
 
 @match_args_return
@@ -816,11 +797,7 @@ def alpha_wrt_t_exact(SA, t, p):
     2011-03-29. David Jackett, Trevor McDougall and Paul Barker
     """
 
-    n0, n1 = 0, 1
-
-    g011 = gibbs(n0, n1, n1, SA, t, p)
-    g001 = gibbs(n0, n0, n1, SA, t, p)
-    return g011 / g001
+    return gibbs(n0, n1, n1, SA, t, p) / gibbs(n0, n0, n1, SA, t, p)
 
 
 @match_args_return
@@ -870,13 +847,8 @@ def isochoric_heat_cap_t_exact(SA, t, p):
     2011-03-29. Trevor McDougall
     """
 
-    n0, n1, n2 = 0, 1, 2
-
-    g020 = gibbs(n0, n2, n0, SA, t, p)
-    g011 = gibbs(n0, n1, n1, SA, t, p)
-    g002 = gibbs(n0, n0, n2, SA, t, p)
-
-    return -(Kelvin + t) * (g020 - g011 * g011 / g002)
+    return (-(Kelvin + t) * (gibbs(n0, n2, n0, SA, t, p) -
+            gibbs(n0, n1, n1, SA, t, p) ** 2 / gibbs(n0, n0, n2, SA, t, p)))
 
 
 @match_args_return
@@ -944,14 +916,9 @@ def kappa_t_exact(SA, t, p):
     2011-03-23. David Jackett, Trevor McDougall and Paul Barker
     """
 
-    n0, n1, n2 = 0, 1, 2
-
-    g020 = gibbs(n0, n2, n0, SA, t, p)
-    g011 = gibbs(n0, n1, n1, SA, t, p)
-    g002 = gibbs(n0, n0, n2, SA, t, p)
-    g001 = gibbs(n0, n0, n1, SA, t, p)
-
-    return (g011 ** 2 - g020 * g002) / (g001 * g020)
+    return ((gibbs(n0, n1, n1, SA, t, p) ** 2 - gibbs(n0, n2, n0, SA, t, p) *
+            gibbs(n0, n0, n2, SA, t, p)) / (gibbs(n0, n0, n1, SA, t, p) *
+            gibbs(n0, n2, n0, SA, t, p)))
 
 
 @match_args_return
@@ -1017,7 +984,6 @@ def SA_from_rho_t_exact(rho, t, p):
     2011-03-28. Trevor McDougall and Paul Barker.
     """
 
-    n0, n1 = 0, 1
     v_lab = np.ones_like(rho) / rho
     v_0 = gibbs(n0, n0, n1, 0, t, p)
     v_120 = gibbs(n0, n0, n1, 120, t, p)
@@ -1315,16 +1281,9 @@ def alpha_wrt_CT_t_exact(SA, t, p):
     2011-03-29. Trevor McDougall and Paul Barker
     """
 
-    n0, n1, n2 = 0, 1, 2
-
     pt0 = pt0_from_t(SA, t, p)
-
     factor = -cp0 / ((Kelvin + pt0) * gibbs(n0, n2, n0, SA, t, p))
-
-    g011 = gibbs(n0, n1, n1, SA, t, p)
-    g001 = gibbs(n0, n0, n1, SA, t, p)
-
-    return factor * (g011 / g001)
+    return factor * (gibbs(n0, n1, n1, SA, t, p) / gibbs(n0, n0, n1, SA, t, p))
 
 
 @match_args_return
@@ -1375,15 +1334,9 @@ def alpha_wrt_pt_t_exact(SA, t, p):
     2011-03-29. David Jackett, Trevor McDougall and Paul Barker
     """
 
-    n0, n1, n2 = 0, 1, 2
-
     pt0 = pt0_from_t(SA, t, p)
-
     factor = gibbs(n0, n2, n0, SA, pt0, 0) / gibbs(n0, n2, n0, SA, t, p)
-    g011 = gibbs(n0, n1, n1, SA, t, p)
-    g001 = gibbs(n0, n0, n1, SA, t, p)
-
-    return factor * (g011 / g001)
+    return factor * (gibbs(n0, n1, n1, SA, t, p) / gibbs(n0, n0, n1, SA, t, p))
 
 
 @match_args_return
@@ -1436,22 +1389,15 @@ def beta_const_CT_t_exact(SA, t, p):
 
     # TODO: Original GSW-V3 re-implements gibbs, check what to do here!
 
-    n0, n1, n2 = 0, 1, 2
-
     pt0 = pt0_from_t(SA, t, p)
 
-    g001 = gibbs(n0, n0, n1, SA, t, p)
-    g110 = gibbs(n1, n1, n0, SA, t, p)
-    g100 = gibbs(n1, n0, n0, SA, pt0, 0)
+    factora = (gibbs(n1, n1, n0, SA, t, p) - gibbs(n1, n0, n0, SA, pt0, 0) /
+               (Kelvin + pt0))
+    factor = (factora / (gibbs(n0, n0, n1, SA, t, p) *
+              gibbs(n0, n2, n0, SA, t, p)))
 
-    factora = g110 - g100 / (Kelvin + pt0)
-    g020 = gibbs(n0, n2, n0, SA, t, p)
-    factor = factora / (g001 * g020)
-
-    g011 = gibbs(n0, n1, n1, SA, t, p)
-    g101 = gibbs(n1, n0, n1, SA, t, p)
-
-    return g011 * factor - g101 / g001
+    return (gibbs(n0, n1, n1, SA, t, p) * factor -
+            gibbs(n1, n0, n1, SA, t, p) / gibbs(n0, n0, n1, SA, t, p))
 
 
 @match_args_return
@@ -1501,23 +1447,16 @@ def beta_const_pt_t_exact(SA, t, p):
     Modifications:
     2011-04-10. Trevor McDougall and Paul Barker
     """
-    # TODO: Original GSW-V3 re-implements gibbs, check what to do here!
-
-    n0, n1, n2 = 0, 1, 2
 
     pt0 = pt0_from_t(SA, t, p)
 
-    g001 = gibbs(n0, n0, n1, SA, t, p)
-    g110 = gibbs(n1, n1, n0, SA, t, p)
-    factora = g110 - gibbs(n1, n1, n0, SA, pt0, 0)
+    factora = gibbs(n1, n1, n0, SA, t, p) - gibbs(n1, n1, n0, SA, pt0, 0)
 
-    g020 = gibbs(n0, n2, n0, SA, t, p)
-    factor = factora / (g001 * g020)
+    factor = (factora / (gibbs(n0, n0, n1, SA, t, p) *
+              gibbs(n0, n2, n0, SA, t, p)))
 
-    g011 = gibbs(n0, n1, n1, SA, t, p)
-    g101 = gibbs(n1, n0, n1, SA, t, p)
-
-    return g011 * factor - g101 / g001
+    return (gibbs(n0, n1, n1, SA, t, p) * factor -
+            gibbs(n1, n0, n1, SA, t, p) / gibbs(n0, n0, n1, SA, t, p))
 
 
 @match_args_return
@@ -1568,11 +1507,7 @@ def beta_const_t_exact(SA, t, p):
     2011-03-29. David Jackett, Trevor McDougall and Paul Barker
     """
 
-    n0, n1 = 0, 1
-
-    g101 = gibbs(n1, n0, n1, SA, t, p)
-    g001 = gibbs(n0, n0, n1, SA, t, p)
-    return -g101 / g001
+    return -gibbs(n1, n0, n1, SA, t, p) / gibbs(n0, n0, n1, SA, t, p)
 
 
 @match_args_return
@@ -1799,10 +1734,7 @@ def adiabatic_lapse_rate_t_exact(SA, t, p):
     2011-03-29. Trevor McDougall and Paul Barker
     """
 
-    n0, n1, n2 = 0, 1, 2
-    g011 = gibbs(n0, n1, n1, SA, t, p)
-    g020 = gibbs(n0, n2, n0, SA, t, p)
-    return - g011 / g020
+    return -gibbs(n0, n1, n1, SA, t, p) / gibbs(n0, n2, n0, SA, t, p)
 
 
 @match_args_return
@@ -1852,15 +1784,13 @@ def osmotic_coefficient_t_exact(SA, t, p):
     2011-04-01. Trevor McDougall and Paul Barker
     """
 
-    n0 = 0
-
     # Molality of seawater in mol/kg.
     molal = molality_from_SA(SA)
     part = molal * R * (Kelvin + t)
 
     SAzero = 0
-    g000 = gibbs(n0, n0, n0, SAzero, t, p)
-    return (g000 - chem_potential_water_t_exact(SA, t, p)) / part
+    return (gibbs(n0, n0, n0, SAzero, t, p) -
+            chem_potential_water_t_exact(SA, t, p)) / part
 
 
 @match_args_return
@@ -1960,7 +1890,6 @@ def t_maxdensity_exact(SA, p):
     2011-04-03. Trevor McDougall and Paul Barker
     """
 
-    n0, n1 = 0, 1
     # The temperature increment for calculating the gibbs_PTT derivative.
     dt = 0.001
     t = 3.978 - 0.22072 * SA  # The initial guess of t_maxden.
