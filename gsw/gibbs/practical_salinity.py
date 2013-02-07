@@ -14,7 +14,7 @@ __all__ = [
            'R_from_SP',
            'SP_salinometer',
            'SP_from_SK',
-           'SK_from_SP'  # NOTE: Not here in the original matlab toolbox.
+           'SK_from_SP'
            ]
 
 # Constants:
