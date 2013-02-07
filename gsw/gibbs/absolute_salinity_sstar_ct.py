@@ -233,6 +233,12 @@ def CT_from_t(SA, t, p):
     Modifications:
     2011-03-27. David Jackett, Trevor McDougall and Paul Barker
     """
+    # Find values that are out of range, set them to NaN.
+    invalid = np.logical_and(p < 100, np.logical_or(t > 80, t < -12))
+    t[invalid] = np.NaN
+
+    invalid = np.logical_and(p >= 100, np.logical_or(t > 40, t < -12))
+    t[invalid] = np.NaN
 
     pt0 = pt0_from_t(SA, t, p)
     CT = CT_from_pt(SA, pt0)
