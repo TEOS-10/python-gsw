@@ -10,12 +10,13 @@ r"""Conductivity of 42.914 [mmho cm :sup:`-1` == mS cm :sup:`-1`] at Salinity
 
 References
 ----------
-.. [1] R.C. Millard and K. Yang 1992. "CTD Calibration and Processing Methods
-used by Woods Hole Oceanographic Institution" Draft April 14, 1992
-(Personal communication).
+.. [1] Culkin and Smith, 1980:  Determination of the Concentration of Potassium
+Chloride Solution Having the Same Electrical Conductivity, at 15C and Infinite
+Frequency, as Standard Seawater of Salinity 35.0000 (Chlorinity 19.37394),
+IEEE J. Oceanic Eng, 5, 22-23.
 
-See also (Culkin and Smith, 1980; UNESCO, 1983.)
-"""
+.. [2] Unesco, 1983: Algorithms for computation of fundamental properties of
+seawater. Unesco Technical Papers in Marine Science, 44, 53 pp."""
 
 earth_radius = 6371000.
 r"""Mean radius of earth  A.E. Gill."""
@@ -51,7 +52,7 @@ References
 Oceanography Pergamon Press Sydney. ISBN 0-08-028728-X. page: 303."""
 
 T0 = Kelvin = 273.15
-r"""The Celcius zero point; 273.15 K.  That is T = t + T0 where T is the
+r"""The Celsius zero point; 273.15 K.  That is T = t + T0 where T is the
 Absolute Temperature (in degrees K) and t is temperature in degrees C."""
 
 db2Pascal = 1e4
@@ -102,7 +103,7 @@ mol :sup:`-1`."""
 r1 = 0.35
 """ TODO """
 
-uPS = SSO / 35
+uPS = SSO / 35.0
 r"""The unit conversion factor for salinities (35.16504/35) g/kg (Millero et
 al., 2008). Reference Salinity SR is uPS times Practical Salinity SP.
 
