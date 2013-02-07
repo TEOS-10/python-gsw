@@ -222,12 +222,12 @@ def sigma0_pt0_exact(SA, pt0):
     g08 = x2 * (-3310.49154044839 +
           x * (199.459603073901 +
           x * (-54.7919133532887 +
-          x *  36.0284195611086 -
-          y *  22.6683558512829) +
+          x * 36.0284195611086 -
+          y * 22.6683558512829) +
           y * (-175.292041186547 +
           y * (383.058066002476 +
           y * (-460.319931801257 +
-          y *  234.565187611355)))) +
+          y * 234.565187611355)))) +
           y * (729.116529735046 +
           y * (-860.764303783977 +
           y * (694.244814133268 +
@@ -238,6 +238,7 @@ def sigma0_pt0_exact(SA, pt0):
     """
 
     return 100000000. / (g03 + g08) - 1000.0
+
 
 @match_args_return
 def enthalpy_t_exact(SA, t, p):
@@ -293,9 +294,8 @@ def enthalpy_t_exact(SA, t, p):
     """
 
     n0, n1 = 0, 1
-    g000 = gibbs(n0, n0, n0, SA, t, p)
-    g010 = gibbs(n0, n1, n0, SA, t, p)
-    return g000 - (t + Kelvin) * g010
+    return (gibbs(n0, n0, n0, SA, t, p) -
+            (t + Kelvin) * gibbs(n0, n1, n0, SA, t, p))
 
 
 @match_args_return
@@ -585,7 +585,7 @@ def specvol_anom_t_exact(SA, t, p):
 
     t_zero = pt_from_t(SSO, pt_zero, 0, p)
 
-    return  (gibbs(n0, n0, n1, SA, t, p) - gibbs(n0, n0, n1, SSO, t_zero, p))
+    return (gibbs(n0, n0, n1, SA, t, p) - gibbs(n0, n0, n1, SSO, t_zero, p))
 
 
 @match_args_return
@@ -1133,12 +1133,12 @@ def t_from_rho_exact(rho, SA, p):
 
     I_salty = alpha_freezing > alpha_limit
 
-    t_diff = 40*ones(size(I_salty)) - t_freezing(I_salty);
+    t_diff = 40. * np.ones_like(I_salty) - t_freezing(I_salty)
 
     top = (rho_40[I_salty] - rho_freezing[I_salty] +
     rho_freezing[I_salty] * alpha_freezing[I_salty] * t_diff)
 
-    a   = top / (t_diff ** 2)
+    a = top / (t_diff ** 2)
     b = -rho_freezing[I_salty] * alpha_freezing[I_salty]
     c = rho_freezing[I_salty] - rho[I_salty]
     sqrt_disc = np.sqrt(b ** 2 - 4 * a * c)
@@ -1201,13 +1201,14 @@ def t_from_rho_exact(rho, SA, p):
         I_quad = ~np.isnan(t_a)
         t[I_quad] = t_a[I_quad]
 
-    I_quad = ~isnan(t_b)
+    I_quad = ~np.isnan(t_b)
     t_multiple[I_quad] = t_b[I_quad]
 
     # After three iterations of this modified Newton-Raphson iteration,
     # the error in rho is no larger than 4.6x10^-13 kg/m^3.
 
     return t, t_multiple
+
 
 @match_args_return
 def pot_rho_t_exact(SA, t, p, p_ref=0):
@@ -1382,7 +1383,7 @@ def alpha_wrt_pt_t_exact(SA, t, p):
     g011 = gibbs(n0, n1, n1, SA, t, p)
     g001 = gibbs(n0, n0, n1, SA, t, p)
 
-    return  factor * (g011 / g001)
+    return factor * (g011 / g001)
 
 
 @match_args_return
@@ -1859,7 +1860,7 @@ def osmotic_coefficient_t_exact(SA, t, p):
 
     SAzero = 0
     g000 = gibbs(n0, n0, n0, SAzero, t, p)
-    return  (g000 - chem_potential_water_t_exact(SA, t, p)) / part
+    return (g000 - chem_potential_water_t_exact(SA, t, p)) / part
 
 
 @match_args_return
