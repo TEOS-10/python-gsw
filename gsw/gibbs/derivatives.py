@@ -418,17 +418,12 @@ def entropy_first_derivatives(SA, CT):
     Modifications:
     2011-03-29. Trevor McDougall.
     """
-
     n0, n1 = 0, 1
     pt = pt_from_CT(SA, CT)
 
-    def entropy_derivative_SA(SA, CT):
-        return -(gibbs(n1, n0, n0, SA, pt, 0)) / (Kelvin + pt)
-
-    def entropy_derivative_CT(SA, CT):
-        return cp0 / (Kelvin + pt)
-
-    return entropy_derivative_SA(SA, CT), entropy_derivative_CT(SA, CT)
+    eta_SA = -(gibbs(n1, n0, n0, SA, pt, 0)) / (Kelvin + pt)
+    eta_CT = cp0 / (Kelvin + pt)
+    return eta_SA, eta_CT
 
 
 @match_args_return
