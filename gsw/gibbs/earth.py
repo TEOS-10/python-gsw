@@ -13,7 +13,7 @@ __all__ = ['f',
            'grav',
            'distance']
 
-RAD = np.pi / 180.0
+DEG2RAD = np.pi / 180.0
 
 
 def f(lat):
@@ -49,7 +49,7 @@ def f(lat):
     """
 
     lat = np.asanyarray(lat)
-    return 2 * OMEGA * np.sin(lat * RAD)
+    return 2 * OMEGA * np.sin(lat * DEG2RAD)
 
 
 @match_args_return
@@ -104,7 +104,7 @@ def grav(lat, p=0):
     2011-03-29. Trevor McDougall & Paul Barker
     """
 
-    X = np.sin(lat * RAD)
+    X = np.sin(lat * DEG2RAD)
     sin2 = X ** 2
     gs = 9.780327 * (1.0 + (5.2792e-3 + (2.32e-5 * sin2)) * sin2)
     z = z_from_p(p, lat)
@@ -196,11 +196,11 @@ def distance(lon, lat, p=0):
 
     lon, lat, p = np.broadcast_arrays(lon, lat, p)
 
-    dlon = np.diff(lon * RAD)
-    dlat = np.diff(lat * RAD)
+    dlon = np.diff(lon * DEG2RAD)
+    dlat = np.diff(lat * DEG2RAD)
 
-    a = ((np.sin(dlat / 2.)) ** 2 + np.cos(lat[:, :-1] * RAD) *
-           np.cos(lat[:, 1:] * RAD) * (np.sin(dlon / 2.)) ** 2)
+    a = ((np.sin(dlat / 2.)) ** 2 + np.cos(lat[:, :-1] * DEG2RAD) *
+           np.cos(lat[:, 1:] * DEG2RAD) * (np.sin(dlon / 2.)) ** 2)
 
     # FIXME: Do we need np.ma here?
     angles = 2. * np.arctan2(np.ma.sqrt(a), np.ma.sqrt(1 - a))
