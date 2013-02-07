@@ -8,7 +8,7 @@
 # e-mail:   ocefpaf@gmail
 # web:      http://ocefpaf.tiddlyspot.com/
 # created:  06-Jun-2011
-# modified: Thu 07 Feb 2013 03:44:10 PM BRST
+# modified: Thu 07 Feb 2013 03:46:02 PM BRST
 #
 # obs:
 #
@@ -64,9 +64,10 @@ gsw_data.close()
 # where the structure variable gsw_cf was saved.  The matlab version relies
 # on the result of some of its functions to test others, so we need this file.
 gsw_cf = h5py.File('gsw_cf.mat', mode='r')
+gsw_cf['gsw_cf']
 
 cf_vars = dict()
-for name in gsw_cf.dtype.names:
-    var = get_data(gsw_cf[name])
+for name in gsw_cf:
+    var = get_data(gsw_cf[name][:])
     cf_vars.update({name: var})
 np.savez("gsw_cf", **cf_vars)
