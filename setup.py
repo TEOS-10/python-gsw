@@ -2,16 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import codecs
-
+from gsw import __version__
 from distutils.core import setup
-
 try:  # Python 3
     from distutils.command.build_py import build_py_2to3 as build_py
 except ImportError:  # Python 2
     from distutils.command.build_py import build_py
 
-
-from gsw.version import version
 classifiers = """\
 Development Status :: 5 - Production/Stable
 Environment :: Console
@@ -28,9 +25,9 @@ Topic :: Software Development :: Libraries :: Python Modules
 
 readme = codecs.open('README.rst', encoding='utf-8')
 config = dict(name='gsw',
-              version=version,
+              version=__version__,
               packages=['gsw', 'gsw/gibbs', 'gsw/utilities'],
-              package_data={'gsw.utilities': ['data/*.npz']},
+              package_data={'gsw': ['utilities/data/*.npz']},
               license=open('LICENSE.txt').read(),
               description='Gibbs SeaWater Oceanographic Package of TEOS-10',
               long_description=readme.read(),
