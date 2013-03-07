@@ -317,8 +317,8 @@ def SP_from_R(R, t, p):
     # Hill et al. (1986) algorithm.  This algorithm is adjusted so that it is
     # exactly equal to the PSS-78 algorithm at SP = 2.
 
-    I2, = np.nonzero(np.ravel(SP) < 2)
-    if len(I2) > 0:
+    I2 = SP < 2
+    if I2.any():
         Hill_ratio = Hill_ratio_at_SP2(t[I2])
         x = 400 * Rt[I2]
         sqrty = 10 * Rtx[I2]
@@ -669,9 +669,8 @@ def SP_salinometer(Rt, t):
         part2 = 1 + sqrty * (1 + sqrty * (1 + sqrty))
         SP_Hill_raw = SP[I2] - a[0] / part1 - b[0] * ft68[I2] / part2
         SP[I2] = Hill_ratio * SP_Hill_raw
-
-    SP = np.maximum(SP, 0)  # Ensure that SP is non-negative.
-
+    # Ensure that SP is non-negative.
+    SP = np.maximum(SP, 0)
     return SP
 
 

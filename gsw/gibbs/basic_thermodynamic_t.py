@@ -7,8 +7,8 @@ import numpy as np
 from library import gibbs
 from absolute_salinity_sstar_ct import CT_from_t
 from gsw.utilities import match_args_return, strip_mask
-from constants import Kelvin, db2Pascal, P0, SSO, cp0, R, sfac
-from conversions import pt_from_CT, pt_from_t, pt0_from_t, molality_from_SA
+from conversions import pt_from_CT, pt_from_t, pt0_from_t
+from constants import Kelvin, db2Pascal, P0, SSO, cp0, R, sfac, M_S
 
 __all__ = [
            'rho_t_exact',
@@ -987,14 +987,18 @@ def SA_from_rho_t_exact(rho, t, p):
     v_lab = np.ones_like(rho) / rho
     v_0 = gibbs(n0, n0, n1, 0, t, p)
     v_120 = gibbs(n0, n0, n1, 120, t, p)
-    SA = 120 * (v_lab - v_0) / (v_120 - v_0)  # Initial estimate of SA.
-    Ior = (SA < 0) | (SA > 120)
-    v_SA = (v_120 - v_0) / 120  # Initial estimate of v_SA, SA derivative of v
+
+    # Initial estimate of SA.
+    SA = 120 * (v_lab - v_0) / (v_120 - v_0)
+    Ior = np.logical_or(SA < 0, SA > 120)
+
+    # Initial estimate of v_SA, SA derivative of v
+    v_SA = (v_120 - v_0) / 120
 
     for k in range(0, 2):
         SA_old = SA
         delta_v = gibbs(n0, n0, n1, SA_old, t, p) - v_lab
-        # Half way through the modified N-R method.
+        # Half way the mod. N-R method (McDougall and Wotherspoon, 2012)
         SA = SA_old - delta_v / v_SA
         SA_mean = 0.5 * (SA + SA_old)
         v_SA = gibbs(n1, n0, n1, SA_mean, t, p)
@@ -1447,6 +1451,7 @@ def beta_const_pt_t_exact(SA, t, p):
     Modifications:
     2011-04-10. Trevor McDougall and Paul Barker
     """
+    # NOTE: The original Matlab toolbox re-implement some code here.  Why?
 
     pt0 = pt0_from_t(SA, t, p)
 
@@ -1781,16 +1786,43 @@ def osmotic_coefficient_t_exact(SA, t, p):
     UNESCO (English), 196 pp.
 
     Modifications:
-    2011-04-01. Trevor McDougall and Paul Barker
+    2011-04-01. Trevor McDougall and Paul Barker.
+    2012-11-15. Trevor McDougall and Paul Barker.
     """
 
-    # Molality of seawater in mol/kg.
-    molal = molality_from_SA(SA)
-    part = molal * R * (Kelvin + t)
+    SA = np.maximum(SA, 0)
+    k = M_S / R
+    part = k * (1000 - SA) / (Kelvin + t)
 
-    SAzero = 0
-    return (gibbs(n0, n0, n0, SAzero, t, p) -
-            chem_potential_water_t_exact(SA, t, p)) / part
+    x2 = sfac * SA
+    x = np.sqrt(x2)
+    y = t * 0.025
+    # Note that the input pressure (p) is sea pressure in units of dbar.
+    z = p / db2Pascal
+
+    oc = (7.231916621570606e1, 1.059039593127674e1, -3.025914794694813e1,
+          5.040733670521486e1, -4.074543321119333e1, 1.864215613820487e1,
+          -3.022566485046178, -6.138647522851840, 1.353207379758663e1,
+          -7.316560781114737, 1.829232499785750, -5.358042980767074e-1,
+          -1.705887283375562, -1.246962174707332e-1, 1.228376913546017,
+          1.089364009088042e-2, -4.264828939262248e-1, 6.213127679460041e-2,
+          2.481543497315280, -1.363368964861909, -5.640491627443773e-1,
+          1.344724779893754, -2.180866793244492, 4.765753255963401,
+          -5.726993916772165, 2.918303792060746, -6.506082399183509e-1,
+          -1.015695507663942e-1, 1.035024326471108, -6.742173543702397e-1,
+          8.465642650849419e-1, -7.508472135244717e-1, -3.668086444057845e-1,
+          3.189939162107803e-1, -4.245629194309487e-2)
+
+    tl = (oc[0] + oc[1] * y + x * (oc[2] + x * (oc[3] + x * (oc[4] + x *
+         (oc[5] + oc[6] * x))) + y * (oc[7] + x * (oc[8] + x *
+         (oc[9] + oc[10] * x)) + y * (oc[11] + oc[12] * x + y * (oc[13] +
+         oc[14] * x + y * (oc[15] + x * (oc[16] + oc[17] * y))))) + z *
+         (oc[18] + x * (oc[19] + oc[20] * y + oc[21] * x) + y * (oc[22] + y *
+         (oc[23] + y * (oc[24] + oc[25] * y))) + z * (oc[26] + oc[27] * x + y *
+         (oc[28] + oc[29] * y) + z * (oc[30] + oc[31] * x + y * (oc[32] +
+         oc[33] * y) + oc[34] * z)))))
+
+    return tl * part
 
 
 @match_args_return
@@ -1898,7 +1930,7 @@ def t_maxdensity_exact(SA, p):
     for Number_of_iterations in range(0, 3):
         t_old = t
         gibbs_PT = gibbs(n0, n1, n1, SA, t_old, p)
-        # This is half way through the modified method
+        # Half way through the mod. method (McDougall and Wotherspoon, 2012)
         t = t_old - gibbs_PT / gibbs_PTT
         t_mean = 0.5 * (t + t_old)
         gibbs_PTT = (gibbs(n0, n1, n1, SA, t_mean + dt, p) -
@@ -1951,15 +1983,15 @@ def osmotic_pressure_t_exact(SA, t, pw):
     Modifications:
     2011-05-26. Trevor McDougall and Paul Barker
     """
-
+    SA = np.maximum(SA, 0)
     gibbs_pure_water = gibbs(0, 0, 0, 0, t, pw)
 
     # Initial guess of p, in dbar.
     p = pw + 235.4684
 
     # Initial guess of df/dp.
-    df_dp = -db2Pascal * (gibbs(0, 0, 1, SA, t, p) -
-                          SA * gibbs(1, 0, 1, SA, t, p))
+    df_dp = -db2Pascal * (gibbs(n0, n0, n1, SA, t, p) -
+                          SA * gibbs(n1, n0, n1, SA, t, p))
 
     for Number_of_iterations in range(0, 2):
         p_old = p

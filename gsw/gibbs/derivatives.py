@@ -5,7 +5,7 @@ from __future__ import division
 import numpy as np
 
 from library import gibbs
-from constants import cp0, Kelvin
+from constants import Kelvin, cp0, sfac
 from gsw.utilities import match_args_return
 from conversions import pt_from_CT, pt_from_t
 
@@ -19,6 +19,8 @@ __all__ = [
            'pt_first_derivatives',
            'pt_second_derivatives',
           ]
+
+n0, n1, n2 = 0, 1, 2
 
 
 @match_args_return
@@ -75,21 +77,19 @@ def pt_first_derivatives(SA, CT):
     2011-03-29. Trevor McDougall and Paul Barker.
     """
 
-    n0, n1, n2 = 0, 1, 2
     pt = pt_from_CT(SA, CT)
     abs_pt = Kelvin + pt
+
+    CT_SA = ((gibbs(n1, n0, n0, SA, pt, 0) - abs_pt *
+              gibbs(n1, n1, n0, SA, pt, 0)) / cp0)
+
     CT_pt = - (abs_pt * gibbs(n0, n2, n0, SA, pt, 0)) / cp0
 
-    def pt_derivative_SA(SA, CT):
-        CT_SA = (gibbs(n1, n0, n0, SA, pt, 0) - abs_pt *
-                                           gibbs(n1, n1, n0, SA, pt, 0)) / cp0
-        return - CT_SA / CT_pt
+    pt_SA = - CT_SA / CT_pt
 
-    def pt_derivative_CT(SA, CT):
-        return 1.0 / CT_pt
+    pt_CT = 1.0 / CT_pt
 
-    return (pt_derivative_SA(SA, CT),
-            pt_derivative_CT(SA, CT))
+    return pt_SA, pt_CT
 
 
 @match_args_return
@@ -153,15 +153,16 @@ def pt_second_derivatives(SA, CT):
     Modifications:
     2011-03-29. Trevor McDougall and Paul Barker.
     """
-
-    def pt_derivative_SA_SA(SA, CT):
-        dSA = 1e-3
-        SA_l = SA - dSA
-        SA_l = SA_l.clip(0.0, np.inf)
-        SA_u = SA + dSA
-        pt_SA_l, pt_CT_l = pt_first_derivatives(SA_l, CT)
-        pt_SA_u, pt_CT_u = pt_first_derivatives(SA_u, CT)
-        return (pt_SA_u - pt_SA_l) / (SA_u - SA_l)
+    # Increment of Absolute Salinity is 0.001 g/kg.
+    dSA = 1e-3
+    SA_l = SA - dSA
+    SA_l = np.maximum(SA_l, 0)
+    SA_u = SA + dSA
+    pt_SA_l, pt_CT_l = pt_first_derivatives(SA_l, CT)
+    pt_SA_u, pt_CT_u = pt_first_derivatives(SA_u, CT)
+    pt_SA_SA = (pt_SA_u - pt_SA_l) / (SA_u - SA_l)
+    # Can calculate this either way.
+    # pt_SA_CT = (pt_CT_u - pt_CT_l) / (SA_u - SA_l)
 
     dCT = 1e-2
     CT_l = CT - dCT
@@ -169,17 +170,10 @@ def pt_second_derivatives(SA, CT):
     pt_SA_l, pt_CT_l = pt_first_derivatives(SA, CT_l)
     pt_SA_u, pt_CT_u = pt_first_derivatives(SA, CT_u)
 
-    def pt_derivative_SA_CT(SA, CT):
-        # Can calculate this either way;
-        # pt_SA_CT = (pt_CT_u - pt_CT_l) / (SA_u - SA_l)
-        return (pt_SA_u - pt_SA_l) / (CT_u - CT_l)
+    pt_SA_CT = (pt_SA_u - pt_SA_l) / (CT_u - CT_l)
+    pt_CT_CT = (pt_CT_u - pt_CT_l) / (CT_u - CT_l)
 
-    def pt_derivative_CT_CT(SA, CT):
-        return (pt_CT_u - pt_CT_l) / (CT_u - CT_l)
-
-    return (pt_derivative_SA_SA(SA, CT),
-            pt_derivative_SA_CT(SA, CT),
-            pt_derivative_CT_CT(SA, CT))
+    return pt_SA_SA, pt_SA_CT, pt_CT_CT
 
 
 @match_args_return
@@ -248,20 +242,44 @@ def CT_first_derivatives(SA, pt):
     # FIXME: Matlab version 3.0 has a copy-and-paste of the gibbs function here
     # instead of a call. Why?
 
-    n0, n1, n2 = 0, 1, 2
     abs_pt = Kelvin + pt
 
-    g100 = gibbs(n1, n0, n0, SA, pt, 0)
-    g110 = gibbs(n1, n1, n0, SA, pt, 0)
-    g020 = gibbs(n0, n2, n0, SA, pt, 0)
+    CT_pt = -(abs_pt * gibbs(n0, n2, n0, SA, pt, 0)) / cp0
 
-    def CT_derivative_SA(SA, pt):
-        return (g100 - abs_pt * g110) / cp0
+    x2 = sfac * SA
+    x = np.sqrt(x2)
+    y_pt = 0.025 * pt
 
-    def CT_derivative_pt(SA, pt):
-        return - (abs_pt * g020) / cp0
+    g_SA_T_mod = (1187.3715515697959 + x * (-1480.222530425046 + x *
+                 (2175.341332000392 + x * (-980.14153344888 +
+                 220.542973797483 * x) + y_pt * (-548.4580073635929 + y_pt *
+                 (592.4012338275047 + y_pt * (-274.2361238716608 +
+                 49.9394019139016 * y_pt)))) + y_pt * (-258.3988055868252 +
+                 y_pt * (-90.2046337756875 + y_pt * 10.50720794170734))) +
+                 y_pt * (3520.125411988816 + y_pt * (-1351.605895580406 +
+                 y_pt * (731.4083582010072 + y_pt * (-216.60324087531103 +
+                 25.56203650166196 * y_pt)))))
 
-    return CT_derivative_SA(SA, pt), CT_derivative_pt(SA, pt)
+    g_SA_T_mod *= 0.5 * sfac * 0.025
+
+    g_SA_mod = (8645.36753595126 + x * (-7296.43987145382 + x *
+               (8103.20462414788 + y_pt * (2175.341332000392 + y_pt *
+               (-274.2290036817964 + y_pt * (197.4670779425016 + y_pt *
+               (-68.5590309679152 + 9.98788038278032 * y_pt)))) + x *
+               (-5458.34205214835 - 980.14153344888 * y_pt + x *
+               (2247.60742726704 - 340.1237483177863 * x + 220.542973797483 *
+               y_pt))) + y_pt * (-1480.222530425046 + y_pt *
+               (-129.1994027934126 + y_pt * (-30.0682112585625 + y_pt *
+               (2.626801985426835))))) + y_pt * (1187.3715515697959 + y_pt *
+               (1760.062705994408 + y_pt * (-450.535298526802 + y_pt *
+               (182.8520895502518 + y_pt * (-43.3206481750622 +
+               4.26033941694366 * y_pt))))))
+
+    g_SA_mod *= 0.5 * sfac
+
+    CT_SA = (g_SA_mod - abs_pt * g_SA_T_mod) / cp0
+
+    return CT_SA, CT_pt
 
 
 @match_args_return
@@ -328,40 +346,30 @@ def CT_second_derivatives(SA, pt):
     2011-03-29. Trevor McDougall.
     """
 
-    def CT_derivative_SA_SA(SA, pt):
-        dSA = 1e-3
-        SA_l = SA - dSA
-        SA_l = SA_l.clip(0.0, np.inf)
-        SA_u = SA + dSA
+    dSA = 1e-3
+    SA_l = SA - dSA
+    SA_l = np.maximum(SA_l, 0)
+    SA_u = SA + dSA
 
-        CT_SA_l, _ = CT_first_derivatives(SA_l, pt)
-        CT_SA_u, _ = CT_first_derivatives(SA_u, pt)
+    CT_SA_l, _ = CT_first_derivatives(SA_l, pt)
+    CT_SA_u, _ = CT_first_derivatives(SA_u, pt)
 
-        return (CT_SA_u - CT_SA_l) / (SA_u - SA_l)
+    CT_SA_SA = np.zeros_like(SA) * np.NaN
+    CT_SA_SA[SA_u != SA_l] = ((CT_SA_u[SA_u != SA_l] - CT_SA_l[SA_u != SA_l]) /
+                              (SA_u[SA_u != SA_l] - SA_l[SA_u != SA_l]))
 
-    def CT_derivative_SA_pt(SA, pt):
-        dpt = 1e-2
-        pt_l = pt - dpt
-        pt_u = pt + dpt
+    # Increment of potential temperature is 0.01 degrees C.
+    dpt = 1e-2
+    pt_l = pt - dpt
+    pt_u = pt + dpt
 
-        CT_SA_l, CT_pt_l = CT_first_derivatives(SA, pt_l)
-        CT_SA_u, CT_pt_u = CT_first_derivatives(SA, pt_u)
+    CT_SA_l, CT_pt_l = CT_first_derivatives(SA, pt_l)
+    CT_SA_u, CT_pt_u = CT_first_derivatives(SA, pt_u)
 
-        return (CT_SA_u - CT_SA_l) / (pt_u - pt_l)
+    CT_SA_pt = (CT_SA_u - CT_SA_l) / (pt_u - pt_l)
+    CT_pt_pt = (CT_pt_u - CT_pt_l) / (pt_u - pt_l)
 
-    def CT_derivative_pt_pt(SA, pt):
-        dpt = 1e-2
-        pt_l = pt - dpt
-        pt_u = pt + dpt
-
-        CT_SA_l, CT_pt_l = CT_first_derivatives(SA, pt_l)
-        CT_SA_u, CT_pt_u = CT_first_derivatives(SA, pt_u)
-
-        return (CT_pt_u - CT_pt_l) / (pt_u - pt_l)
-
-    return (CT_derivative_SA_SA(SA, pt),
-            CT_derivative_SA_pt(SA, pt),
-            CT_derivative_pt_pt(SA, pt))
+    return CT_SA_SA, CT_SA_pt, CT_pt_pt
 
 
 @match_args_return
@@ -418,7 +426,6 @@ def entropy_first_derivatives(SA, CT):
     Modifications:
     2011-03-29. Trevor McDougall.
     """
-    n0, n1 = 0, 1
     pt = pt_from_CT(SA, CT)
 
     eta_SA = -(gibbs(n1, n0, n0, SA, pt, 0)) / (Kelvin + pt)
@@ -483,33 +490,21 @@ def entropy_second_derivatives(SA, CT):
     2011-03-29. Trevor McDougall and Paul Barker.
     """
 
-    n0, n1, n2 = 0, 1, 2
-
     pt = pt_from_CT(SA, CT)
     abs_pt = Kelvin + pt
 
-    def entropy_derivative_CT_CT(SA, CT):
-        CT_pt = -(abs_pt * gibbs(n0, n2, n0, SA, pt, 0)) / cp0
+    CT_SA = ((gibbs(n1, n0, n0, SA, pt, 0) -
+             (abs_pt * gibbs(n1, n1, n0, SA, pt, 0))) / cp0)
 
-        return - cp0 / (CT_pt * abs_pt ** 2)
+    CT_pt = -(abs_pt * gibbs(n0, n2, n0, SA, pt, 0)) / cp0
 
-    def entropy_derivative_SA_CT(SA, CT):
-        CT_SA = (gibbs(n1, n0, n0, SA, pt, 0) -
-                        (abs_pt * gibbs(n1, n1, n0, SA, pt, 0))) / cp0
+    eta_CT_CT = - cp0 / (CT_pt * abs_pt ** 2)
 
-        return -CT_SA * entropy_derivative_CT_CT(SA, CT)
+    eta_SA_CT = CT_SA * eta_CT_CT
 
-    def entropy_derivative_SA_SA(SA, CT):
-        CT_SA = (gibbs(n1, n0, n0, SA, pt, 0) -
-                        (abs_pt * gibbs(n1, n1, n0, SA, pt, 0))) / cp0
+    eta_SA_SA = -gibbs(n2, n0, n0, SA, pt, 0) / abs_pt - CT_SA * eta_SA_CT
 
-        eta_SA_CT = entropy_derivative_SA_CT(SA, CT)
-
-        return -gibbs(n2, n0, n0, SA, pt, 0) / abs_pt - CT_SA * eta_SA_CT
-
-    return (entropy_derivative_SA_SA(SA, CT),
-            entropy_derivative_SA_CT(SA, CT),
-            entropy_derivative_CT_CT(SA, CT),)
+    return eta_SA_SA, eta_SA_CT, eta_CT_CT
 
 
 @match_args_return
@@ -565,7 +560,6 @@ def enthalpy_first_derivatives(SA, CT, p):
     # FIXME: The gsw 3.0 has the gibbs derivatives "copy-and-pasted" here
     # instead of the calls to the library! Why?
 
-    n0, n1 = 0, 1
     pt0 = pt_from_CT(SA, CT)
     t = pt_from_t(SA, pt0, 0, p)
     temp_ratio = (Kelvin + t) / (Kelvin + pt0)
@@ -636,20 +630,19 @@ def enthalpy_second_derivatives(SA, CT, p):
     # NOTE: The Matlab version 3.0 mentions that this function is unchanged,
     # but that's not true!
 
-    n0, n1, n2 = 0, 1, 2
     pt0 = pt_from_CT(SA, CT)
     abs_pt0 = Kelvin + pt0
     t = pt_from_t(SA, pt0, 0, p)
     temp_ratio = (Kelvin + t) / abs_pt0
 
-    rec_gTT_pt0 = 1.0 / gibbs(n0, n2, n0, SA, pt0, 0)
-    rec_gTT_t = 1.0 / gibbs(n0, n2, n0, SA, t, p)
+    rec_gTT_pt0 = 1 / gibbs(n0, n2, n0, SA, pt0, 0)
+    rec_gTT_t = 1 / gibbs(n0, n2, n0, SA, t, p)
     gST_pt0 = gibbs(n1, n1, n0, SA, pt0, 0)
     gST_t = gibbs(n1, n1, n0, SA, t, p)
     gS_pt0 = gibbs(n1, n0, n0, SA, pt0, 0)
 
     part = ((temp_ratio * gST_pt0 * rec_gTT_pt0 - gST_t * rec_gTT_t) /
-                                                                    (abs_pt0))
+            (abs_pt0))
 
     factor = gS_pt0 / cp0
 

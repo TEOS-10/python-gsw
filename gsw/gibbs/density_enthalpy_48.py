@@ -1339,8 +1339,7 @@ def SA_from_rho(rho, CT, p):
 
     SA = 50 * (v_lab - v_0) / (v_50 - v_0)  # Initial estimate of SA.
 
-    Ior = (SA < 0) | (SA > 50)
-    SA[Ior] = np.NaN
+    SA[np.logical_or(SA < 0, SA > 50)] = np.NaN
 
     v_SA = (v_50 - v_0) / 50.  # Initial v_SA estimate (SA derivative of v).
 
@@ -1348,13 +1347,13 @@ def SA_from_rho(rho, CT, p):
     for Number_of_iterations in range(0, 3):
         SA_old = SA
         delta_v = specvol(SA_old, CT, p) - v_lab
+        # Half way the mod. N-R method (McDougall and Wotherspoon, 2012)
         SA = SA_old - delta_v / v_SA  # Half way through the mod. N-R method.
         SA_mean = 0.5 * (SA + SA_old)
         rho, alpha, beta = rho_alpha_beta(SA_mean, CT, p)
         v_SA = -beta / rho
         SA = SA_old - delta_v / v_SA
-        Ior = (SA < 0) | (SA > 50)
-        SA[Ior] = np.NaN
+        SA[np.logical_or(SA < 0, SA > 50)] = np.NaN
 
     # After two iterations of this modified Newton-Raphson iteration,
     # the error in SA is no larger than 8x10^-13 g kg^-1, which

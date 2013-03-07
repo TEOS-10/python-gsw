@@ -41,7 +41,8 @@ __all__ = [
            'ionic_strength_from_SA'
            ]
 
-rad = np.pi / 180.0
+DEG2RAD = np.pi / 180.0
+n0, n1, n2 = 0, 1, 2
 
 
 @match_args_return
@@ -90,9 +91,7 @@ def pt_from_entropy(SA, entropy):
     2011-04-03. Trevor McDougall and Paul Barker.
     """
 
-    SA.clip(0, np.inf)
-
-    n0, n1 = 0, 1
+    SA = np.maximum(SA, 0)
 
     part1 = 1 - SA / SSO
     part2 = 1 - 0.05 * part1
@@ -104,7 +103,9 @@ def pt_from_entropy(SA, entropy):
     for Number_of_iterations in range(0, 3):
         pt_old = pt
         dentropy = entropy_from_pt(SA, pt_old) - entropy
-        pt = pt_old - dentropy / dentropy_dt  # Half way through mod. method.
+        # This is half way through the modified method
+        # (McDougall and Wotherspoon, 2012)
+        pt = pt_old - dentropy / dentropy_dt
         ptm = 0.5 * (pt + pt_old)
         dentropy_dt = -gibbs_pt0_pt0(SA, ptm)
         pt = pt_old - dentropy / dentropy_dt
@@ -230,9 +231,7 @@ def pt_from_t(SA, t, p, p_ref=0):
 
     p_ref = np.asanyarray(p_ref)
 
-    n0, n2 = 0, 2
-
-    SA[SA < 0] = 0
+    SA = np.maximum(SA, 0)
 
     s1 = SA * 35. / SSO
 
@@ -369,6 +368,8 @@ def pot_enthalpy_from_pt(SA, pt):
 
     SA, pt, mask = strip_mask(SA, pt)
 
+    SA = np.maximum(SA, 0)
+
     x2 = sfac * SA
     x = np.sqrt(x2)
     y = pt * 0.025  # Normalize for F03 and F08
@@ -397,7 +398,6 @@ def pot_enthalpy_from_pt(SA, pt):
     the commented code below. When this code below is run, the results are
     identical to calculating pot_enthalpy as above, to machine precision.
 
-    n0, n1 = 0, 1
     g000 = gibbs(n0, n0, n0, SA, pt, 0)
     g010 = gibbs(n0, n1, n0, SA, pt, 0)
     pot_enthalpy = g000 - (Kelvin + pt) * g010
@@ -467,6 +467,8 @@ def pt0_from_t(SA, t, p):
     Paul Barker.
     """
 
+    SA = np.maximum(SA, 0)
+
     s1 = SA * (35. / SSO)
 
     pt0 = t + p * (8.65483913395442e-6 -
@@ -477,15 +479,15 @@ def pt0_from_t(SA, t, p):
               t * 1.77803965218656e-8 +
               p * 1.71155619208233e-10))
 
-    dentropy_dt = cp0 / ((Kelvin + pt0) * (1 - 0.05 *
-                                        (1 - SA / SSO)))
+    dentropy_dt = cp0 / ((Kelvin + pt0) * (1 - 0.05 * (1 - SA / SSO)))
 
     true_entropy_part = entropy_part(SA, t, p)
 
     for Number_of_iterations in range(0, 2, 1):
         pt0_old = pt0
         dentropy = entropy_part_zerop(SA, pt0_old) - true_entropy_part
-        pt0 = pt0_old - dentropy / dentropy_dt  # Half way through mod. method.
+        # Half way the mod. method (McDougall and Wotherspoon, 2012).
+        pt0 = pt0_old - dentropy / dentropy_dt
         pt0m = 0.5 * (pt0 + pt0_old)
         dentropy_dt = -gibbs_pt0_pt0(SA, pt0m)
         pt0 = pt0_old - dentropy / dentropy_dt
@@ -554,6 +556,7 @@ def pt_from_CT(SA, CT):
     """
 
     SA, CT, mask = strip_mask(SA, CT)
+    SA = np.maximum(SA, 0)
 
     s1 = SA * 35. / SSO
 
@@ -584,7 +587,7 @@ def pt_from_CT(SA, CT):
     pt = pt_old - CT_diff / dCT_dpt  # 1/2-way through the 1st modified N-R.
     ptm = 0.5 * (pt + pt_old)
 
-    # This routine calls gibbs_pt0_pt0(SA,pt0) to get the second derivative of
+    # This routine calls gibbs_pt0_pt0(SA, pt0) to get the second derivative of
     # the Gibbs function with respect to temperature at zero sea pressure.
 
     dCT_dpt = -(ptm + Kelvin) * gibbs_pt0_pt0(SA, ptm) / cp0
@@ -592,7 +595,7 @@ def pt_from_CT(SA, CT):
     CT_diff = CT_from_pt(SA, pt) - CT
     pt_old = pt
     pt = pt_old - CT_diff / dCT_dpt  # 1.5 iterations of the modified N-R.
-
+    # Abs max error of result is 1.42e-14 deg C.
     return np.ma.array(pt, mask=mask, copy=False)
 
 
@@ -656,16 +659,15 @@ def z_from_p(p, lat, geo_strf_dyn_height=None):
     """
 
     if not geo_strf_dyn_height:
-        geo_strf_dyn_height = np.zeros(p.shape)
+        geo_strf_dyn_height = np.zeros_like(p)
 
-    X = np.sin(lat * rad)
+    X = np.sin(lat * DEG2RAD)
     sin2 = X ** 2
     B = 9.780327 * (1.0 + (5.2792e-3 + (2.32e-5 * sin2)) * sin2)
     A = -0.5 * gamma * B
     C = enthalpy_SSO_0_p(p) - geo_strf_dyn_height
-    z = -2 * C / (B + np.sqrt(B ** 2 - 4 * A * C))
 
-    return z
+    return -2 * C / (B + np.sqrt(B ** 2 - 4 * A * C))
 
 
 @match_args_return
@@ -735,7 +737,7 @@ def p_from_z(z, lat, geo_strf_dyn_height=0):
     2011-03-26. Trevor McDougall, Claire Roberts-Thomson and Paul Barker
     """
 
-    X = np.sin(lat * rad)
+    X = np.sin(lat * DEG2RAD)
     sin2 = X ** 2
     gs = 9.780327 * (1.0 + (5.2792e-3 + (2.32e-5 * sin2)) * sin2)
 
@@ -1167,7 +1169,6 @@ def entropy_from_pt(SA, pt):
     """
 
     SA = np.maximum(SA, 0)
-    n0, n1 = 0, 1
     return -gibbs(n0, n1, n0, SA, pt, 0)
 
 
@@ -1216,7 +1217,6 @@ def entropy_from_CT(SA, CT):
     """
 
     SA = np.maximum(SA, 0)
-    n0, n1 = 0, 1
     pt0 = pt_from_CT(SA, CT)
     return -gibbs(n0, n1, n0, SA, pt0, 0)
 

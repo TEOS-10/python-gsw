@@ -25,6 +25,7 @@ __all__ = [
            'Hill_ratio_at_SP2'
           ]
 
+
 def gibbs(ns, nt, npr, SA, t, p):
     r"""Calculates specific Gibbs energy and its derivatives up to order 2 for
     seawater.
@@ -1275,7 +1276,6 @@ class SA_table(object):
 
         p_orig = p.copy()  # Save for comparison to clipped p.
 
-
         ix0, iy0 = self.xy_to_ij(lon, lat)
         i0raw = np.floor(ix0).astype(int)
         i0 = np.clip(i0raw, 0, len(self.lon) - 2)
@@ -1392,6 +1392,7 @@ def SAAR(p, lon, lat):
 
     #FIXME: Compare old delta_SA with new SAAR.
     return SA_table().delta_SA(p, lon, lat)
+
 
 def infunnel(SA, CT, p):
     r"""Oceanographic funnel check for the 25-term equation
@@ -1754,11 +1755,11 @@ def enthalpy_SSO_0_p(p):
 
 
 def specvol_SSO_0_p(p):
-    r"""This function calculates specific volume at the Standard Ocean Salinity,
-    SSO, and at a Conservative Temperature of zero degrees C, as a function
-    of pressure, p, in dbar, using a streamlined version of the 48-term CT
-    version of specific volume, that is, a streamlined version of the code
-    "specvol(SA, CT, p)".
+    r"""This function calculates specific volume at the Standard Ocean
+    Salinity, SSO, and at a Conservative Temperature of zero degrees C, as a
+    function of pressure, p, in dbar, using a streamlined version of the
+    48-term CT version of specific volume, that is, a streamlined version of
+    the code "specvol(SA, CT, p)".
 
     Modifications:
     """

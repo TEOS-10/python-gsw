@@ -13,7 +13,7 @@ __all__ = ['f',
            'grav',
            'distance']
 
-DEG2RAD = np.pi / 180.0
+DEG2RAD = np.pi / 180
 
 
 def f(lat):
@@ -181,12 +181,12 @@ def distance(lon, lat, p=0):
     2000-11-06. Rich Pawlowicz
     2011-04-04. Paul Barker and Trevor McDougall
     """
-    #FIXME? The argument handling seems much too complicated.
+    # FIXME? The argument handling seems much too complicated.
     # Maybe we can come up with some simple specifications of
     # what argument combinations are permitted, and handle everything
     # with broadcasting. - EF
 
-    #FIXME: Eric what do you think? This assume p(stations, depth)
+    # FIXME: Eric what do you think? This assume p(stations, depth)
     lon, lat, = np.atleast_2d(lon), np.atleast_2d(lat)
 
     if (lon.size == 1) & (lat.size == 1):
@@ -199,11 +199,10 @@ def distance(lon, lat, p=0):
     dlon = np.diff(lon * DEG2RAD)
     dlat = np.diff(lat * DEG2RAD)
 
-    a = ((np.sin(dlat / 2.)) ** 2 + np.cos(lat[:, :-1] * DEG2RAD) *
-           np.cos(lat[:, 1:] * DEG2RAD) * (np.sin(dlon / 2.)) ** 2)
+    a = ((np.sin(dlat / 2)) ** 2 + np.cos(lat[:, :-1] * DEG2RAD) *
+           np.cos(lat[:, 1:] * DEG2RAD) * (np.sin(dlon / 2)) ** 2)
 
-    # FIXME: Do we need np.ma here?
-    angles = 2. * np.arctan2(np.ma.sqrt(a), np.ma.sqrt(1 - a))
+    angles = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
 
     p_mid = 0.5 * (p[:, 0:-1] + p[:, 0:-1])
     lat_mid = 0.5 * (lat[:, :-1] + lat[:, 1:])

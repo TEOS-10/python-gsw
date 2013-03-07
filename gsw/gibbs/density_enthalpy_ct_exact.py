@@ -213,9 +213,7 @@ def rho_alpha_beta_CT_exact(SA, CT, p):
     alpha_CT_exact = alpha_wrt_CT_t_exact(SA, t, p)
     beta_CT_exact = beta_const_CT_t_exact(SA, t, p)
 
-    return (rho_CT_exact,
-            alpha_CT_exact,
-            beta_CT_exact)
+    return rho_CT_exact, alpha_CT_exact, beta_CT_exact
 
 
 def specvol_CT_exact(SA, CT, p):
@@ -449,7 +447,7 @@ def sound_speed_CT_exact(SA, CT, p):
     """
 
     t = t_from_CT(SA, CT, p)
-    return  sound_speed_t_exact(SA, t, p)
+    return sound_speed_t_exact(SA, t, p)
 
 
 def internal_energy_CT_exact(SA, CT, p):
@@ -728,8 +726,7 @@ def SA_from_rho_CT_exact(rho, CT, p):
 
     SA = 120 * (v_lab - v_0) / (v_120 - v_0)  # Initial estimate of SA.
 
-    Ior = (SA < 0) | (SA > 120)
-    SA[Ior] = np.NaN
+    SA[np.logical_or(SA < 0, SA > 120)] = np.NaN
 
     v_SA = (v_120 - v_0) / 120  # Initial v_SA estimate (SA derivative of v).
 
@@ -737,13 +734,13 @@ def SA_from_rho_CT_exact(rho, CT, p):
     for Number_of_iterations in range(0, 3):
         SA_old = SA
         delta_v = specvol_CT_exact(SA_old, CT, p) - v_lab
-        SA = SA_old - delta_v / v_SA  # Half way through the mod. N-R method.
+        # Half way the mod. N-R method (McDougall and Wotherspoon, 2012).
+        SA = SA_old - delta_v / v_SA
         SA_mean = 0.5 * (SA + SA_old)
         rho, alpha, beta = rho_alpha_beta_CT_exact(SA_mean, CT, p)
         v_SA = -beta / rho
         SA = SA_old - delta_v / v_SA
-        Ior = (SA < 0) | (SA > 120)
-        SA[Ior] = np.ma.masked
+        SA[np.logical_or(SA < 0, SA > 120)] = np.ma.masked
 
     """After two iterations of this modified Newton-Raphson iteration, the
     error in SA is no larger than 8x10^-13 g kg^-1, which is machine precision
@@ -802,8 +799,7 @@ def CT_from_rho_exact(rho, SA, p):
     """
 
     t, t_multiple = t_from_rho_exact(rho, SA, p)
-    return (CT_from_t(SA, t, p),
-            CT_from_t(SA, t_multiple, p))
+    return CT_from_t(SA, t, p), CT_from_t(SA, t_multiple, p)
 
 
 def CT_maxdensity_exact(SA, p):

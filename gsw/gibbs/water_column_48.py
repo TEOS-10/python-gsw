@@ -88,7 +88,7 @@ def Nsquared(SA, CT, p, lat=None):
     2011-03-22. Trevor McDougall & Paul Barker
     """
 
-    if lat != None:
+    if lat is not None:
         g = grav(lat, p)
     else:
         g = 9.7963  # Standard value from Griffies (2004).
