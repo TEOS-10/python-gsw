@@ -105,7 +105,7 @@ def SA_from_SP(SP, p, lon, lat):
     SAAR = lib.SAAR(p, lon, lat)
     #SAAR = lib.delta_SA(p, lon, lat)
 
-    SA = (SSO / 35) * SP + (1 + SAAR)
+    SA = (SSO / 35) * SP * (1 + SAAR)
     SA_baltic = lib.SA_from_SP_Baltic(SP, lon, lat)
 
     # The following function (SAAR) finds SAAR in the non-Baltic parts of
