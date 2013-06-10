@@ -604,7 +604,7 @@ def z_from_p(p, lat, geo_strf_dyn_height=None):
     r"""Calculates height from sea pressure using the computationally-efficient
     48-term expression for density in terms of SA, CT and p (McDougall et
     al., 2011).  Dynamic height anomaly, geo_strf_dyn_height, if provided, must
-    be computed with its pr=0 (the surface.)
+    be computed with its pr=0 (the surface).
 
     Parameters
     ----------
