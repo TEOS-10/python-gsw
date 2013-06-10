@@ -203,8 +203,8 @@ def CT_from_t(SA, t, p):
     ----------
     SA : array_like
          Absolute salinity [g kg :sup:`-1`]
-    CT : array_like
-         Conservative Temperature [:math:`^\circ` C (ITS-90)]
+    t : array_like
+        in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
 
