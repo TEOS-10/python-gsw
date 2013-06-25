@@ -7,23 +7,31 @@ import numpy as np
 from constants import sfac, SSO, db2Pascal
 from gsw.utilities import match_args_return, strip_mask, read_data
 
-__all__ = [
-           'gibbs',
-           #'SAAR',  TODO
-           #'Fdelta',  TODO
-           #'delta_SA_ref',  TODO: delta_SA ?
-           'SA_from_SP_Baltic',
-           'SP_from_SA_Baltic',
-           'infunnel',
+__all__ = ['deltaSA_atlas',  # TODO
+           'enthalpy_SSO_0_p',
            'entropy_part',
            'entropy_part_zerop',
+           'Fdelta',  # TODO
+           'gibbs',
+           'gibbs_pt0_pt0',
+           'Hill_ratio_at_SP2',
+           'infunnel',
            'interp_ref_cast',
            'interp_SA_CT',
-           'gibbs_pt0_pt0',
+           'SAAR',  # TODO
+           'SA_from_SP_Baltic',
            'specvol_SSO_0_p',
-           'enthalpy_SSO_0_p',
-           'Hill_ratio_at_SP2'
-          ]
+           'SP_from_SA_Baltic']
+
+
+def deltaSA_atlas():
+    r"""TODO."""
+    pass
+
+
+def Fdelta():
+    r"""TODO."""
+    pass
 
 
 def gibbs(ns, nt, npr, SA, t, p):
@@ -645,7 +653,6 @@ def entropy_part(SA, t, p):
     z * (381.06836198507096 + z * (-133.7383902842754 +
     49.023632509086724 * z))))))))
 
-    # TODO? short-circuit this if SA is zero
     g08 = x2 * (z * (729.116529735046 +
     z * (-343.956902961561 + z * (124.687671116248 + z * (-31.656964386073 +
     7.04658803315449 * z)))) +
@@ -947,16 +954,7 @@ def SP_from_SA_Baltic(SA, lon, lat):
 
     Examples
     --------
-    >>> import gsw.library as lib
-    >>> SA = [6.6699, 6.7738, 6.9130, 7.3661, 7.5862, 10.3895]
-    >>> lon, lat = 20, 59
-    >>> lat = 59
-    >>> lib.SP_from_SA_Baltic(SA, lon, lat)
-    masked_array(data = [6.56825466873 6.67192351682 6.8108138311 7.26290579519 7.4825161269
-     10.2795794748],
-                 mask = [False False False False False False],
-           fill_value = 1e+20)
-    <BLANKLINE>
+    TODO
 
     References
     ----------
@@ -1025,16 +1023,7 @@ def SP_from_SA_Baltic_old(SA, lon, lat):
 
     Examples
     --------
-    >>> import gsw.library as lib
-    >>> SA = [6.6699, 6.7738, 6.9130, 7.3661, 7.5862, 10.3895]
-    >>> lon, lat = 20, 59
-    >>> lat = 59
-    >>> lib.SP_from_SA_Baltic(SA, lon, lat)
-    masked_array(data = [6.56825466873 6.67192351682 6.8108138311 7.26290579519 7.4825161269
-     10.2795794748],
-                 mask = [False False False False False False],
-           fill_value = 1e+20)
-    <BLANKLINE>
+    TODO
 
     References
     ----------
@@ -1702,7 +1691,23 @@ def enthalpy_SSO_0_p(p):
     version of the Gibbs function, that is, a streamlined version of the
     code "enthalpy(SA,CT,p).
 
+    Examples
+    --------
+    >>> import gsw
+    >>> p = np.array([10, 50, 125, 250, 600, 1000])
+    >>> gsw.library.enthalpy_SSO_0_p(p)
+    array([   97.26388276,   486.27439004,  1215.47518168,  2430.24919716,
+            5827.90973888,  9704.32296903])
+
     Modifications:
+    VERSION NUMBER: 3.03 (29th April, 2013)
+
+    References
+    ----------
+    .. [1] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2013:  A
+    computationally efficient 48-term expression for the density of seawater in
+    terms of Conservative Temperature, and related properties of seawater.  To
+    be submitted to J. Atm. Ocean. Technol., xx, yyy-zzz.
     """
 
     v01 = 9.998420897506056e+2
@@ -1783,3 +1788,8 @@ def specvol_SSO_0_p(p):
     return ((v21 + SSO * (v26 + v36 * SSO + v31 * np.sqrt(SSO)) + p *
            (v37 + v41 * SSO + p * (v43 + v47 * p))) / (v01 + SSO * (v05 + v08 *
            np.sqrt(SSO)) + p * (v12 + v15 * SSO + p * (v17 + v20 * SSO))))
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
