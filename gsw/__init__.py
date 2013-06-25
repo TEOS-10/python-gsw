@@ -2,7 +2,7 @@
 
 __authors__ = 'Eric Firing', u'Bjørn Ådlandsvik', 'Filipe Fernandes'
 __license__ = "MIT"
-__version__ = "3.0.2"
+__version__ = "3.0.3"
 __maintainer__ = "Filipe Fernandes"
 __email__ = "ocefpaf@gmail.com"
 __status__ = "Production"
