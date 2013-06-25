@@ -10,38 +10,35 @@ from gsw.utilities import match_args_return, strip_mask
 from conversions import pt_from_CT, pt_from_t, pt0_from_t
 from constants import Kelvin, db2Pascal, P0, SSO, cp0, R, sfac, M_S
 
-__all__ = [
-           'rho_t_exact',
-           'pot_rho_t_exact',
-           'sigma0_pt0_exact',
-           'alpha_wrt_CT_t_exact',
+__all__ = ['alpha_wrt_CT_t_exact',
            'alpha_wrt_pt_t_exact',
            'alpha_wrt_t_exact',
            'beta_const_CT_t_exact',
            'beta_const_pt_t_exact',
            'beta_const_t_exact',
-           'specvol_t_exact',
-           'specvol_anom_t_exact',
-           'sound_speed_t_exact',
-           'kappa_t_exact',
-           'kappa_const_t_exact',
-           'internal_energy_t_exact',
-           'enthalpy_t_exact',
-           'dynamic_enthalpy_t_exact',
-           'SA_from_rho_t_exact',
-           #'t_from_rho_exact',
-           't_maxdensity_exact',
-           'entropy_t_exact',
-           'cp_t_exact',
-           'isochoric_heat_cap_t_exact',
            'chem_potential_relative_t_exact',
-           'chem_potential_water_t_exact',
            'chem_potential_salt_t_exact',
+           'chem_potential_water_t_exact',
+           'cp_t_exact',
+           'dynamic_enthalpy_t_exact',
+           'enthalpy_t_exact',
+           'entropy_t_exact',
            'Helmholtz_energy_t_exact',
-           'adiabatic_lapse_rate_t_exact',
+           'internal_energy_t_exact',
+           'isochoric_heat_cap_t_exact',
+           'kappa_const_t_exact',
+           'kappa_t_exact',
            'osmotic_coefficient_t_exact',
-           'osmotic_pressure_t_exact'
-          ]
+           'osmotic_pressure_t_exact',
+           'pot_rho_t_exact',
+           'rho_t_exact',
+           'SA_from_rho_t_exact',
+           'sigma0_pt0_exact',
+           'sound_speed_t_exact',
+           'specvol_anom_t_exact',
+           'specvol_t_exact',
+           't_from_rho_exact',
+           't_maxdensity_exact']
 
 n0, n1, n2 = 0, 1, 2
 
@@ -209,27 +206,27 @@ def sigma0_pt0_exact(SA, pt0):
     y = pt0 * 0.025
 
     g03 = (100015.695367145 +
-          y * (-270.983805184062 +
-          y * (1455.0364540468 +
-          y * (-672.50778314507 +
-          y * (397.968445406972 +
-          y * (-194.618310617595 +
-          y * (63.5113936641785 -
-          y * 9.63108119393062)))))))
+           y * (-270.983805184062 +
+           y * (1455.0364540468 +
+           y * (-672.50778314507 +
+           y * (397.968445406972 +
+           y * (-194.618310617595 +
+           y * (63.5113936641785 -
+           y * 9.63108119393062)))))))
 
     g08 = x2 * (-3310.49154044839 +
-          x * (199.459603073901 +
-          x * (-54.7919133532887 +
-          x * 36.0284195611086 -
-          y * 22.6683558512829) +
-          y * (-175.292041186547 +
-          y * (383.058066002476 +
-          y * (-460.319931801257 +
-          y * 234.565187611355)))) +
-          y * (729.116529735046 +
-          y * (-860.764303783977 +
-          y * (694.244814133268 +
-          y * (-297.728741987187)))))
+                x * (199.459603073901 +
+                x * (-54.7919133532887 +
+                x * 36.0284195611086 -
+                y * 22.6683558512829) +
+                y * (-175.292041186547 +
+                y * (383.058066002476 +
+                y * (-460.319931801257 +
+                y * 234.565187611355)))) +
+                y * (729.116529735046 +
+                y * (-860.764303783977 +
+                y * (694.244814133268 +
+                y * (-297.728741987187)))))
 
     """The above code is exactly the same as the following two lines of code.
     sigma0_pt_exact = rho_t_exact(SA, pt0, 0.) - 1000
@@ -1105,8 +1102,8 @@ def t_from_rho_exact(rho, SA, p):
 
     t_diff = 40. * np.ones_like(I_salty) - t_freezing(I_salty)
 
-    top = (rho_40[I_salty] - rho_freezing[I_salty] +
-    rho_freezing[I_salty] * alpha_freezing[I_salty] * t_diff)
+    top = (rho_40[I_salty] - rho_freezing[I_salty] + rho_freezing[I_salty] *
+           alpha_freezing[I_salty] * t_diff)
 
     a = top / (t_diff ** 2)
     b = -rho_freezing[I_salty] * alpha_freezing[I_salty]
@@ -1129,8 +1126,8 @@ def t_from_rho_exact(rho, SA, p):
     t_a = np.zeros_like(SA) + np.NaN
     # Set the initial value of the quadratic solution roots.
     t_a[I_fresh[I_quad]] = (t_max_rho[I_fresh[I_quad]] +
-                           np.sqrt(rec_half_rho_TT * (rho[I_fresh[I_quad]] -
-                           rho_max[I_fresh[I_quad]])))
+                            np.sqrt(rec_half_rho_TT * (rho[I_fresh[I_quad]] -
+                            rho_max[I_fresh[I_quad]])))
 
     for Number_of_iterations in range(0, 5):
         t_old = t_a
@@ -1143,8 +1140,8 @@ def t_from_rho_exact(rho, SA, p):
     t_b = np.zeros_like(SA) + np.NaN
     # Set the initial value of the quadratic solution routes.
     t_b[I_fresh[I_quad]] = (t_max_rho[I_fresh[I_quad]] -
-                           np.sqrt(rec_half_rho_TT * (rho[I_fresh[I_quad]] -
-                           rho_max[I_fresh[I_quad]])))
+                            np.sqrt(rec_half_rho_TT * (rho[I_fresh[I_quad]] -
+                            rho_max[I_fresh[I_quad]])))
     for Number_of_iterations in range(0, 6):
         t_old = t_b
         rho_old = rho_t_exact(SA, t_old, p)
@@ -1572,28 +1569,28 @@ def chem_potential_water_t_exact(SA, t, p):
     z = p * 1e-4  # Pressure (p) is sea pressure in units of dbar.
 
     g03_g = (101.342743139674 + z * (100015.695367145 +
-        z * (-2544.5765420363 + z * (284.517778446287 +
-        z * (-33.3146754253611 + (4.20263108803084 -
-        0.546428511471039 * z) * z)))) +
-        y * (5.90578347909402 + z * (-270.983805184062 +
-        z * (776.153611613101 + z * (-196.51255088122 +
-        (28.9796526294175 - 2.13290083518327 * z) * z))) +
-        y * (-12357.785933039 + z * (1455.0364540468 +
-        z * (-756.558385769359 + z * (273.479662323528 +
-        z * (-55.5604063817218 + 4.34420671917197 * z)))) +
-        y * (736.741204151612 + z * (-672.50778314507 +
-        z * (499.360390819152 + z * (-239.545330654412 +
-        (48.8012518593872 - 1.66307106208905 * z) * z))) +
-        y * (-148.185936433658 + z * (397.968445406972 +
-        z * (-301.815380621876 + (152.196371733841 -
-        26.3748377232802 * z) * z)) +
-        y * (58.0259125842571 + z * (-194.618310617595 +
-        z * (120.520654902025 + z * (-55.2723052340152 +
-        6.48190668077221 * z))) +
-        y * (-18.9843846514172 + y * (3.05081646487967 -
-        9.63108119393062 * z) +
-        z * (63.5113936641785 + z * (-22.2897317140459 +
-        8.17060541818112 * z)))))))))
+             z * (-2544.5765420363 + z * (284.517778446287 +
+             z * (-33.3146754253611 + (4.20263108803084 -
+             0.546428511471039 * z) * z)))) +
+             y * (5.90578347909402 + z * (-270.983805184062 +
+             z * (776.153611613101 + z * (-196.51255088122 +
+             (28.9796526294175 - 2.13290083518327 * z) * z))) +
+             y * (-12357.785933039 + z * (1455.0364540468 +
+             z * (-756.558385769359 + z * (273.479662323528 +
+             z * (-55.5604063817218 + 4.34420671917197 * z)))) +
+             y * (736.741204151612 + z * (-672.50778314507 +
+             z * (499.360390819152 + z * (-239.545330654412 +
+             (48.8012518593872 - 1.66307106208905 * z) * z))) +
+             y * (-148.185936433658 + z * (397.968445406972 +
+             z * (-301.815380621876 + (152.196371733841 -
+             26.3748377232802 * z) * z)) +
+             y * (58.0259125842571 + z * (-194.618310617595 +
+             z * (120.520654902025 + z * (-55.2723052340152 +
+             6.48190668077221 * z))) +
+             y * (-18.9843846514172 + y * (3.05081646487967 -
+             9.63108119393062 * z) +
+             z * (63.5113936641785 + z * (-22.2897317140459 +
+             8.17060541818112 * z)))))))))
 
     g08_g = x2 * (1416.27648484197 +
         x * (-2432.14662381794 + x * (2025.80115603697 +
@@ -1689,57 +1686,6 @@ def chem_potential_salt_t_exact(SA, t, p):
 
     return (chem_potential_relative_t_exact(SA, t, p) +
                                        chem_potential_water_t_exact(SA, t, p))
-
-
-@match_args_return
-def adiabatic_lapse_rate_t_exact(SA, t, p):
-    r"""Calculates the adiabatic lapse rate of seawater.
-
-    Parameters
-    ----------
-    SA : array_like
-         Absolute salinity [g kg :sup:`-1`]
-    t : array_like
-        in situ temperature [:math:`^\circ` C (ITS-90)]
-    p : array_like
-        pressure [dbar]
-
-    Returns
-    -------
-    adiabatic_lapse_rate : array_like
-                           Adiabatic lapse rate [K Pa :sup:`-1`]
-
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    The output is in unit of degrees Celsius per Pa, (or equivalently K/Pa) not
-    in units of K/dbar
-
-    Examples
-    --------
-    >>> import gsw
-    >>> SA = [34.7118, 34.8915, 35.0256, 34.8472, 34.7366, 34.7324]
-    >>> t = [28.7856, 28.4329, 22.8103, 10.2600, 6.8863, 4.4036]
-    >>> p = [10, 50, 125, 250, 600, 1000]
-    >>> gsw.adiabatic_lapse_rate_t_exact(SA, t, p)
-    array([  2.40350282e-08,   2.38496700e-08,   2.03479880e-08,
-             1.19586543e-08,   9.96170718e-09,   8.71747270e-09])
-
-    References
-    ----------
-    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqn. (2.22.1).
-
-    Modifications:
-    2011-03-29. Trevor McDougall and Paul Barker
-    """
-
-    return -gibbs(n0, n1, n1, SA, t, p) / gibbs(n0, n2, n0, SA, t, p)
 
 
 @match_args_return
@@ -1934,7 +1880,7 @@ def t_maxdensity_exact(SA, p):
         t = t_old - gibbs_PT / gibbs_PTT
         t_mean = 0.5 * (t + t_old)
         gibbs_PTT = (gibbs(n0, n1, n1, SA, t_mean + dt, p) -
-                    gibbs(n0, n1, n1, SA, t_mean - dt, p)) / (dt + dt)
+                     gibbs(n0, n1, n1, SA, t_mean - dt, p)) / (dt + dt)
         t = t_old - gibbs_PT / gibbs_PTT
 
     # After three iterations of this modified Newton-Raphson iteration, the
