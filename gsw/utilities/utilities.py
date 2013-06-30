@@ -14,6 +14,45 @@ __all__ = [
            'strip_mask',
            ]
 
+def repair_npzfile_with_objects(infile, outfile):
+    """
+    Read an npz file written based on scipy.io.loadmat,
+    and write out a new npz file in which arrays have been
+    extracted from object arrays.
+
+    This might be needed only during the development process.
+    It is motivated by the need to fix gsw_cf.npz so that
+    the special object array handling in to_masked is not needed
+    for the tests.
+    """
+    dat = np.load(infile)
+    out = dict()
+    for k, v in dat.iteritems():
+        if v.dtype.kind == 'O':
+            v = v.item()
+        out[k] = v
+    np.savez(outfile, **out)
+
+def to_masked(arg):
+    r"""
+    Ensure an argument is a floating-point masked array.
+
+    This is a helper for match_args_return.
+    """
+    if not np.iterable(arg):
+        arg = [arg]
+    try:
+        arg = np.ma.array(arg, copy=False, dtype=float)
+    except ValueError:
+        # We might not want to keep this here.  It handles the
+        # case where reading a matfile with scipy has yielded
+        # an object array containing a single object, which is
+        # the array one actually wants.
+        if arg.dtype.kind == 'O':
+            arg = np.ma.array(arg.item(), copy=False, dtype=float)
+        else:
+            raise
+    return np.ma.masked_invalid(arg)
 
 class match_args_return(object):
     r"""Function decorator to homogenize input arguments and to make the output
@@ -33,8 +72,7 @@ class match_args_return(object):
             args.append(p)
         self.array = np.any([hasattr(a, '__iter__') for a in args])
         self.masked = np.any([np.ma.isMaskedArray(a) for a in args])
-        newargs = [np.ma.atleast_1d(np.ma.masked_invalid(a)) for a in args]
-        newargs = [a.astype(np.float) for a in newargs]
+        newargs = [to_masked(a) for a in args]
         if p is not None:
             kw['p'] = newargs.pop()
         ret = self.func(*newargs, **kw)
