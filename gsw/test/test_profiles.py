@@ -40,7 +40,7 @@ cf = Dict2Struc(np.load(os.path.join(datadir, 'gsw_cf.npz')))
 # Main dictionary of functions with arguments. Could perhaps be auto-generated.
 function_arguments = dict(
     # absolute_salinity_sstar_ct.py
-    #SA_from_SP=('SP', 'p', 'long', 'lat'), BUG on SAAR
+    SA_from_SP=('SP', 'p', 'long', 'lat'),  # uses SAAR
     #Sstar_from_SP  TODO
     CT_from_t=('SA', 't', 'p'),
     #
@@ -65,14 +65,14 @@ function_arguments = dict(
     SA_from_rho_t_exact=('rho', 't', 'p'),
     #t_from_rho_exact=('rho', 'SA', 'p'),
     t_maxdensity_exact=('SA', 'p'),
-    entropy_t_exact=('SA', 't', 'p'),
+    #entropy_t_exact=('SA', 't', 'p'),             # Not in V3.03
     cp_t_exact=('SA', 't', 'p'),
     isochoric_heat_cap_t_exact=('SA', 't', 'p'),
     chem_potential_relative_t_exact=('SA', 't', 'p'),
     chem_potential_water_t_exact=('SA', 't', 'p'),
     chem_potential_salt_t_exact=('SA', 't', 'p'),
     Helmholtz_energy_t_exact=('SA', 't', 'p'),
-    adiabatic_lapse_rate_t_exact=('SA', 't', 'p'),
+    # adiabatic_lapse_rate_t_exact=('SA', 't', 'p'),  # Not in V3.03
     osmotic_coefficient_t_exact=('SA', 't', 'p'),
     osmotic_pressure_t_exact=('SA', 't', 'p'),
     #
@@ -209,9 +209,9 @@ function_arguments = dict(
     #
     # library.py
     #gibbs
-    #SAAR  TODO
+    #SAAR=('p', 'long', 'lat'),          #  not directly tested on Matlab
     #Fdelta  TODO
-    #delta_SA_ref=('p', 'long', 'lat'), TODO
+    #delta_SA_ref=('p', 'long', 'lat'),  #  not directly tested on Matlab
     #SA_from_SP_Baltic=('SP', 'long', 'lat'),  NOTE: Not tested on Matlab.
     #SP_from_SA_Baltic=('SA', 'long', 'lat'),  NOTE: Not tested on Matlab.
     #infunnel=('SA', 'CT', 'p'),  NOTE: Not tested on Matlab.
@@ -286,7 +286,7 @@ not_match = {
     'Turner_Rsubrho': 'Tu',
     'IPV_vs_fNsquared_ratio': 'IPVfN2',
     'Nsquared': 'n2',
-    'chem_potential_relative_t_exact': 'chem_potential_t_exact',
+    #'chem_potential_relative_t_exact': 'chem_potential_t_exact',
     'rho_alpha_beta_CT_exact': 'rho_CTrab_exact',
     'rho_alpha_beta': 'rho_rab',
     }

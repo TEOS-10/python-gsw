@@ -9,9 +9,9 @@ from gsw.utilities import match_args_return, strip_mask, read_data
 
 __all__ = [
            'gibbs',
-           #'SAAR',  TODO
+           'SAAR',              # new in V3
+           'delta_SA_ref',      # was delta_SA in V3
            #'Fdelta',  TODO
-           #'delta_SA_ref',  TODO: delta_SA ?
            'SA_from_SP_Baltic',
            'SP_from_SA_Baltic',
            'infunnel',
@@ -1147,23 +1147,26 @@ class SA_table(object):
         self.max_p_fudge = max_p_fudge
         self.min_frac = min_frac
         data = read_data(fname)
-        # Make the order x, y, z:
-        temp = data.delta_SA_ref.transpose((2, 1, 0)).copy()
-        self.dsa = np.ma.masked_invalid(temp)
-        self.dsa.data[self.dsa.mask] = 0
+
         self.lon = data.longs_ref.astype(np.float)
         self.lat = data.lats_ref.astype(np.float)
         self.p = data.p_ref                # Depth levels
-        # ndepth from the file disagrees with the unmasked count from
-        # delta_SA_ref in a few places; this should be fixed in the
-        # file, but for now we will simply calculate ndepth directly from
-        # delta_SA_ref.
-        #self.ndepth = np.ma.masked_invalid(data.ndepth_ref.T).astype(np.int8)
-        ndepth = self.dsa.count(axis=-1)
-        self.ndepth = np.ma.masked_equal(ndepth, 0)
         self.dlon = self.lon[1] - self.lon[0]
         self.dlat = self.lat[1] - self.lat[0]
         self.i_ca, self.j_ca = self.xy_to_ij(self.x_ca, self.y_ca)
+
+        # Make the order x, y, z:
+        # Start with deltaSA_ref (was delta_SA_ref in V2):
+        temp = data.deltaSA_ref.transpose((2, 1, 0)).copy()
+        self.dsa_ref = np.ma.masked_invalid(temp)
+        self.dsa_ref.data[self.dsa_ref.mask] = 0
+        # Now SAAR_ref, which did not exist in V2:
+        temp = data.SAAR_ref.transpose((2, 1, 0)).copy()
+        self.SAAR_ref = np.ma.masked_invalid(temp)
+        self.SAAR_ref.data[self.SAAR_ref.mask] = 0
+
+
+
 
     def xy_to_ij(self, x, y):
         """
@@ -1258,9 +1261,10 @@ class SA_table(object):
         dsa = vv.sum(axis=0)
         return dsa, frac
 
-    def delta_SA(self, p, lon, lat):
-        r"""Table lookup of salinity anomaly, given pressure, lon, and lat."""
-
+    def _delta_SA(self, p, lon, lat):
+        """
+        Table lookup engine--to be called only from SAAR or SA_ref.
+        """
         p = np.ma.masked_less(p, 0)
         mask_in = np.ma.mask_or(np.ma.getmask(p), np.ma.getmask(lon))
         mask_in = np.ma.mask_or(mask_in, np.ma.getmask(lat))
@@ -1333,6 +1337,35 @@ class SA_table(object):
             delta_SA = np.ma.array(delta_SA, mask=mask_in, copy=False)
         return delta_SA
 
+    def SAAR(self, p, lon, lat):
+        """
+        Table lookup of salinity anomaly ratio, given pressure, lon, and lat.
+        """
+        self.dsa = self.SAAR_ref
+        # In V2,
+        # ndepth from the file disagrees with the unmasked count from
+        # SAAR_ref in a few places; this should be fixed in the
+        # file, but for now we will simply calculate ndepth directly from
+        # SAAR_ref.
+        # TODO: check to see whether this discrepancy is also found in V3.
+        #self.ndepth = np.ma.masked_invalid(data.ndepth_ref.T).astype(np.int8)
+        ndepth = self.dsa.count(axis=-1)
+        self.ndepth = np.ma.masked_equal(ndepth, 0)
+
+        return self._delta_SA(p, lon, lat)
+
+    def delta_SA_ref(self, p, lon, lat):
+        """
+        Table lookup of salinity anomaly reference value, given pressure,
+        lon, and lat.
+        """
+        self.dsa = self.dsa_ref
+        # See comment in previous method.
+        ndepth = self.dsa.count(axis=-1)
+        self.ndepth = np.ma.masked_equal(ndepth, 0)
+
+        return self._delta_SA(p, lon, lat)
+
 
 @match_args_return
 def SAAR(p, lon, lat):
@@ -1356,7 +1389,7 @@ def SAAR(p, lon, lat):
     Returns
     -------
     SAAR : masked array; masked where no nearby ocean is found in data
-           Absolute Salinity Anomaly Ratio [unitless] FIXME: [g kg :sup:`-1`]?
+           Absolute Salinity Anomaly Ratio [unitless]
 
     Notes
     -----
@@ -1387,11 +1420,68 @@ def SAAR(p, lon, lat):
     but the numpy implementation here differs substantially from the
     matlab implementation.
 
-    Modifications:
     """
 
-    #FIXME: Compare old delta_SA with new SAAR.
-    return SA_table().delta_SA(p, lon, lat)
+    return SA_table().SAAR(p, lon, lat)
+
+
+@match_args_return
+def delta_SA_ref(p, lon, lat):
+    r"""Absolute Salinity anomaly reference value (excluding the Baltic Sea).
+
+    Calculates the Absolute Salinity anomaly reference value, SA - SR,
+    in the open ocean by spatially interpolating the global reference
+    data set of deltaSA_ref to the location of the seawater sample.
+
+    This function uses version 3.0 of the deltaSA_ref look up table.
+
+    Parameters
+    ----------
+    p : array_like
+        pressure [dbar]
+    lon : array_like
+          decimal degrees east (will be treated modulo 360)
+    lat : array_like
+          decimal degrees (+ve N, -ve S) [-90..+90]
+
+    Returns
+    -------
+    delta_SA_ref : masked array; masked where no nearby ocean is found in data
+           Absolute Salinity anomaly reference value  [g/kg]
+
+    Notes
+    -----
+    The Absolute Salinity anomaly reference value in the Baltic Sea is
+    evaluated separately, since it is a function of Practical Salinity,
+    not of space. The present function returns a delta_SA_ref of zero
+    for data in the Baltic Sea. The correct way of calculating Absolute
+    Salinity in the Baltic Sea is by calling SA_from_SP.
+
+    The mask is only set when the observation is well and truly on dry
+    land; often the warning flag is not set until one is several hundred
+    kilometers inland from the coast.
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp.
+
+    .. [2] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
+    for estimating Absolute Salinity in the global ocean.  Submitted to Ocean
+    Science. A preliminary version is available at Ocean Sci. Discuss.,
+    6, 215-242.
+    http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
+
+    The algorithm is taken from the matlab implementation of the references,
+    but the numpy implementation here differs substantially from the
+    matlab implementation.
+
+    """
+
+    return SA_table().delta_SA_ref(p, lon, lat)
+
 
 
 def infunnel(SA, CT, p):
