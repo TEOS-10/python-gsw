@@ -11,7 +11,7 @@ __all__ = ['deltaSA_atlas',
            'enthalpy_SSO_0_p',
            'entropy_part',
            'entropy_part_zerop',
-           'Fdelta',  # TODO
+           'Fdelta',            # seems to be new in V3
            'gibbs',
            'gibbs_pt0_pt0',
            'Hill_ratio_at_SP2',
@@ -23,15 +23,6 @@ __all__ = ['deltaSA_atlas',
            'specvol_SSO_0_p',
            'SP_from_SA_Baltic']
 
-
-def deltaSA_atlas():
-    r"""TODO."""
-    pass
-
-
-def Fdelta():
-    r"""TODO."""
-    pass
 
 
 def gibbs(ns, nt, npr, SA, t, p):
@@ -1471,6 +1462,61 @@ def deltaSA_atlas(p, lon, lat):
 
     return SA_table().delta_SA_ref(p, lon, lat)
 
+
+# @match_args_return # not needed because it immediately calls SAAR
+def Fdelta(p, lon, lat):
+    r"""Fdelta from the Absolute Salinity Anomaly Ratio (SAAR)::
+
+       Fdelta = (1 + r1)SAAR/(1 - r1*SAAR)
+              = (SA/Sstar) - 1
+
+    with r1 being the constant 0.35 based on the work of Pawlowicz et al.
+    (2011). Note that since SAAR is everywhere less than 0.001 in the global
+    ocean, Fdelta is only slighty different to 1.35*SAAR.
+
+    Parameters
+    ----------
+    p : array_like
+        pressure [dbar]
+    lon : array_like
+          decimal degrees east (will be treated modulo 360)
+    lat : array_like
+          decimal degrees (+ve N, -ve S) [-90..+90]
+
+    Returns
+    -------
+    Fdelta : masked array; masked where no nearby ocean is found in data
+           Ratio of SA to Sstar, minus 1 [unitless]
+
+    Notes
+    -----
+    The mask is only set when the observation is well and truly on dry
+    land; often the warning flag is not set until one is several hundred
+    kilometers inland from the coast.
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation of
+    seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp.  Available from http://www.TEOS-10.org
+    See section 2.5 and appendices A.4 and A.5 of this TEOS-10 Manual.
+
+    .. [2] McDougall, T.J., D.R. Jackett, F.J. Millero, R. Pawlowicz and
+    P.M. Barker, 2012: A global algorithm for estimating Absolute Salinity.
+    Ocean Science, 8, 1123-1134.
+    http://www.ocean-sci.net/8/1123/2012/os-8-1123-2012.pdf
+
+    .. [3] Pawlawicz, R., D.G. Wright and F.J. Millero, 2011; The effects of
+    biogeochemical processes on oceanic conductivity/salinty/density
+    relationships and the characterization of real seawater. Ocean Science,
+    7, 363-387.  http://www.ocean-sci.net/7/363/2011/os-7-363-2011.pdf
+
+    """
+    r = 0.35
+    saar = SAAR(p, lon, lat)
+    Fdelta = ((1 + r) * saar) / (1 - r * saar)
+    return Fdelta
 
 
 def infunnel(SA, CT, p):

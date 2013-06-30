@@ -210,7 +210,7 @@ function_arguments = dict(
     # library.py
     #gibbs
     #SAAR=('p', 'long', 'lat'),          #  not directly tested on Matlab
-    #Fdelta  TODO
+    Fdelta=('p', 'long', 'lat'),
     deltaSA_atlas=('p', 'long', 'lat'),
     #SA_from_SP_Baltic=('SP', 'long', 'lat'),  NOTE: Not tested on Matlab.
     #SP_from_SA_Baltic=('SA', 'long', 'lat'),  NOTE: Not tested on Matlab.
