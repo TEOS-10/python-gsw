@@ -9,10 +9,11 @@ from gsw.utilities import match_args_return
 from conversions import pt0_from_t, CT_from_pt
 import library as lib
 
-__all__ = [
+__all__ = ['check_input',
            'SA_from_SP',  # FIXME: Incomplete and untested. (need lib.SAAR)
            'Sstar_from_SP',  # FIXME: Incomplete and untested. (need lib.SAAR)
-           'CT_from_t'
+           'CT_from_t',
+           'SA_CT_plot'  # FIXME: Incomplete and untested.
            ]
 
 
