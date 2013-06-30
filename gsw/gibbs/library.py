@@ -7,8 +7,7 @@ import numpy as np
 from constants import sfac, SSO, db2Pascal
 from gsw.utilities import match_args_return, strip_mask, read_data
 
-__all__ = ['deltaSA_atlas',  # TODO
-           'delta_SA_ref',      # was delta_SA in V3
+__all__ = ['deltaSA_atlas',
            'enthalpy_SSO_0_p',
            'entropy_part',
            'entropy_part_zerop',
@@ -1416,19 +1415,19 @@ def SAAR(p, lon, lat):
 
 
 @match_args_return
-def delta_SA_ref(p, lon, lat):
-    r"""Absolute Salinity anomaly reference value (excluding the Baltic Sea).
+def deltaSA_atlas(p, lon, lat):
+    r"""Absolute Salinity anomaly atlas value (excluding the Baltic Sea).
 
-    Calculates the Absolute Salinity anomaly reference value, SA - SR,
+    Calculates the Absolute Salinity anomaly atlas value, SA - SR,
     in the open ocean by spatially interpolating the global reference
-    data set of deltaSA_ref to the location of the seawater sample.
+    data set of deltaSA_atlas to the location of the seawater sample.
 
     This function uses version 3.0 of the deltaSA_ref look up table.
 
     Parameters
     ----------
     p : array_like
-        pressure [dbar]
+        sea pressure (absolute pressure - 10.1325 dbar) [dbar]
     lon : array_like
           decimal degrees east (will be treated modulo 360)
     lat : array_like
@@ -1436,14 +1435,14 @@ def delta_SA_ref(p, lon, lat):
 
     Returns
     -------
-    delta_SA_ref : masked array; masked where no nearby ocean is found in data
-           Absolute Salinity anomaly reference value  [g/kg]
+    deltaSA_atlas : masked array; masked where no nearby ocean is found in data
+           Absolute Salinity anomaly atlas value  [g/kg]
 
     Notes
     -----
-    The Absolute Salinity anomaly reference value in the Baltic Sea is
+    The Absolute Salinity anomaly atlas value in the Baltic Sea is
     evaluated separately, since it is a function of Practical Salinity,
-    not of space. The present function returns a delta_SA_ref of zero
+    not of space. The present function returns a deltaSA_atlas of zero
     for data in the Baltic Sea. The correct way of calculating Absolute
     Salinity in the Baltic Sea is by calling SA_from_SP.
 
@@ -1464,9 +1463,9 @@ def delta_SA_ref(p, lon, lat):
     6, 215-242.
     http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
 
-    The algorithm is taken from the matlab implementation of the references,
+    The algorithm is taken from the Matlab implementation of the references,
     but the numpy implementation here differs substantially from the
-    matlab implementation.
+    Matlab implementation.
 
     """
 

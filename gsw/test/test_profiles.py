@@ -211,7 +211,7 @@ function_arguments = dict(
     #gibbs
     #SAAR=('p', 'long', 'lat'),          #  not directly tested on Matlab
     #Fdelta  TODO
-    #delta_SA_ref=('p', 'long', 'lat'),  #  not directly tested on Matlab
+    deltaSA_atlas=('p', 'long', 'lat'),
     #SA_from_SP_Baltic=('SP', 'long', 'lat'),  NOTE: Not tested on Matlab.
     #SP_from_SA_Baltic=('SA', 'long', 'lat'),  NOTE: Not tested on Matlab.
     #infunnel=('SA', 'CT', 'p'),  NOTE: Not tested on Matlab.
