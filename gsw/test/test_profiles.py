@@ -44,7 +44,7 @@ function_arguments = dict(
     #Sstar_from_SP  TODO
     CT_from_t=('SA', 't', 'p'),
     #
-    # basic_thermodynamic_t.py
+    # thermodynamics_from_t.py
     rho_t_exact=('SA', 't', 'p'),
     pot_rho_t_exact=('SA', 't', 'p', 'pr'),
     sigma0_pt0_exact=('SA', 'pt0'),
@@ -315,8 +315,8 @@ def generic_test(self, func=None, argnames=None):
     try:
         self.assertTrue(maxdiff < maxallowed)
     except AssertionError, e:
-        #print out
-        #print target
+        print out
+        print target
         raise AssertionError("Error in %s %s, maxdiff is %s vs %s allowed"
                               % (func, e.args, maxdiff, maxallowed))
 

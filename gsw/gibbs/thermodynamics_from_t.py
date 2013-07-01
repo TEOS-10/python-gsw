@@ -588,7 +588,7 @@ def chem_potential_relative_t_exact(SA, t, p):
     Returns
     -------
     chem_potential_relative : array_like
-                              relative chemical potential [J kg :sup:`-1`]
+                              relative chemical potential [J/g]
 
     See Also
     --------
@@ -616,9 +616,10 @@ def chem_potential_relative_t_exact(SA, t, p):
     UNESCO (English), 196 pp.
 
     Modifications:
-    2011-03-29. Trevor McDougall and Paul Barker
+    2013-04-15. Trevor McDougall and Paul Barker
     """
-
+    n0 = 0
+    n1 = 1
     return gibbs(n1, n0, n0, SA, t, p)
 
 
@@ -1529,7 +1530,7 @@ def chem_potential_water_t_exact(SA, t, p):
     -------
     chem_potential_water : array_like
                            chemical potential of water in seawater
-                           [J kg :sup:`-1`]
+                           [J/g]
 
     See Also
     --------
@@ -1557,7 +1558,7 @@ def chem_potential_water_t_exact(SA, t, p):
     UNESCO (English), 196 pp.
 
     Modifications:
-    2011-03-29. Trevor McDougall and Paul Barker
+    2013-04-15. Trevor McDougall and Paul Barker
     """
     SA, t, p, mask = strip_mask(SA, t, p)
 
@@ -1633,6 +1634,11 @@ def chem_potential_water_t_exact(SA, t, p):
         y * (1187.3715515697959))
 
     chem_potential_water = g03_g + g08_g - 0.5 * sfac * SA * g_SA_part
+
+    # V3.03: convert from J/kg to J/g.
+    # See section 2.9 of TEOS-10 manual.
+
+    chem_potential_water *= 1e-3
 
     return np.ma.array(chem_potential_water, mask=mask, copy=False)
 

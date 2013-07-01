@@ -8,12 +8,12 @@ from library import match_args_return
 from constants import cp0
 from conversions import t_from_CT, pt_from_CT
 from absolute_salinity_sstar_ct import CT_from_t
-from basic_thermodynamic_t import rho_t_exact, alpha_wrt_CT_t_exact
-from basic_thermodynamic_t import beta_const_CT_t_exact, specvol_t_exact
-from basic_thermodynamic_t import specvol_anom_t_exact, sound_speed_t_exact
-from basic_thermodynamic_t import t_maxdensity_exact, enthalpy_t_exact
-from basic_thermodynamic_t import internal_energy_t_exact, sigma0_pt0_exact
-from basic_thermodynamic_t import t_from_rho_exact
+from thermodynamics_from_t import rho_t_exact, alpha_wrt_CT_t_exact
+from thermodynamics_from_t import beta_const_CT_t_exact, specvol_t_exact
+from thermodynamics_from_t import specvol_anom_t_exact, sound_speed_t_exact
+from thermodynamics_from_t import t_maxdensity_exact, enthalpy_t_exact
+from thermodynamics_from_t import internal_energy_t_exact, sigma0_pt0_exact
+from thermodynamics_from_t import t_from_rho_exact
 
 __all__ = [
            'rho_CT_exact',
