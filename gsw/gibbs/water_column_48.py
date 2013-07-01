@@ -16,17 +16,24 @@ __all__ = [
            'IPV_vs_fNsquared_ratio'
            ]
 
-# FIXME: match_args_return returns a
-# ndarray instead of a tuple.
 # Need to create a test for the match_args_return.
 
+## In the following, we are assuming the p dimension comes
+#  first.  This follows the matlab code, (Fortran order)
+#  but is unnatural in Python (C order).
+#  We might need to deal with this in a better way.
 
-#@match_args_return
+@match_args_return
 def Nsquared(SA, CT, p, lat=None):
-    r"""Calculates the buoyancy frequency squared (N^2)(i.e. the Brunt-Väisälä
-    frequency squared) at the mid pressure from the equation,
-    .. math::
-        N^2 = g^2 \frac{\partial\rho}{\partial p}
+    r"""Calculates the buoyancy frequency squared (N^2)
+    (i.e. the Brunt-Väisälä frequency squared) at the
+    mid pressure from the equation::
+
+           2      2             beta.d(SA) - alpha.d(CT)
+         N   =  g   rho_local   ------------------------
+                                          dP
+
+    dP in the above formula is in Pascals
 
     Parameters
     ----------
@@ -48,20 +55,14 @@ def Nsquared(SA, CT, p, lat=None):
     p_mid : array_like
             Mid pressure between p grid [dbar]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     This routine uses rho from the computationally efficient 48-term expression
-    for density in terms of SA, CT and p.  Also that the pressure increment,
-    :math:`\partial p`, in the above formula is in Pa, so that it is 10^4 times
-    the pressure increment in dbar.
+    for density in terms of SA, CT and p.
 
     The 48-term equation has been fitted in a restricted range of parameter
     space, and is most accurate inside the "oceanographic funnel" described in
-    McDougall et al. (2011).  The GSW library function "infunnel(SA, CT, p)" is
+    IOC et al. (2010).  The GSW library function "infunnel(SA, CT, p)" is
     available to be used if one wants to test if some of one's data lies
     outside this "funnel".
 
@@ -76,34 +77,42 @@ def Nsquared(SA, CT, p, lat=None):
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 3.10 and Eqn. (3.10.2).
 
-    ..[2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    ..[3] Griffies, S. M., 2004: Fundamentals of Ocean Climate Models.
+    ..[2] Griffies, S. M., 2004: Fundamentals of Ocean Climate Models.
     Princeton, NJ: Princeton University Press, 518 pp + xxxiv.
 
     Modifications:
-    2011-03-22. Trevor McDougall & Paul Barker
+    2013-04-29. Trevor McDougall & Paul Barker
     """
 
     if lat is not None:
         g = grav(lat, p)
+        SA, CT, p, g = np.broadcast_arrays(SA, CT, p, g)
     else:
         g = 9.7963  # Standard value from Griffies (2004).
+        SA, CT, p = np.broadcast_arrays(SA, CT, p)
 
-    SA, CT, p, g = np.broadcast_arrays(SA, CT, p, g)
+    ishallow = (slice(0, -1), Ellipsis)
+    ideep = (slice(1, None), Ellipsis)
 
-    p_mid = 0.5 * (p[1:, ...] + p[:-1, ...])
+    def mid(x):
+        return 0.5 * (x[ideep] + x[ishallow])
 
-    drho = (rho(SA[1:, ...], CT[1:, ...], p_mid) -
-            rho(SA[:-1, ...], CT[:-1, ...], p_mid))
+    def delta(x):
+        return x[ideep] - x[ishallow]
 
-    grav_local = 0.5 * (g[1:, ...] + g[:-1, ...])
-    dp = p[1:, ...] - p[:-1, ...]
+    vars = SA, CT, p
+    SA_mid, CT_mid, p_mid = [mid(x) for x in vars]
+    dSA, dCT, dp = [delta(x) for x in vars]
 
-    N2 = grav_local ** 2 * drho / (db2Pascal * dp)
+    rho_mid, alpha_mid, beta_mid = rho_alpha_beta(SA_mid, CT_mid, p_mid)
+
+    if lat is not None:
+        grav_mid = mid(g)
+    else:
+        grav_mid = g
+
+    N2 = (grav_mid ** 2 / db2Pascal) * (rho_mid / dp)
+    N2 *= (beta_mid * dSA - alpha_mid * dCT)
 
     return N2, p_mid
 
