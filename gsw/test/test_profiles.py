@@ -309,11 +309,16 @@ def generic_test(self, func=None, argnames=None):
     if isinstance(out, tuple):
         out = out[0]
         #print("""%s returns a tuple.""" % func)
-    maxdiff = np.nanmax(abs(out - getattr(cv, func)))
+    target = getattr(cv, func)
+    maxdiff = np.nanmax(abs(out - target))
+    maxallowed = getattr(cv, func + '_ca')
     try:
-        self.assertTrue(maxdiff < getattr(cv, func + '_ca'))
+        self.assertTrue(maxdiff < maxallowed)
     except AssertionError, e:
-        raise AssertionError("Error in %s %s" % (func, e.args))
+        #print out
+        #print target
+        raise AssertionError("Error in %s %s, maxdiff is %s vs %s allowed"
+                              % (func, e.args, maxdiff, maxallowed))
 
 
 # Dictionary of functions with corresponding test methods.
