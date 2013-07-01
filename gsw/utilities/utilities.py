@@ -75,7 +75,17 @@ class match_args_return(object):
         newargs = [to_masked(a) for a in args]
         if p is not None:
             kw['p'] = newargs.pop()
+
         ret = self.func(*newargs, **kw)
+
+        if isinstance(ret, tuple):
+            retlist = [self.fixup(arg) for arg in ret]
+            ret = tuple(retlist)
+        else:
+            ret = self.fixup(ret)
+        return ret
+
+    def fixup(self, ret):
         if not self.masked:
             ret = np.ma.filled(ret, np.nan)
         if not self.array:
