@@ -41,16 +41,6 @@ gdef = 9.8
 r"""Acceleration of gravity [m s :sup:`2`] used by sw.swvel and bfrq without
 lat info."""
 
-DEG2NM, NM2KM = 60., 1.8520
-r"""1 nm = 1.8520 km
-
-Used by sw.dist() to convert nautical miles to kilometers.
-
-References
-----------
-.. [1] S. Pond & G.Pickard 2nd Edition 1986 Introductory Dynamical
-Oceanography Pergamon Press Sydney. ISBN 0-08-028728-X. page: 303."""
-
 T0 = Kelvin = 273.15
 r"""The Celsius zero point; 273.15 K.  That is T = t + T0 where T is the
 Absolute Temperature (in degrees K) and t is temperature in degrees C."""
