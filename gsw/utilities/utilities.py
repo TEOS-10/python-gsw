@@ -89,6 +89,7 @@ def match_args_return(f):
         else:
             ret = fixup(ret)
         return ret
+    wrapper.__wrapped__ = f
     return wrapper
 
 
