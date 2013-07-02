@@ -1795,6 +1795,10 @@ def interp_ref_cast(spycnl, A="gn"):
     user-callable, but is instead used internally by user-callable
     functions.
 
+    Note: The v3.03 matlab code is incorrectly using approximate numbers
+    for the gamma_n case, even when the sigma_2 case is in effect.
+    That bug is fixed here.
+
     """
 
     if A.lower() in ["s2", "sigma2", "sigma_2"]:
@@ -1810,12 +1814,21 @@ def interp_ref_cast(spycnl, A="gn"):
     else:
         zvar_ref = gsw_data.gamma_n_ref_cast
 
-    # Not sure why this is needed, but it is in the Matlab version,
-    # and presumably can't hurt.
-    cond = (spycnl >= 21.805) & (spycnl <= 28.3614)
-    zvar_new = spycnl[cond]
+    zvar_new = spycnl
 
     Si, Ci, Pi = interp_S_T(SA_ref, CT_ref, zvar_ref, zvar_new, P=p_ref)
+
+    shallower = spycnl <= zvar_ref[0]
+    deeper = spycnl >= zvar_ref[-1]
+
+    if shallower.any():
+        Si[shallower] = SA_ref[0]
+        Ci[shallower] = CT_ref[0]
+        Pi[shallower] = p_ref[0]
+    if deeper.any():
+        Si[deeper] = SA_ref[-1]
+        Ci[deeper] = CT_ref[-1]
+        Pi[deeper] = p_ref[-1]
 
     return Si, Ci, Pi
 
