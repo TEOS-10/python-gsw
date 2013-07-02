@@ -4,10 +4,10 @@ from __future__ import division
 
 import numpy as np
 
+import library as lib
 from constants import SSO, r1
 from gsw.utilities import match_args_return
 from conversions import pt0_from_t, CT_from_pt
-import library as lib
 
 __all__ = ['check_input',
            'CT_from_t',
@@ -92,6 +92,44 @@ def CT_from_t(SA, t, p):
 
 
 @match_args_return
+def SA_CT_plot(SA, CT, isopycs, title_string):
+    r"""Calculates Conservative Temperature of seawater from in situ
+    temperature.
+
+    Parameters
+    ----------
+    SA : array_like
+         Absolute salinity [g kg :sup:`-1`]
+    CT : array_like
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
+
+    See Also
+    --------
+    TODO
+
+    Notes
+    -----
+    TODO
+
+    Examples
+    --------
+    TODO
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp. See section 3.3.
+
+    Modifications:
+    2011-03-27. David Jackett, Trevor McDougall and Paul Barker
+    """
+
+    return None
+
+
+@match_args_return
 def SA_from_SP(SP, p, lon, lat):
     r"""Calculates Absolute Salinity from Practical Salinity.
 
@@ -168,44 +206,6 @@ def SA_from_SP(SP, p, lon, lat):
         SA[~SA_baltic.mask] = SA_baltic[~SA_baltic.mask]
 
     return SA
-
-
-@match_args_return
-def SA_CT_plot(SA, CT, isopycs, title_string):
-    r"""Calculates Conservative Temperature of seawater from in situ
-    temperature.
-
-    Parameters
-    ----------
-    SA : array_like
-         Absolute salinity [g kg :sup:`-1`]
-    CT : array_like
-         Conservative Temperature [:math:`^\circ` C (ITS-90)]
-
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
-    Examples
-    --------
-    TODO
-
-    References
-    ----------
-    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See section 3.3.
-
-    Modifications:
-    2011-03-27. David Jackett, Trevor McDougall and Paul Barker
-    """
-
-    return None
 
 
 @match_args_return
