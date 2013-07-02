@@ -38,10 +38,22 @@ try:
 except IndexError:
     path = "./matlab_gsw_v3_03"
 
+
+# We have to supply a fake superiorfloat function for octave.
+# We are writing it in the local directory, which is not a nice
+# thing to do; maybe this can be improved later.
+
+_sfloat = """function out = superiorfloat(varargin)
+out = 'double';
+"""
+open('superiorfloat.m', 'wt').write(_sfloat)
+
+
 if not os.path.exists(path):
     raise ValueError("matlab gsw path %s not found" % path)
 
 _ = octave.addpath(octave.genpath(path))
+_ = octave.addpath('./')
 
 def compare_results(name, function, args):
     args = [values.get(arg) for arg in args]
@@ -65,9 +77,17 @@ def compare_results(name, function, args):
             val = val[0]
     except Oct2PyError:
         print('%s: Octave runtime error' % name)
+        print("python:\n%s" % res)
         return 'no_octave'
 
-    val = val.flatten()
+    try:
+        val = val.flatten()
+        perfect = (val == res).all()
+    except:
+        print('%s: Comparison failed' % name)
+        print("octave:\n%s" % val)
+        print("python:\n%s" % res)
+        return 'no_comparison'
     if (val == res).all():
         print('%s: Passed' % name)
         return 'passed'
@@ -95,8 +115,9 @@ values = dict(C=np.array([34.5487, 34.7275, 34.8605, 34.6810, 34.568, 34.56]),
                             4.3236]),
               spycnl=np.array([21.8482, 22.2647, 24.4207, 27.7841, 29.8287,
                                31.9916]),
-              A='s2', # or anything else, like 'gamma', for gamma_n space
-              p_i=500.0,
+              A='gn', # or s2 for sigma2; but then spycnl would need to change
+                      # Also, the matlab code is incorrect for the s2 case.
+              p_i=np.array([500.0, 600.0, 700.0]),
               # Baltic.
               SAb=np.array([6.6699, 6.7738, 6.9130, 7.3661, 7.5862, 10.3895]),
               SPb=np.array([6.5683, 6.6719, 6.8108, 7.2629, 7.4825, 10.2796]),
@@ -113,7 +134,6 @@ library = OrderedDict({
     'Hill_ratio_at_SP2': (gsw.library.Hill_ratio_at_SP2, ('t')),
     'infunnel': (gsw.library.infunnel, ('SA', 'CT', 'p')),
 
-    # The interp functions fail on octave because of "superiorfloat".
     # There is also a problem with the argument handling in interp_SA_CT.
     'interp_ref_cast': (gsw.library.interp_ref_cast, ('spycnl', 'A')),
     'interp_SA_CT': (gsw.library.interp_SA_CT, ('SA', 'CT', 'p', 'p_i')),
@@ -128,17 +148,21 @@ library = OrderedDict({
 
 
 if __name__ == '__main__':
-    outcomes = ['passed', 'no_octave', 'no_python', 'failed']
+    outcomes = ['passed', 'no_octave', 'no_python', 'failed', 'no_comparison']
     results = dict([(k, list()) for k in outcomes])
+
 
     for name, (function, args) in library.iteritems():
         ret = compare_results(name=name, function=function, args=args)
         results[ret].append(name)
+
+    #os.remove('superiorfloat.m')
 
     print('\nSummary:')
     print('passed:\n  %s' % '\n  '.join(results['passed']))
     print('octave call failed:\n  %s' % '\n  '.join(results['no_octave']))
     print('python call failed:\n  %s' % '\n  '.join(results['no_python']))
     print('results did not match:\n  %s' % '\n  '.join(results['failed']))
+    print('comparison failed:\n  %s' % '\n  '.join(results['no_comparison']))
     print('')
 
