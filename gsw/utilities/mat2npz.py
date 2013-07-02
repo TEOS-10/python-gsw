@@ -8,9 +8,10 @@
 # e-mail:   ocefpaf@gmail
 # web:      http://ocefpaf.tiddlyspot.com/
 # created:  06-Jun-2011
-# modified: Thu 07 Feb 2013 03:46:02 PM BRST
+# modified: Mon 01 Jul 2013 08:24:06 PM BRT
 #
-# obs:
+# obs: pycurrents.file.matfile.loadmatbunch is part of CODAS.
+# hg clone   http://currents.soest.hawaii.edu/hg/pycurrents
 #
 
 import numpy as np
@@ -26,24 +27,21 @@ for k in gsw_data:
         pass
     else:
         ref_table[k] = gsw_data[k]
-np.savez("gsw_data_%s" % data_ver, **ref_table)
+np.savez("data/gsw_data_%s" % data_ver, **ref_table)
 
 # Save demo data values gsw_demo_data in a separate file.
 gsw_demo_data = gsw_data['gsw_demo_data']
 
-np.savez("gsw_demo_data_%s" % data_ver, **gsw_data['gsw_demo_data'])
+np.savez("data/gsw_demo_data_%s" % data_ver, **gsw_data['gsw_demo_data'])
 
 # Save compare values `gsw_cv` in a separate file.
 cv_vars = gsw_data['gsw_cv']
 
-np.savez("gsw_cv_%s" % data_ver, **cv_vars)
+np.savez("data/gsw_cv_%s" % data_ver, **cv_vars)
 
-# NOTE: This is a saved result of a modified version of `gsw_check_functions.m`
-# where the structure variable gsw_cf was saved.  The matlab version relies
-# on the result of some of its functions to test others, so we need this file.
+# NOTE: The matfile gsw_cf.mat is just the structure variable `gsw_cf` from
+# gsw_check_functions.m.
 
-# Turned off; I don't have the mat file.  Maybe the existing npz file is OK.
-if False:
+if True:
     gsw_cf = loadmatbunch('gsw_cf.mat', masked=False)
-    np.savez("gsw_cf", **gsw_cf)
-
+    np.savez("data/gsw_cf", **gsw_cf)
