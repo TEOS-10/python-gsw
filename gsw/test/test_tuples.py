@@ -43,6 +43,7 @@ cv.rho_chck_cast = cv.rho_CT_exact
 cv.R_cf_chck_cast = cf.R
 cv.rho_cf_chck_cast = cf.rho
 
+
 def generic_test(self, func=None, argnames=None):
     """Generic test function, to be specialized by functools.partial"""
     # Transform argument names to name convention in cv dataset
@@ -65,15 +66,16 @@ def generic_test(self, func=None, argnames=None):
 function_test = {}
 for f in function_arguments:
     function_test[f] = functools.partial(generic_test,
-                      func=f, argnames=function_arguments[f])
+                                         argnames=function_arguments[f],
+                                         func=f)
 
 
-# Auto-generated TestCase
+# Auto-generated TestCase.
 class Test_profiles(unittest.TestCase):
 
     for f in function_test:
-        method_def = ("test_" + f +
-            " = lambda self: function_test['" + f + "'](self)")
+        method_def = ("test_%s = lambda self: function_test['%s'](self)" %
+                      (f, f))
         #print method_def
         exec(method_def)
 
@@ -86,10 +88,12 @@ if __name__ == '__main__':
         sys.exit(256)
     #unittest.main()
 
-[gsw_cf.CT_SA, gsw_cf.CT_pt] = gsw_CT_first_derivatives(gsw_cv.SA_chck_cast,gsw_cf.pt);
-[gsw_cf.ICT_first_deriv] = find(abs(gsw_cv.CT_SA - gsw_cf.CT_SA) >= gsw_cv.CT_SA_ca | ...
-    (gsw_cv.CT_pt - gsw_cf.CT_pt) >= gsw_cv.CT_pt_ca);
-if ~isempty(gsw_cf.ICT_first_deriv)
-    fprintf(2,'gsw_CT_first_derivatives:   Failed\n');
-    gsw_cf.gsw_chks = 0;
-end
+gsw_cf.CT_SA, gsw_cf.CT_pt = gsw.CT_first_derivatives(gsw_cv.SA_chck_cast,
+                                                      gsw_cf.pt)
+gsw_cf.ICT_first_deriv = np.where(np.abs(gsw_cv.CT_SA - gsw_cf.CT_SA) >=
+                                  gsw_cv.CT_SA_ca |
+                                  (gsw_cv.CT_pt - gsw_cf.CT_pt) >=
+                                  gsw_cv.CT_pt_ca)
+if gsw_cf.ICT_first_deriv:
+    print(2, 'gsw_CT_first_derivatives:   Failed\n')
+    gsw_cf.gsw_chks = 0
