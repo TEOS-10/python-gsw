@@ -10,11 +10,10 @@ from conversions import pt0_from_t, CT_from_pt
 import library as lib
 
 __all__ = ['check_input',
-           'SA_from_SP',  # FIXME: Incomplete and untested. (need lib.SAAR)
-           'Sstar_from_SP',  # FIXME: Incomplete and untested. (need lib.SAAR)
            'CT_from_t',
-           'SA_CT_plot'  # FIXME: Incomplete and untested.
-           ]
+           'SA_CT_plot',  # FIXME
+           'SA_from_SP',  # FIXME
+           'Sstar_from_SP']  # FIXME
 
 
 def check_input(SP, p, lon, lat):
@@ -38,6 +37,58 @@ def check_input(SP, p, lon, lat):
     SP = np.maximum(SP, 0)
 
     return SP, p, lon, lat
+
+
+@match_args_return
+def CT_from_t(SA, t, p):
+    r"""Calculates Conservative Temperature of seawater from in situ
+    temperature.
+
+    Parameters
+    ----------
+    SA : array_like
+         Absolute salinity [g kg :sup:`-1`]
+    t : array_like
+        in situ temperature [:math:`^\circ` C (ITS-90)]
+    p : array_like
+        pressure [dbar]
+
+    Returns
+    -------
+
+    See Also
+    --------
+    TODO
+
+    Notes
+    -----
+    TODO
+
+    Examples
+    --------
+    TODO
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp. See section 3.3.
+
+    Modifications:
+    2011-03-27. David Jackett, Trevor McDougall and Paul Barker
+    """
+    # Find values that are out of range, set them to NaN.
+    invalid = np.logical_and(p < 100, np.logical_or(t > 80, t < -12))
+    t[invalid] = np.NaN
+
+    invalid = np.logical_and(p >= 100, np.logical_or(t > 40, t < -12))
+    t[invalid] = np.NaN
+
+    pt0 = pt0_from_t(SA, t, p)
+    CT = CT_from_pt(SA, pt0)
+
+    return CT
 
 
 @match_args_return
@@ -120,6 +171,44 @@ def SA_from_SP(SP, p, lon, lat):
 
 
 @match_args_return
+def SA_CT_plot(SA, CT, isopycs, title_string):
+    r"""Calculates Conservative Temperature of seawater from in situ
+    temperature.
+
+    Parameters
+    ----------
+    SA : array_like
+         Absolute salinity [g kg :sup:`-1`]
+    CT : array_like
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
+
+    See Also
+    --------
+    TODO
+
+    Notes
+    -----
+    TODO
+
+    Examples
+    --------
+    TODO
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp. See section 3.3.
+
+    Modifications:
+    2011-03-27. David Jackett, Trevor McDougall and Paul Barker
+    """
+
+    return None
+
+
+@match_args_return
 def Sstar_from_SP(SP, p, lon, lat):
     r"""Calculates Preformed Salinity from Absolute Salinity.
 
@@ -193,96 +282,6 @@ def Sstar_from_SP(SP, p, lon, lat):
         Sstar[~Sstar_baltic.mask] = Sstar_baltic[~Sstar_baltic.mask]
 
     return Sstar
-
-
-@match_args_return
-def CT_from_t(SA, t, p):
-    r"""Calculates Conservative Temperature of seawater from in situ
-    temperature.
-
-    Parameters
-    ----------
-    SA : array_like
-         Absolute salinity [g kg :sup:`-1`]
-    t : array_like
-        in situ temperature [:math:`^\circ` C (ITS-90)]
-    p : array_like
-        pressure [dbar]
-
-    Returns
-    -------
-
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
-    Examples
-    --------
-    TODO
-
-    References
-    ----------
-    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See section 3.3.
-
-    Modifications:
-    2011-03-27. David Jackett, Trevor McDougall and Paul Barker
-    """
-    # Find values that are out of range, set them to NaN.
-    invalid = np.logical_and(p < 100, np.logical_or(t > 80, t < -12))
-    t[invalid] = np.NaN
-
-    invalid = np.logical_and(p >= 100, np.logical_or(t > 40, t < -12))
-    t[invalid] = np.NaN
-
-    pt0 = pt0_from_t(SA, t, p)
-    CT = CT_from_pt(SA, pt0)
-
-    return CT
-
-
-@match_args_return
-def SA_CT_plot(SA, CT, isopycs, title_string):
-    r"""Calculates Conservative Temperature of seawater from in situ
-    temperature.
-
-    Parameters
-    ----------
-    SA : array_like
-         Absolute salinity [g kg :sup:`-1`]
-    CT : array_like
-         Conservative Temperature [:math:`^\circ` C (ITS-90)]
-
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
-    Examples
-    --------
-    TODO
-
-    References
-    ----------
-    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See section 3.3.
-
-    Modifications:
-    2011-03-27. David Jackett, Trevor McDougall and Paul Barker
-    """
-
-    return None
 
 if __name__ == '__main__':
     import doctest
