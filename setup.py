@@ -26,7 +26,7 @@ Topic :: Software Development :: Libraries :: Python Modules
 readme = codecs.open('README.rst', encoding='utf-8')
 config = dict(name='gsw',
               version=__version__,
-              packages=['gsw', 'gsw/gibbs', 'gsw/utilities'],
+              packages=['gsw', 'gsw/gibbs', 'gsw/utilities', 'gsw/test'],
               package_data={'gsw': ['utilities/data/*.npz']},
               license=open('LICENSE.txt').read(),
               description='Gibbs SeaWater Oceanographic Package of TEOS-10',
@@ -41,7 +41,6 @@ config = dict(name='gsw',
               platforms='any',
               cmdclass={'build_py': build_py},
               keywords=['oceanography', 'seawater'],
-              install_requires=['numpy', 'nose']
-             )
+              install_requires=['numpy', 'nose'])
 
 setup(**config)
