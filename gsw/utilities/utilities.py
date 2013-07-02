@@ -3,6 +3,7 @@
 from __future__ import division
 
 import os
+from functools import wraps
 
 import numpy as np
 
@@ -54,43 +55,41 @@ def to_masked(arg):
             raise
     return np.ma.masked_invalid(arg)
 
-class match_args_return(object):
-    r"""Function decorator to homogenize input arguments and to make the output
-    match the original input with respect to scalar versus array, and masked
-    versus ndarray.
-    """
-    def __init__(self, func):
-        self.func = func
-        self.__wrapped__ = func
-        self.__doc__ = func.__doc__
-        self.__name__ = func.__name__
 
-    def __call__(self, *args, **kw):
+def match_args_return(f):
+    """
+    Decorator for most functions that operate on profile data.
+    """
+    @wraps(f)
+    def wrapper(*args, **kw):
         p = kw.get('p', None)
         if p is not None:
             args = list(args)
             args.append(p)
-        self.array = np.any([hasattr(a, '__iter__') for a in args])
-        self.masked = np.any([np.ma.isMaskedArray(a) for a in args])
+
+        isarray = np.any([hasattr(a, '__iter__') for a in args])
+        ismasked = np.any([np.ma.isMaskedArray(a) for a in args])
+
+        def fixup(ret):
+            if not ismasked:
+                ret = np.ma.filled(ret, np.nan)
+            if not isarray:
+                ret = ret[0]
+            return ret
+
         newargs = [to_masked(a) for a in args]
         if p is not None:
             kw['p'] = newargs.pop()
 
-        ret = self.func(*newargs, **kw)
+        ret = f(*newargs, **kw)
 
         if isinstance(ret, tuple):
-            retlist = [self.fixup(arg) for arg in ret]
+            retlist = [fixup(arg) for arg in ret]
             ret = tuple(retlist)
         else:
-            ret = self.fixup(ret)
+            ret = fixup(ret)
         return ret
-
-    def fixup(self, ret):
-        if not self.masked:
-            ret = np.ma.filled(ret, np.nan)
-        if not self.array:
-            ret = ret[0]
-        return ret
+    return wrapper
 
 
 class Dict2Struc(object):
