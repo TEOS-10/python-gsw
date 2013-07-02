@@ -5,12 +5,14 @@ from __future__ import division
 import numpy as np
 
 from library import gibbs
+from freezing import t_freezing
 from absolute_salinity_sstar_ct import CT_from_t
 from gsw.utilities import match_args_return, strip_mask
 from conversions import pt_from_CT, pt_from_t, pt0_from_t
 from constants import Kelvin, db2Pascal, P0, SSO, cp0, R, sfac, M_S
 
-__all__ = ['alpha_wrt_CT_t_exact',
+__all__ = ['adiabatic_lapse_rate_t_exact',
+           'alpha_wrt_CT_t_exact',
            'alpha_wrt_pt_t_exact',
            'alpha_wrt_t_exact',
            'beta_const_CT_t_exact',
@@ -20,6 +22,7 @@ __all__ = ['alpha_wrt_CT_t_exact',
            'chem_potential_salt_t_exact',
            'chem_potential_water_t_exact',
            'cp_t_exact',
+           'deltaSA_from_rho_t_exact',
            'dynamic_enthalpy_t_exact',
            'enthalpy_t_exact',
            'entropy_t_exact',
@@ -32,6 +35,7 @@ __all__ = ['alpha_wrt_CT_t_exact',
            'osmotic_pressure_t_exact',
            'pot_rho_t_exact',
            'rho_t_exact',
+           'SA_from_rho_t',
            'SA_from_rho_t_exact',
            'sigma0_pt0_exact',
            'sound_speed_t_exact',
@@ -41,6 +45,18 @@ __all__ = ['alpha_wrt_CT_t_exact',
            't_maxdensity_exact']
 
 n0, n1, n2 = 0, 1, 2
+
+
+def adiabatic_lapse_rate_t_exact(SA, t, p):
+    pass
+
+
+def deltaSA_from_rho_t_exact(rho, SP, t, p):
+    pass
+
+
+def SA_from_rho_t(rho, t, p):
+    pass
 
 
 @match_args_return
@@ -1066,6 +1082,8 @@ def t_from_rho_exact(rho, SA, p):
     temperature of maximum density."""
     rec_half_rho_TT = -110.0
 
+    t_a, t_b = None, None
+
     t = np.zeros_like(SA) + np.NaN
     t_multiple = np.zeros_like(SA) + np.NaN
 
@@ -1077,100 +1095,96 @@ def t_from_rho_exact(rho, SA, p):
 
     rho_40 = rho_t_exact(SA, 40 * np.ones_like(SA), p)
 
-    I_rho_light = (rho - rho_40) < 0
-
-    SA[I_rho_light] = np.ma.masked
+    SA[(rho - rho_40) < 0] = np.ma.masked
 
     t_max_rho = t_maxdensity_exact(SA, p)
     rho_max = rho_t_exact(SA, t_max_rho, p)
-    rho_extreme = rho_max
-    t_freezing = t_freezing(SA, p)  # Assumes seawater is saturated with air.
-    rho_freezing = rho_t_exact(SA, t_freezing, p)
+    rho_extreme = rho_max.copy()
+    t_freeze = t_freezing(SA, p)  # Assumes seawater is saturated with air.
+    rho_freezing = rho_t_exact(SA, t_freeze, p)
 
-    I_fr_gr_max = (t_freezing - t_max_rho) > 0
+    # Set rhos greater than those at the freezing point to be equal to the
+    # freezing point.
+    I_fr_gr_max = (t_freeze - t_max_rho) > 0
     rho_extreme[I_fr_gr_max] = rho_freezing[I_fr_gr_max]
 
-    I_rho_dense = rho > rho_extreme
-    SA[I_rho_dense] = np.ma.masked
+    SA[rho > rho_extreme] = np.ma.masked
+    SA[np.isnan(SA * p * rho)] = np.ma.masked
 
-    # FIXME: Is this needed?
-    I_bad = np.isnan(SA * p * rho)
-    SA[I_bad] = np.ma.masked
-
-    alpha_freezing = alpha_wrt_t_exact(SA, t_freezing, p)
+    alpha_freezing = alpha_wrt_t_exact(SA, t_freeze, p)
 
     I_salty = alpha_freezing > alpha_limit
-
-    t_diff = 40. * np.ones_like(I_salty) - t_freezing(I_salty)
-
-    top = (rho_40[I_salty] - rho_freezing[I_salty] + rho_freezing[I_salty] *
-           alpha_freezing[I_salty] * t_diff)
-
-    a = top / (t_diff ** 2)
-    b = -rho_freezing[I_salty] * alpha_freezing[I_salty]
-    c = rho_freezing[I_salty] - rho[I_salty]
-    sqrt_disc = np.sqrt(b ** 2 - 4 * a * c)
-    # The value of t[I_salty] is the initial guess `t` in the range of I_salty.
-    t[I_salty] = t_freezing[I_salty] + 0.5 * (-b - sqrt_disc) / a
+    if I_salty.any():
+        t_diff = 40. * np.ones_like(I_salty) - t_freeze[I_salty]
+        top = (rho_40[I_salty] - rho_freezing[I_salty] +
+               rho_freezing[I_salty] * alpha_freezing[I_salty] * t_diff)
+        a = top / (t_diff ** 2)
+        b = -rho_freezing[I_salty] * alpha_freezing[I_salty]
+        c = rho_freezing[I_salty] - rho[I_salty]
+        sqrt_disc = np.sqrt(b ** 2 - 4 * a * c)
+        # The value of t[I_salty] is the initial guess `t` in the range of
+        # I_salty.
+        t[I_salty] = t_freeze[I_salty] + 0.5 * (-b - sqrt_disc) / a
 
     I_fresh = alpha_freezing <= alpha_limit
-    t_diff = 40 * np.ones_like[I_fresh] - t_max_rho[I_fresh]
-    factor = ((rho_max[I_fresh] - rho[I_fresh]) /
-             (rho_max[I_fresh] - rho_40[I_fresh]))
-    delta_t = t_diff * np.sqrt(factor)
+    if I_fresh.any():
+        t_diff = 40 * np.ones_like[I_fresh] - t_max_rho[I_fresh]
+        factor = ((rho_max[I_fresh] - rho[I_fresh]) / (rho_max[I_fresh] -
+                                                       rho_40[I_fresh]))
+        delta_t = t_diff * np.sqrt(factor)
+        I_fresh_NR = delta_t > 5
+        if I_fresh_NR.any():
+            t[I_fresh[I_fresh_NR]] = (t_max_rho[I_fresh[I_fresh_NR]] +
+                                      delta_t[I_fresh_NR])
 
-    I_fresh_NR = delta_t > 5
-    t[I_fresh[I_fresh_NR]] = (t_max_rho[I_fresh[I_fresh_NR]] +
-                              delta_t[I_fresh_NR])
+        I_quad = delta_t <= 5
+        if I_quad.any():
+            t_a = np.zeros_like(SA) + np.NaN
+            # Set the initial value of the quadratic solution roots.
+            t_a[I_fresh[I_quad]] = (t_max_rho[I_fresh[I_quad]] +
+                                    np.sqrt(rec_half_rho_TT *
+                                            (rho[I_fresh[I_quad]] -
+                                             rho_max[I_fresh[I_quad]])))
+            for Number_of_iterations in range(0, 6):
+                t_old = t_a
+                rho_old = rho_t_exact(SA, t_old, p)
+                factorqa = (rho_max - rho) / (rho_max - rho_old)
+                t_a = t_max_rho + (t_old - t_max_rho) * np.sqrt(factorqa)
 
-    I_quad = delta_t <= 5
-    t_a = np.zeros_like(SA) + np.NaN
-    # Set the initial value of the quadratic solution roots.
-    t_a[I_fresh[I_quad]] = (t_max_rho[I_fresh[I_quad]] +
-                            np.sqrt(rec_half_rho_TT * (rho[I_fresh[I_quad]] -
-                            rho_max[I_fresh[I_quad]])))
+            t_a[t_freezing - t_a < 0] = np.ma.masked
+            t_b = np.zeros_like(SA) + np.NaN
+            # Set the initial value of the quadratic solution routes.
+            t_b[I_fresh[I_quad]] = (t_max_rho[I_fresh[I_quad]] -
+                                    np.sqrt(rec_half_rho_TT *
+                                            (rho[I_fresh[I_quad]] -
+                                             rho_max[I_fresh[I_quad]])))
+            for Number_of_iterations in range(0, 6):
+                t_old = t_b.copy()
+                rho_old = rho_t_exact(SA, t_old, p)
+                factorqb = (rho_max - rho) / (rho_max - rho_old)
+                t_b = t_max_rho + (t_old - t_max_rho) * np.sqrt(factorqb)
+                # After seven iterations of this quadratic iterative procedure,
+                # the error in rho is no larger than 4.6x10^-13 kg/m^3.
 
-    for Number_of_iterations in range(0, 5):
-        t_old = t_a
-        rho_old = rho_t_exact(SA, t_old, p)
-        factorqa = (rho_max - rho) / (rho_max - rho_old)
-        t_a = t_max_rho + (t_old - t_max_rho) * np.sqrt(factorqa)
-
-        t_a[t_freezing - t_a < 0] = np.ma.masked
-
-    t_b = np.zeros_like(SA) + np.NaN
-    # Set the initial value of the quadratic solution routes.
-    t_b[I_fresh[I_quad]] = (t_max_rho[I_fresh[I_quad]] -
-                            np.sqrt(rec_half_rho_TT * (rho[I_fresh[I_quad]] -
-                            rho_max[I_fresh[I_quad]])))
-    for Number_of_iterations in range(0, 6):
-        t_old = t_b
-        rho_old = rho_t_exact(SA, t_old, p)
-        factorqb = (rho_max - rho) / (rho_max - rho_old)
-        t_b = t_max_rho + (t_old - t_max_rho) * np.sqrt(factorqb)
-
-    # After seven iterations of this quadratic iterative procedure,
-    # the error in rho is no larger than 4.6x10^-13 kg/m^3.
-    t_b[t_freezing - t_b < 0] = np.ma.masked
-
-    # Begin the modified Newton-Raphson iterative method, which will only
-    # operate on non-masked data.
+            t_b[t_freezing - t_b < 0] = np.ma.masked
+            # Begin the modified Newton-Raphson iterative method, which will
+            # only operate on non-masked data.
 
     v_lab = np.ones_like(rho) / rho
     v_t = gibbs(0, 1, 1, SA, t, p)
     for Number_of_iterations in range(0, 3):
-        t_old = t
+        t_old = t.copy()
         delta_v = gibbs(0, 0, 1, SA, t_old, p) - v_lab
         t = t_old - delta_v / v_t  # Half way through the modified N-R method.
         t_mean = 0.5 * (t + t_old)
         v_t = gibbs(0, 1, 1, SA, t_mean, p)
         t = t_old - delta_v / v_t
 
-        I_quad = ~np.isnan(t_a)
-        t[I_quad] = t_a[I_quad]
+    if t_a:
+        t[~np.isnan(t_a)] = t_a[~np.isnan(t_a)]
 
-    I_quad = ~np.isnan(t_b)
-    t_multiple[I_quad] = t_b[I_quad]
+    if t_b:
+        t_multiple[~np.isnan(t_b)] = t_b[~np.isnan(t_b)]
 
     # After three iterations of this modified Newton-Raphson iteration,
     # the error in rho is no larger than 4.6x10^-13 kg/m^3.
