@@ -37,7 +37,7 @@ __all__ = ['Abs_Pressure_from_p',
            't90_from_t68',
            't_from_CT',
            'z_from_depth',
-           'z_from_p']  # TODO: New test case with geo_strf_dyn_height != None
+           'z_from_p']  # TODO: Test with geo_strf_dyn_height != None
 
 DEG2RAD = np.pi / 180.0
 n0, n1, n2 = 0, 1, 2

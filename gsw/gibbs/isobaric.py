@@ -2,15 +2,23 @@
 
 from __future__ import division
 
-from gsw.utilities import match_args_return
 from conversions import CT_from_pt
+from gsw.utilities import match_args_return
 
 
-__all__ = [
-           #'latentheat_melting',
-           #'latentheat_evap_CT',
-           'latentheat_evap_t'
-          ]
+__all__ = ['latentheat_evap_CT',
+           'latentheat_melting',
+           'latentheat_evap_t']
+
+
+@match_args_return
+def latentheat_evap_CT(SA, CT):
+    pass
+
+
+@match_args_return
+def latentheat_melting(SA, p):
+    pass
 
 
 @match_args_return
@@ -58,3 +66,7 @@ def latentheat_evap_t(SA, t):
 
     CT = CT_from_pt(SA, t)
     return latentheat_evap_CT(SA, CT)
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()

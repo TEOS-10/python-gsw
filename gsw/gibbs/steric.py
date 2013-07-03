@@ -4,7 +4,7 @@ from __future__ import division
 
 import numpy as np
 from gsw.utilities import match_args_return
-#from conversions import geo_strf_dyn_height
+from geostrophic_48.py import geo_strf_dyn_height
 
 __all__ = ['steric_height']
 
@@ -125,3 +125,7 @@ def steric_height(SA, CT, p, p_ref):
     const_grav = 9.7963  # Griffies, 2004.
 
     return dynamic_height_anomaly / const_grav
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
