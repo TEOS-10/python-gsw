@@ -4,9 +4,9 @@ from __future__ import division
 
 import numpy as np
 
-from constants import gamma, earth_radius, OMEGA
-from gsw.utilities import match_args_return
 from conversions import z_from_p
+from gsw.utilities import match_args_return
+from constants import gamma, earth_radius, OMEGA
 
 
 __all__ = ['distance',

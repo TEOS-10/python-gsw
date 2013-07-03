@@ -201,7 +201,7 @@ def R_from_SP(SP, t, p):
     ft68 = (t68 - 15) / (1 + k * (t68 - 15))
 
     x = np.sqrt(SP)
-    Rtx = np.zeros_like(SP) * np.nan
+    Rtx = np.zeros_like(SP) * np.NaN
 
     # Finding the starting value of Rtx, the square root of Rt, using four
     # different polynomials of SP and t68.
@@ -492,7 +492,7 @@ def SP_from_C(C, t, p):
          (1 + d[0] * t68 + d[1] * t68 ** 2 + (d[2] + d[3] * t68) * R))
     Rt = R / (Rp * rt_lc)
 
-    Rt[Rt < 0] = np.nan
+    Rt[Rt < 0] = np.ma.masked
     Rtx = np.sqrt(Rt)
 
     SP = (a[0] + (a[1] + (a[2] + (a[3] + (a[4] + a[5] * Rtx) * Rtx) * Rtx) *
@@ -590,7 +590,7 @@ def SP_from_R(R, t, p):
          (1 + d[0] * t68 + d[1] * t68 ** 2 + (d[2] + d[3] * t68) * R))
     Rt = R / (Rp * rt_lc)
 
-    Rt[Rt < 0] = np.nan
+    Rt[Rt < 0] = np.ma.masked
     Rtx = np.sqrt(Rt)
 
     SP = (a[0] + (a[1] + (a[2] + (a[3] + (a[4] + a[5] * Rtx) * Rtx) * Rtx) *
@@ -724,7 +724,7 @@ def SP_salinometer(Rt, t):
     t68 = t * 1.00024
     ft68 = (t68 - 15) / (1 + k * (t68 - 15))
 
-    Rt[Rt < 0] = np.NaN
+    Rt[Rt < 0] = np.ma.masked
     Rtx = np.sqrt(Rt)
 
     SP = (a[0] + (a[1] + (a[2] + (a[3] + (a[4] + a[5] * Rtx) * Rtx) * Rtx) *

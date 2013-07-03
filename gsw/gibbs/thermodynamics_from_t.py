@@ -1522,8 +1522,8 @@ def t_from_rho_exact(rho, SA, p):
     temperature of maximum density."""
     rec_half_rho_TT = -110.0
     t_a, t_b = None, None
-    t = np.zeros_like(SA) + np.NaN
-    t_multiple = np.zeros_like(SA) + np.NaN
+    t = np.zeros_like(SA) * np.NaN
+    t_multiple = np.zeros_like(SA) * np.NaN
     I_SA = np.logical_or(SA < 0, SA > 42)
     I_p = np.logical_or(p < -1.5, p > 12000)
     I_SA_p = np.logical_or(I_SA, I_p)
@@ -1566,7 +1566,7 @@ def t_from_rho_exact(rho, SA, p):
                                       delta_t[I_fresh_NR])
         I_quad = delta_t <= 5
         if I_quad.any():
-            t_a = np.zeros_like(SA) + np.NaN
+            t_a = np.zeros_like(SA) * np.NaN
             # Set the initial value of the quadratic solution roots.
             t_a[I_fresh[I_quad]] = (t_max_rho[I_fresh[I_quad]] +
                                     np.sqrt(rec_half_rho_TT *
@@ -1578,7 +1578,7 @@ def t_from_rho_exact(rho, SA, p):
                 factorqa = (rho_max - rho) / (rho_max - rho_old)
                 t_a = t_max_rho + (t_old - t_max_rho) * np.sqrt(factorqa)
             t_a[t_freezing - t_a < 0] = np.ma.masked
-            t_b = np.zeros_like(SA) + np.NaN
+            t_b = np.zeros_like(SA) * np.NaN
             # Set the initial value of the quadratic solution routes.
             t_b[I_fresh[I_quad]] = (t_max_rho[I_fresh[I_quad]] -
                                     np.sqrt(rec_half_rho_TT *

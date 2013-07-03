@@ -556,7 +556,7 @@ def enthalpy_diff(SA, CT, p_shallow, p_deep):
          Conservative Temperature [:math:`^\circ` C (ITS-90)]
     p_shallow : array_like
                 lower sea pressure [dbar]
-    p_deep : array-like
+    p_deep : array_like
              upper sea pressure [dbar]
 
     Returns
@@ -937,7 +937,7 @@ def SA_from_rho(rho, CT, p):
 
     SA = 50 * (v_lab - v_0) / (v_50 - v_0)  # Initial estimate of SA.
 
-    SA[np.logical_or(SA < 0, SA > 50)] = np.NaN
+    SA[np.logical_or(SA < 0, SA > 50)] = np.ma.masked
 
     v_SA = (v_50 - v_0) / 50.  # Initial v_SA estimate (SA derivative of v).
 
@@ -951,7 +951,7 @@ def SA_from_rho(rho, CT, p):
         rho, alpha, beta = rho_alpha_beta(SA_mean, CT, p)
         v_SA = -beta / rho
         SA = SA_old - delta_v / v_SA
-        SA[np.logical_or(SA < 0, SA > 50)] = np.NaN
+        SA[np.logical_or(SA < 0, SA > 50)] = np.ma.masked
 
     # After two iterations of this modified Newton-Raphson iteration,
     # the error in SA is no larger than 8x10^-13 g kg^-1, which

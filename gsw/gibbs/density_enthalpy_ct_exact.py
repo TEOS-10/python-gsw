@@ -4,16 +4,16 @@ from __future__ import division
 
 import numpy as np
 
-from library import match_args_return
 from constants import cp0
+from gsw.utilities import match_args_return
 from conversions import t_from_CT, pt_from_CT
 from absolute_salinity_sstar_ct import CT_from_t
-from thermodynamics_from_t import t_from_rho_exact
-from thermodynamics_from_t import rho_t_exact, alpha_wrt_CT_t_exact
-from thermodynamics_from_t import t_maxdensity_exact, enthalpy_t_exact
-from thermodynamics_from_t import beta_const_CT_t_exact, specvol_t_exact
-from thermodynamics_from_t import internal_energy_t_exact, sigma0_pt0_exact
-from thermodynamics_from_t import specvol_anom_t_exact, sound_speed_t_exact
+from thermodynamics_from_t import (t_from_rho_exact, rho_t_exact,
+                                   alpha_wrt_CT_t_exact, t_maxdensity_exact,
+                                   enthalpy_t_exact, beta_const_CT_t_exact,
+                                   specvol_t_exact, internal_energy_t_exact,
+                                   sigma0_pt0_exact, specvol_anom_t_exact,
+                                   sound_speed_t_exact)
 
 __all__ = ['alpha_CT_exact',
            'beta_CT_exact',
@@ -317,7 +317,7 @@ def enthalpy_diff_CT_exact(SA, CT, p_shallow, p_deep):
          Conservative Temperature [:math:`^\circ` C (ITS-90)]
     p_shallow : array_like
                 lower sea pressure [dbar]
-    p_deep : array-like
+    p_deep : array_like
              upper sea pressure [dbar]
     returns
     -------
@@ -497,7 +497,7 @@ def SA_from_rho_CT_exact(rho, CT, p):
     v_0 = specvol_CT_exact(np.zeros_like(rho), CT, p)
     v_120 = specvol_CT_exact(120 * np.ones_like(rho), CT, p)
     SA = 120 * (v_lab - v_0) / (v_120 - v_0)  # Initial estimate of SA.
-    SA[np.logical_or(SA < 0, SA > 120)] = np.NaN
+    SA[np.logical_or(SA < 0, SA > 120)] = np.ma.masked
     v_SA = (v_120 - v_0) / 120  # Initial v_SA estimate (SA derivative of v).
     # Begin the modified Newton-Raphson iterative procedure.
     for Number_of_iterations in range(0, 3):

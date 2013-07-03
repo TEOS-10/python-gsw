@@ -4,9 +4,9 @@ from __future__ import division
 
 import numpy as np
 
-import library as lib
 from constants import SSO, r1
 from gsw.utilities import match_args_return
+from  library import SA_from_SP_Baltic, SAAR
 from conversions import pt0_from_t, CT_from_pt
 
 __all__ = ['check_input',
@@ -20,8 +20,8 @@ def check_input(SP, p, lon, lat):
     r"""Check for out of range values."""
     lon, lat, p, SP = np.broadcast_arrays(lon, lat, p, SP)
 
-    SP[(p < 100) & (SP > 120)] = np.NaN
-    SP[(p >= 100) & (SP > 42)] = np.NaN
+    SP[(p < 100) & (SP > 120)] = np.ma.masked
+    SP[(p >= 100) & (SP > 42)] = np.ma.masked
 
     lon = lon % 360
 
@@ -80,10 +80,10 @@ def CT_from_t(SA, t, p):
     """
     # Find values that are out of range, set them to NaN.
     invalid = np.logical_and(p < 100, np.logical_or(t > 80, t < -12))
-    t[invalid] = np.NaN
+    t[invalid] = np.ma.masked
 
     invalid = np.logical_and(p >= 100, np.logical_or(t > 40, t < -12))
-    t[invalid] = np.NaN
+    t[invalid] = np.ma.masked
 
     pt0 = pt0_from_t(SA, t, p)
     CT = CT_from_pt(SA, pt0)
@@ -192,11 +192,8 @@ def SA_from_SP(SP, p, lon, lat):
 
     SP, p, lon, lat = check_input(SP, p, lon, lat)
 
-    SAAR = lib.SAAR(p, lon, lat)
-    #SAAR = lib.delta_SA(p, lon, lat)
-
-    SA = (SSO / 35) * SP * (1 + SAAR)
-    SA_baltic = lib.SA_from_SP_Baltic(SP, lon, lat)
+    SA = (SSO / 35) * SP * (1 + SAAR(p, lon, lat))
+    SA_baltic = SA_from_SP_Baltic(SP, lon, lat)
 
     # The following function (SAAR) finds SAAR in the non-Baltic parts of
     # the world ocean.  (Actually, this SAAR look-up table returns values
@@ -270,12 +267,10 @@ def Sstar_from_SP(SP, p, lon, lat):
 
     SP, p, lon, lat = check_input(SP, p, lon, lat)
 
-    SAAR = lib.SAAR(p, lon, lat)
-    #SAAR = lib.delta_SA(p, lon, lat)
-    Sstar = (SSO / 35.) * SP - r1 * SAAR
+    Sstar = (SSO / 35.) * SP - r1 * SAAR(p, lon, lat)
 
     # In the Baltic Sea, Sstar==SA.
-    Sstar_baltic = lib.SA_from_SP_Baltic(SP, lon, lat)
+    Sstar_baltic = SA_from_SP_Baltic(SP, lon, lat)
 
     # TODO: Create Baltic and non-Baltic test cases.
     if Sstar_baltic is not None:

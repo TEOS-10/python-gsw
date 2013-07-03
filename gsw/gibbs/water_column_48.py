@@ -4,8 +4,8 @@ from __future__ import division
 
 import numpy as np
 
-from constants import db2Pascal
 from earth import grav
+from constants import db2Pascal
 from gsw.utilities import match_args_return
 from density_enthalpy_48 import rho_alpha_beta
 
@@ -91,7 +91,7 @@ def IPV_vs_fNsquared_ratio(SA, CT, p, p_ref=0):
     if SA.ndim == 1:
         raise ValueError('There must be at least 2 columns.')
 
-    SA.clip(0, np.inf)
+    SA = np.maximum(SA, 0)
 
     SA, CT, p, p_ref = np.broadcast_arrays(SA, CT, p, p_ref)
 
@@ -302,7 +302,7 @@ def Turner_Rsubrho(SA, CT, p):
     if SA.ndim == 1:
         raise ValueError('There must be at least 2 columns.')
 
-    SA.clip(0, np.inf)
+    SA = np.maximum(SA, 0)
 
     SA, CT, p = np.broadcast_arrays(SA, CT, p)
 

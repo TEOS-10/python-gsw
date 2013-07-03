@@ -230,7 +230,7 @@ def enthalpy_first_derivatives(SA, CT, p):
     SA : array_like
          Absolute salinity [g kg :sup:`-1`]
     CT : array_like
-         Conservative Temperature [:math:`^\circ` C (TEOS-10)]
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
 
@@ -305,7 +305,7 @@ def enthalpy_second_derivatives(SA, CT, p):
     SA : array_like
          Absolute salinity [g kg :sup:`-1`]
     CT : array_like
-         Conservative Temperature [:math:`^\circ` C (TEOS-10)]
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
 
@@ -399,7 +399,7 @@ def entropy_first_derivatives(SA, CT):
     SA : array_like
          Absolute salinity [g kg :sup:`-1`]
     CT : array_like
-         Conservative Temperature [:math:`^\circ` C (TEOS-10)]
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
 
     Returns
     -------
@@ -462,7 +462,7 @@ def entropy_second_derivatives(SA, CT):
     SA : array_like
          Absolute salinity [g kg :sup:`-1`]
     CT : array_like
-         Conservative Temperature [:math:`^\circ` C (TEOS-10)]
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
 
     Returns
     -------
@@ -535,7 +535,7 @@ def pt_first_derivatives(SA, CT):
     SA : array_like
          Absolute salinity [g kg :sup:`-1`]
     CT : array_like
-         Conservative Temperature [:math:`^\circ` C (TEOS-10)]
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
 
     Returns
     -------
@@ -606,7 +606,7 @@ def pt_second_derivatives(SA, CT):
     SA : array_like
          Absolute salinity [g kg :sup:`-1`]
     CT : array_like
-         Conservative Temperature [:math:`^\circ` C (TEOS-10)]
+         Conservative Temperature [:math:`^\circ` C (ITS-90)]
 
     Returns
     -------

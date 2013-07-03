@@ -5,10 +5,10 @@ from __future__ import division
 import numpy as np
 
 from constants import SSO, cp0, Kelvin, sfac, uPS
-from constants import db2Pascal, gamma, P0, M_S, valence_factor
-from library import entropy_part, entropy_part_zerop, gibbs
-from library import gibbs_pt0_pt0, enthalpy_SSO_0_p, specvol_SSO_0_p
 from gsw.utilities import match_args_return, strip_mask
+from constants import db2Pascal, gamma, P0, M_S, valence_factor
+from library import (entropy_part, entropy_part_zerop, gibbs, gibbs_pt0_pt0,
+                     enthalpy_SSO_0_p, specvol_SSO_0_p)
 
 __all__ = ['Abs_Pressure_from_p',
            'CT_from_entropy',
