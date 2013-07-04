@@ -267,7 +267,7 @@ def Sstar_from_SP(SP, p, lon, lat):
 
     SP, p, lon, lat = check_input(SP, p, lon, lat)
 
-    Sstar = (SSO / 35.) * SP - r1 * SAAR(p, lon, lat)
+    Sstar = (SSO / 35.0) * SP * (1.0 - r1 * SAAR(p, lon, lat))
 
     # In the Baltic Sea, Sstar==SA.
     Sstar_baltic = SA_from_SP_Baltic(SP, lon, lat)
