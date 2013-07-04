@@ -513,7 +513,7 @@ def entropy_second_derivatives(SA, CT):
 
     eta_CT_CT = - cp0 / (CT_pt * abs_pt ** 2)
 
-    eta_SA_CT = CT_SA * eta_CT_CT
+    eta_SA_CT = - CT_SA * eta_CT_CT
 
     eta_SA_SA = -gibbs(n2, n0, n0, SA, pt, 0) / abs_pt - CT_SA * eta_SA_CT
 
