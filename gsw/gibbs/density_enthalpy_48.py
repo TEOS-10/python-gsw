@@ -27,7 +27,7 @@ __all__ = ['alpha',
            'specvol_anom']
 
 
-# NOTE: Where are all these from?
+# NOTE: these are from gsw_rho_alpha_beta.m
 v01 = 9.998420897506056e+2
 v02 = 2.839940833161907
 v03 = -3.147759265588511e-2
@@ -161,19 +161,20 @@ c21 = 1.817370746264060e-16
 
 
 def v_hat_denominator(SA, CT, p):
-    return (v01 + CT * (v02 + CT * (v03 + v04 * CT)) + SA *
-           (v05 + CT * (v06 + v07 * CT) + np.sqrt(SA) *
-           (v08 + CT * (v09 + CT * (v10 + v11 * CT)))) + p *
-           (v12 + CT * (v13 + v14 * CT) + SA * (v15 + v16 * CT) + p *
-           (v17 + CT * (v18 + v19 * CT) + v20 * SA)))
-
+    return (v01 + CT*(v02 + CT*(v03 + v04*CT))
+            + SA*(v05 + CT*(v06 + v07*CT)
+            + np.sqrt(SA)*(v08 + CT*(v09 + CT*(v10 + v11*CT))))
+            + p*(v12 + CT*(v13 + v14*CT) + SA*(v15 + v16*CT)
+            + p*(v17 + CT*(v18 + v19*CT) + v20*SA)))
 
 def v_hat_numerator(SA, CT, p):
-    return (v21 + CT * (v22 + CT * (v23 + CT * (v24 + v25 * CT))) + SA *
-            (v26 + CT * (v27 + CT * (v28 + CT * (v29 + v30 * CT))) + v36 * SA +
-            np.sqrt(SA) * (v31 + CT * (v32 + CT * (v33 + CT *
-            (v34 + v35 * CT))))) + p * (v37 + CT * (v38 + CT *
-            (v44 + v45 * CT + v46 * SA) + p * (v47 + v48 * CT))))
+    return (v21 + CT*(v22 + CT*(v23 + CT*(v24 + v25*CT)))
+            + SA*(v26 + CT*(v27 + CT*(v28 + CT*(v29 + v30*CT))) + v36*SA
+            + np.sqrt(SA)*(v31 + CT*(v32 + CT*(v33 + CT*(v34 + v35*CT)))))
+            + p*(v37 + CT*(v38 + CT*(v39 + v40*CT))
+            + SA*(v41 + v42*CT)
+            + p*(v43 + CT*(v44 + v45*CT + v46*SA)
+            + p*(v47 + v48*CT))))
 
 
 @match_args_return
