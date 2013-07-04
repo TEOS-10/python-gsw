@@ -4,13 +4,23 @@ from __future__ import division
 
 import numpy as np
 
-from constants import SSO, cp0, Kelvin, sfac, uPS
+from constants import SSO, cp0, r1, Kelvin, sfac, uPS
 from gsw.utilities import match_args_return, strip_mask
 from constants import db2Pascal, gamma, P0, M_S, valence_factor
 from library import (entropy_part, entropy_part_zerop, gibbs, gibbs_pt0_pt0,
                      enthalpy_SSO_0_p, specvol_SSO_0_p)
 
-__all__ = ['Abs_Pressure_from_p',
+from  library import SA_from_SP_Baltic, SAAR
+
+# This first set is moved over from absolute_salinity_sstar_ct,
+# which is being absorbed into this module.
+__all__ = [#'check_input',   #  not for export
+           'CT_from_t',
+           'SA_from_SP',
+           'Sstar_from_SP']  # FIXME
+
+# And these are the originals from this module.
+__all__ += ['Abs_Pressure_from_p',
            'CT_from_entropy',
            'CT_from_pt',
            'SA_Sstar_from_SP',  # TODO
@@ -40,7 +50,41 @@ __all__ = ['Abs_Pressure_from_p',
            'z_from_p']  # TODO: Test with geo_strf_dyn_height != None
 
 DEG2RAD = np.pi / 180.0
-n0, n1, n2 = 0, 1, 2
+n0, n1, n2 = 0, 1, 2  # constants used as arguments to gibbs()
+
+
+def check_input(SP, p, lon, lat):
+    r"""Check for out of range values."""
+    # Helper for the "from_SP" functions.
+    lon, lat, p, SP = np.broadcast_arrays(lon, lat, p, SP)
+
+    cond1 = ((p < 100) & (SP > 120))
+    cond2 = ((p >= 100) & (SP > 42))
+    if cond1.any() or cond2.any():  # don't modify input array
+        mask = np.ma.filled(cond1, False) | np.ma.filled(cond2, False)
+        SP = np.ma.array(SP, mask = mask)
+
+    lon = lon % 360
+
+    # FIXME: If we do keep the checks below, they need to
+    # be reformulated with ValueError('pressure out of range') etc.
+    # The original also checks for 9999s--a fossil from old-time
+    # Fortran days.
+
+    # I don't think we need these here; if any such checking is
+    # needed, it should not just be for the "from_SP" functions.
+    if False:
+        if ((p < -1.5) | (p > 12000)).any():
+            raise(Exception, 'Sstar_from_SP: pressure is out of range')
+        if ((lon < 0) | (lon > 360)).any():
+            raise(Exception, 'Sstar_from_SP: longitude is out of range')
+        if (np.abs(lat) > 90).any():
+            raise(Exception, 'Sstar_from_SP: latitude is out of range')
+
+    SP = np.maximum(SP, 0)  #  works on masked array also
+
+    return SP, p, lon, lat
+
 
 
 @match_args_return
@@ -288,9 +332,255 @@ def Sstar_from_SA():
     pass
 
 
-def deltaSA_from_SP():
-    pass
+@match_args_return
+def CT_from_t(SA, t, p):
+    r"""Calculates Conservative Temperature of seawater from in situ
+    temperature.
 
+    Parameters
+    ----------
+    SA : array_like
+         Absolute salinity [g kg :sup:`-1`]
+    t : array_like
+        in situ temperature [:math:`^\circ` C (ITS-90)]
+    p : array_like
+        pressure [dbar]
+
+    Returns
+    -------
+
+    See Also
+    --------
+    TODO
+
+    Notes
+    -----
+    TODO
+
+    Examples
+    --------
+    TODO
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp. See section 3.3.
+
+    Modifications:
+    2011-03-27. David Jackett, Trevor McDougall and Paul Barker
+    """
+    # Find values that are out of range, set them to NaN.
+    invalid = np.logical_and(p < 100, np.logical_or(t > 80, t < -12))
+    t[invalid] = np.ma.masked
+
+    invalid = np.logical_and(p >= 100, np.logical_or(t > 40, t < -12))
+    t[invalid] = np.ma.masked
+
+    pt0 = pt0_from_t(SA, t, p)
+    CT = CT_from_pt(SA, pt0)
+
+    return CT
+
+
+@match_args_return
+def SA_from_SP(SP, p, lon, lat):
+    r"""Calculates Absolute Salinity from Practical Salinity.
+
+    Parameters
+    ----------
+    SP : array_like
+         salinity (PSS-78) [unitless]
+    p : array_like
+        pressure [dbar]
+    lon : array_like
+          decimal degrees east [0..+360] or [-180..+180]
+    lat : array_like
+          decimal degrees (+ve N, -ve S) [-90..+90]
+
+    Returns
+    -------
+    SA : masked array
+         Absolute salinity [g kg :sup:`-1`]
+
+    See Also
+    --------
+    FIXME
+    _delta_SA, _SA_from_SP_Baltic
+
+    Notes
+    -----
+    The mask is only set when the observation is well and truly on dry
+    land; often the warning flag is not set until one is several hundred
+    kilometers inland from the coast.
+
+    Since SP is non-negative by definition, this function changes any negative
+    input values of SP to be zero.
+
+    Examples
+    --------
+    >>> import seawater.gibbs as gsw
+    >>> SP = [34.5487, 34.7275, 34.8605, 34.6810, 34.5680, 34.5600]
+    >>> p = [10, 50, 125, 250, 600, 1000]
+    >>> lon, lat = 188, 4
+    >>> gsw.SA_from_SP(SP, p, lon, lat)
+    array([ 34.71177971,  34.89152372,  35.02554774,  34.84723008,
+            34.7366296 ,  34.73236186])
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp. See section 2.5 and appendices A.4 and A.5.
+
+    .. [2] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
+    for estimating Absolute Salinity in the global ocean. Submitted to Ocean
+    Science. A preliminary version is available at Ocean Sci. Discuss.,
+    6, 215-242.
+    http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
+
+    Modifications:
+    2011-05-31. David Jackett, Trevor McDougall & Paul Barker.
+    """
+
+    SP, p, lon, lat = check_input(SP, p, lon, lat)
+
+    SA = (SSO / 35) * SP * (1 + SAAR(p, lon, lat))
+    SA_baltic = SA_from_SP_Baltic(SP, lon, lat)
+
+    # The following function (SAAR) finds SAAR in the non-Baltic parts of
+    # the world ocean.  (Actually, this SAAR look-up table returns values
+    # of zero in the Baltic Sea since SAAR in the Baltic is a function of SP,
+    # not space.
+    if SA_baltic is not None:
+        SA[~SA_baltic.mask] = SA_baltic[~SA_baltic.mask]
+
+    return SA
+
+
+@match_args_return
+def Sstar_from_SP(SP, p, lon, lat):
+    r"""Calculates Preformed Salinity from Absolute Salinity.
+
+    Parameters
+    ----------
+    SP : array_like
+         salinity (PSS-78) [unitless]
+    p : array_like
+        pressure [dbar]
+    lon : array_like
+          decimal degrees east [0..+360] or [-180..+180]
+    lat : array_like
+          decimal degrees (+ve N, -ve S) [-90..+90]
+
+    Returns
+    -------
+    Sstar : masked array
+            Preformed Salinity [g kg :sup:`-1`]
+
+    See Also
+    --------
+    FIXME
+    _delta_SA, _SA_from_SP_Baltic
+
+    Notes
+    -----
+    The mask is only set when the observation is well and truly on dry
+    land; often the warning flag is not set until one is several hundred
+    kilometers inland from the coast.
+
+    Since SP is non-negative by definition, this function changes any negative
+    input values of SP to be zero.
+
+    Examples
+    --------
+    >>> import seawater.gibbs as gsw
+    >>> SP = [34.5487, 34.7275, 34.8605, 34.6810, 34.5680, 34.5600]
+    >>> p = [10, 50, 125, 250, 600, 1000]
+    >>> lon, lat =  188, 4
+    >>> gsw.Sstar_from_SP(SP, p, lon, lat)
+    array([ 34.7115532 ,  34.89116101,  35.02464926,  34.84359277,
+            34.7290336 ,  34.71967638])
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp. See section 2.5 and appendices A.4 and A.5.
+
+    .. [2] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
+    for estimating Absolute Salinity in the global ocean. Submitted to Ocean
+    Science. A preliminary version is available at Ocean Sci. Discuss.,
+    6, 215-242.
+
+    Modifications:
+    2011-03-27. David Jackett, Trevor McDougall and Paul Barker.
+    """
+
+    SP, p, lon, lat = check_input(SP, p, lon, lat)
+
+    Sstar = (SSO / 35.0) * SP * (1.0 - r1 * SAAR(p, lon, lat))
+
+    # In the Baltic Sea, Sstar==SA.
+    Sstar_baltic = SA_from_SP_Baltic(SP, lon, lat)
+
+    # TODO: Create Baltic and non-Baltic test cases.
+    if Sstar_baltic is not None:
+        Sstar[~Sstar_baltic.mask] = Sstar_baltic[~Sstar_baltic.mask]
+
+    return Sstar
+
+@match_args_return
+def deltaSA_from_SP(SP, p, lon, lat):
+    """
+     gsw_deltaSA_from_SP                             Absolute Salinity Anomaly
+                                                       from Practical Salinity
+    ==========================================================================
+
+     USAGE:
+      deltaSA = gsw_deltaSA_from_SP(SP,p,long,lat)
+
+     DESCRIPTION:
+      Calculates Absolute Salinity Anomaly from Practical Salinity.  Since SP
+      is non-negative by definition, this function changes any negative input
+      values of SP to be zero.
+
+     INPUT:
+      SP   =  Practical Salinity  (PSS-78)                        [ unitless ]
+      p    =  sea pressure                                            [ dbar ]
+             ( i.e. absolute pressure - 10.1325 dbar )
+      long =  longitude in decimal degrees                      [ 0 ... +360 ]
+                                                         or  [ -180 ... +180 ]
+      lat  =  latitude in decimal degrees north                [ -90 ... +90 ]
+
+      p, lat & long may have dimensions 1x1 or Mx1 or 1xN or MxN,
+      where SP is MxN.
+
+     OUTPUT:
+      deltaSA  =  Absolute Salinity Anomaly                           [ g/kg ]
+
+     AUTHOR:
+      Trevor McDougall & Paul Barker                      [ help@teos-10.org ]
+
+     VERSION NUMBER: 3.03 (29th April, 2013)
+
+     REFERENCES:
+      IOC, SCOR and IAPSO, 2010: The international thermodynamic equation of
+       seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.  Available from http://www.TEOS-10.org
+        See section 2.5 and appendices A.4 and A.5 of this TEOS-10 Manual.
+
+      McDougall, T.J., D.R. Jackett, F.J. Millero, R. Pawlowicz and
+       P.M. Barker, 2012: A global algorithm for estimating Absolute Salinity.
+       Ocean Science, 8, 1117-1128.
+       http://www.ocean-sci.net/8/1117/2012/os-8-1117-2012.pdf
+
+    """
+    return SA_from_SP(SP, p, lon, lat) - SR_from_SP(SP)
 
 def depth_from_z(z):
     r"""Calculates depth from height, z.  Note that in general height is

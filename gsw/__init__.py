@@ -8,7 +8,7 @@ __email__ = "ocefpaf@gmail.com"
 __status__ = "Production"
 __created_ = "14-Jan-2010"
 __modified__ = "07-March-2013"
-__all__ = ['gibbs', 'utilities', 'test']
+__all__ = ['gibbs', 'utilities']
 
 from gibbs import *
 from utilities import *

@@ -5,9 +5,8 @@ from __future__ import division
 import numpy as np
 
 from constants import SSO
-from conversions import t_from_CT
+from conversions import t_from_CT, CT_from_t
 from gsw.utilities import match_args_return
-from absolute_salinity_sstar_ct import CT_from_t
 
 __all__ = ['brineSA_CT',
            'brineSA_t',

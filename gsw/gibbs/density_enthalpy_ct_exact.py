@@ -6,8 +6,7 @@ import numpy as np
 
 from constants import cp0
 from gsw.utilities import match_args_return
-from conversions import t_from_CT, pt_from_CT
-from absolute_salinity_sstar_ct import CT_from_t
+from conversions import t_from_CT, CT_from_t, pt_from_CT
 from thermodynamics_from_t import (t_from_rho_exact, rho_t_exact,
                                    alpha_wrt_CT_t_exact, t_maxdensity_exact,
                                    enthalpy_t_exact, beta_const_CT_t_exact,
