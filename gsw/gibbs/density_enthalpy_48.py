@@ -856,6 +856,8 @@ def rho(SA, CT, p):
     """
 
     SA = np.maximum(SA, 0)
+    sqrtSA = np.sqrt(SA)
+    args = SA, CT, p, sqrtSA
 
     """This function calculates rho using the computationally-efficient 48-term
     expression for density in terms of SA, CT and p. If one wanted to compute
@@ -875,7 +877,7 @@ def rho(SA, CT, p):
     rho,_ ,_ = rho_alpha_beta_CT_exact(SA, CT, p)
     """
 
-    return v_hat_denominator(SA, CT, p) / v_hat_numerator(SA, CT, p)
+    return v_hat_denominator(*args) / v_hat_numerator(*args)
 
 
 def rho_alpha_beta(SA, CT, p):
@@ -1269,6 +1271,9 @@ def sound_speed(SA, CT, p):
     """
 
     SA = np.maximum(SA, 0)
+    sqrtSA = np.sqrt(SA)
+    args = SA, CT, p, sqrtSA
+
 
     dvden_dp = (c01 + CT * (c02 + c03 * CT) + SA * (c04 + c05 * CT) + p *
                 (c06 + CT * (c07 + c08 * CT) + c09 * SA))
@@ -1277,9 +1282,9 @@ def sound_speed(SA, CT, p):
                (c14 + c15 * CT) + p * (c16 + CT *
                (c17 + c18 * CT + c19 * SA) + p * (c20 + c21 * CT)))
 
-    drho_dp = ((dvden_dp * v_hat_numerator(SA, CT, p) - dvnum_dp *
-               v_hat_denominator(SA, CT, p)) / (v_hat_numerator(SA, CT, p) *
-               v_hat_numerator(SA, CT, p)))
+    drho_dp = ((dvden_dp * v_hat_numerator(*args) - dvnum_dp *
+               v_hat_denominator(*args)) / (v_hat_numerator(*args) *
+               v_hat_numerator(*args)))
 
     return 100 * np.sqrt(1. / drho_dp)
 
@@ -1354,7 +1359,11 @@ def specvol(SA, CT, p):
     specvol = specvol_CT_exact(SA, CT, p)
     """
 
-    return v_hat_numerator(SA, CT, p) / v_hat_denominator(SA, CT, p)
+    SA = np.maximum(SA, 0)
+    sqrtSA = np.sqrt(SA)
+    args = SA, CT, p, sqrtSA
+
+    return v_hat_numerator(*args) / v_hat_denominator(*args)
 
 
 @match_args_return
@@ -1414,6 +1423,8 @@ def specvol_anom(SA, CT, p):
     """
 
     SA = np.maximum(SA, 0)
+    sqrtSA = np.sqrt(SA)
+    args = SA, CT, p, sqrtSA
 
     """This function calculates specvol_anom using the computationally-
     efficient 48-term expression for density in terms of SA, CT and p.  If
@@ -1429,7 +1440,7 @@ def specvol_anom(SA, CT, p):
     specvol_anom = specvol_anom_CT_exact(SA, CT, p)
     """
 
-    return (v_hat_numerator(SA, CT, p) / v_hat_denominator(SA, CT, p) -
+    return (v_hat_numerator(*args) / v_hat_denominator(*args) -
             specvol_SSO_0_p(p))
 
 

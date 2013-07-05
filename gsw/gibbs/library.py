@@ -206,6 +206,8 @@ class SA_table(object):
         # file, but for now we will simply calculate ndepth directly from
         # SAAR_ref.
         # TODO: check to see whether this discrepancy is also found in V3.
+        # TODO: check: do we even need to calculate ndepth? It doesn't
+        #       appear to be used for anything.
         #self.ndepth = np.ma.masked_invalid(data.ndepth_ref.T).astype(np.int8)
         ndepth = self.dsa.count(axis=-1)
         self.ndepth = np.ma.masked_equal(ndepth, 0)
@@ -363,6 +365,7 @@ def SAAR(p, lon, lat):
     by spatially interpolating the global reference data set of SAAR to the
     location of the seawater sample.
     This function uses version 3.0 of the SAAR look up table.
+
     Parameters
     ----------
     p : array_like
@@ -371,10 +374,13 @@ def SAAR(p, lon, lat):
           decimal degrees east (will be treated modulo 360)
     lat : array_like
           decimal degrees (+ve N, -ve S) [-90..+90]
+
     Returns
     -------
-    SAAR : masked array; masked where no nearby ocean is found in data
+    SAAR : array
            Absolute Salinity Anomaly Ratio [unitless]
+    in_ocean : boolean array
+
     Notes
     -----
     The Absolute Salinity Anomaly Ratio in the Baltic Sea is evaluated
@@ -382,7 +388,7 @@ def SAAR(p, lon, lat):
     The present function returns a SAAR of zero for data in the Baltic Sea.
     The correct way of calculating Absolute Salinity in the Baltic Sea is by
     calling SA_from_SP.
-    The mask is only set when the observation is well and truly on dry
+    The in_ocean flag is only set when the observation is well and truly on dry
     land; often the warning flag is not set until one is several hundred
     kilometers inland from the coast.
     References
@@ -400,7 +406,8 @@ def SAAR(p, lon, lat):
     but the numpy implementation here differs substantially from the
     matlab implementation.
     """
-    return SA_table().SAAR(p, lon, lat)
+    saar = SA_table().SAAR(p, lon, lat)
+    return saar, ~saar.mask
 
 
 def SA_from_SP_Baltic(SP, lon, lat):
@@ -1307,9 +1314,9 @@ def gibbs(ns, nt, npr, SA, t, p):
     else:
         raise ValueError('Illegal derivative of the Gibbs function')
     gibbs = np.ma.array(gibbs, mask=mask, copy=False)
-    # BÅ: Code below is not needed?
-    #if all_masked:
-    #    gibbs[:] = np.ma.masked
+    # BÅ: Code below is not needed?  EF: it is needed.
+    if all_masked:
+        gibbs[:] = np.ma.masked
     # Do not allow zero salinity with salinity derivatives
     if ns > 0:
         gibbs = np.ma.masked_where(SA == 0, gibbs)

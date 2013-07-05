@@ -23,7 +23,7 @@ __all__ = [#'check_input',   #  not for export
 __all__ += ['Abs_Pressure_from_p',
            'CT_from_entropy',
            'CT_from_pt',
-           'SA_Sstar_from_SP',  # TODO
+           'SA_Sstar_from_SP',
            'SA_from_Sstar',  # TODO
            'SP_from_SA',  # TODO
            'SP_from_SR',
@@ -233,10 +233,29 @@ def CT_from_pt(SA, pt):
 
     return np.ma.array(CT, mask=mask, copy=False)
 
+@match_args_return
+def SA_Sstar_from_SP(SP, p, lon, lat):
+    """
+    TODO: docstring
+    """
+    # Note: with match_args_return, the variables inside
+    # this function are masked arrays, so the outputs of
+    # other functions called here are also masked arrays.
 
-def SA_Sstar_from_SP():
-    pass
+    SP, p, lon, lat = check_input(SP, p, lon, lat)
 
+    saar, in_ocean = SAAR(p, lon, lat)
+    SA = uPS * SP * (1 + saar)
+    Sstar = uPS * SP * (1 - r1 * saar)
+
+    SA_baltic = SA_from_SP_Baltic(SP, lon, lat)
+    bmask = SA_baltic.mask
+    if bmask is not np.ma.nomask and not bmask.all():
+        inbaltic = ~bmask
+        SA[inbaltic] = SA_baltic[inbaltic]
+        Sstar[inbaltic] = SA_baltic[inbaltic]
+
+    return SA, Sstar
 
 def SA_from_Sstar():
     pass
@@ -449,7 +468,7 @@ def SA_from_SP(SP, p, lon, lat):
 
     SP, p, lon, lat = check_input(SP, p, lon, lat)
 
-    SA = (SSO / 35) * SP * (1 + SAAR(p, lon, lat))
+    SA = (SSO / 35) * SP * (1 + SAAR(p, lon, lat)[0])
     SA_baltic = SA_from_SP_Baltic(SP, lon, lat)
 
     # The following function (SAAR) finds SAAR in the non-Baltic parts of
@@ -524,7 +543,7 @@ def Sstar_from_SP(SP, p, lon, lat):
 
     SP, p, lon, lat = check_input(SP, p, lon, lat)
 
-    Sstar = (SSO / 35.0) * SP * (1.0 - r1 * SAAR(p, lon, lat))
+    Sstar = (SSO / 35.0) * SP * (1.0 - r1 * SAAR(p, lon, lat)[0])
 
     # In the Baltic Sea, Sstar==SA.
     Sstar_baltic = SA_from_SP_Baltic(SP, lon, lat)
