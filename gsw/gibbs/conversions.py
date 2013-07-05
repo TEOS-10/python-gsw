@@ -17,19 +17,19 @@ from  library import SA_from_SP_Baltic, SAAR
 __all__ = [#'check_input',   #  not for export
            'CT_from_t',
            'SA_from_SP',
-           'Sstar_from_SP']  # FIXME
+           'Sstar_from_SP']
 
 # And these are the originals from this module.
 __all__ += ['Abs_Pressure_from_p',
            'CT_from_entropy',
            'CT_from_pt',
            'SA_Sstar_from_SP',
-           'SA_from_Sstar',  # TODO
+           'SA_from_Sstar',
            'SP_from_SA',  # TODO
            'SP_from_SR',
            'SP_from_Sstar',  # TODO
            'SR_from_SP',
-           'Sstar_from_SA',  # TODO
+           'Sstar_from_SA',
            'deltaSA_from_SP',  # TODO
            'depth_from_z',
            'entropy_from_CT',
@@ -257,9 +257,18 @@ def SA_Sstar_from_SP(SP, p, lon, lat):
 
     return SA, Sstar
 
-def SA_from_Sstar():
-    pass
+@match_args_return
+def SA_from_Sstar(Sstar, p, lon, lat):
+    """
+    TODO: docstring
+    """
+    saar, in_ocean = SAAR(p, lon, lat)
+    SA = Sstar * (1 + saar) / (1.0 - r1 * saar)
 
+    # % In the Baltic Sea, SA = Sstar, and note that gsw_delta_SA returns zero
+    # % for dSA in the Baltic.
+
+    return SA, in_ocean
 
 def SP_from_SA():
     pass
@@ -349,8 +358,15 @@ def SR_from_SP(SP):
     return uPS * SP
 
 
-def Sstar_from_SA():
-    pass
+@match_args_return
+def Sstar_from_SA(SA, p, lon, lat):
+    """
+    TODO: docstring
+    """
+    saar, in_ocean = SAAR(p, lon, lat)
+    Sstar = SA * (1 - r1 * saar) / (1 + saar)
+    # dSA is zero in Baltic
+    return Sstar, in_ocean
 
 
 @match_args_return

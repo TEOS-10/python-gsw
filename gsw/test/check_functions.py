@@ -116,6 +116,14 @@ class FunctionCheck(object):
     def run(self):
         try:
             exec(self.runline)
+            # In Matlab, the number of output arguments varies
+            # depending on the LHS of the assignment, but Python
+            # always returns the full set.  Here we handle the
+            # case where Python is returning 2 (or more) but
+            # the LHS is assigning only the first.
+            if len(self.outstrings) == 1:
+                if isinstance(eval(self.outstr), tuple):
+                    exec("%s = %s[0]" % (self.outstr, self.outstr))
             self.outlist = [eval(s) for s in self.outstrings]
             exec(self.testline)
             self.result = eval(self.resultstr)
