@@ -9,6 +9,8 @@ from constants import P0, db2Pascal, cp0
 from gsw.utilities import match_args_return
 
 __all__ = ['alpha',
+           'alpha_on_beta',
+           'alpha_on_beta_CT',
            'beta',
            'dynamic_enthalpy',
            'enthalpy',
@@ -159,23 +161,114 @@ c19 = 2.239044689758956e-14
 c20 = -3.601523245654798e-15
 c21 = 1.817370746264060e-16
 
+# Helper functions that are used by more than one user function.
+# FIXME: arrange all these things so that inputs to these
+# functions are done with ordinary ndarrays with nans, not
+# masked arrays.  We might need a different decorator for this.
 
-def v_hat_denominator(SA, CT, p):
-    return (v01 + CT*(v02 + CT*(v03 + v04*CT))
-            + SA*(v05 + CT*(v06 + v07*CT)
-            + np.sqrt(SA)*(v08 + CT*(v09 + CT*(v10 + v11*CT))))
-            + p*(v12 + CT*(v13 + v14*CT) + SA*(v15 + v16*CT)
-            + p*(v17 + CT*(v18 + v19*CT) + v20*SA)))
+def v_hat_denominator(SA, CT, p, sqrtSA):
+    return(v01 + CT*(v02 + CT*(v03 + v04*CT))
+           + SA*(v05 + CT*(v06 + v07*CT)
+           + sqrtSA * (v08 + CT*(v09 + CT*(v10 + v11*CT))))
+           + p*(v12 + CT*(v13 + v14*CT) + SA*(v15 + v16*CT)
+           + p*(v17 + CT*(v18 + v19*CT) + v20*SA)))
 
-def v_hat_numerator(SA, CT, p):
-    return (v21 + CT*(v22 + CT*(v23 + CT*(v24 + v25*CT)))
-            + SA*(v26 + CT*(v27 + CT*(v28 + CT*(v29 + v30*CT))) + v36*SA
-            + np.sqrt(SA)*(v31 + CT*(v32 + CT*(v33 + CT*(v34 + v35*CT)))))
-            + p*(v37 + CT*(v38 + CT*(v39 + v40*CT))
-            + SA*(v41 + v42*CT)
-            + p*(v43 + CT*(v44 + v45*CT + v46*SA)
-            + p*(v47 + v48*CT))))
+def v_hat_numerator(SA, CT, p, sqrtSA):
+    return(v21 + CT*(v22 + CT*(v23 + CT*(v24 + v25*CT)))
+           + SA*(v26 + CT*(v27 + CT*(v28 + CT*(v29 + v30*CT))) + v36*SA
+           + sqrtSA *(v31 + CT*(v32 + CT*(v33 + CT*(v34 + v35*CT)))))
+           + p*(v37 + CT*(v38 + CT*(v39 + v40*CT))
+           + SA*(v41 + v42*CT)
+           + p*(v43 + CT*(v44 + v45*CT + v46*SA)
+           + p*(v47 + v48*CT))))
 
+# next 4 are from alpha on beta:
+def dvhatden_dCT(SA, CT, p, sqrtSA):
+    return(a01 + CT * (a02 + a03*CT)
+           + SA * (a04 + a05*CT
+           + sqrtSA * (a06 + CT * (a07 + a08*CT)))
+           + p * (a09 + a10*CT + a11*SA
+           + p * (a12 + a13*CT)))
+
+def dvhatnum_dCT(SA, CT, p, sqrtSA):
+    return(a14 + CT * (a15 + CT * (a16 + a17*CT))
+           + SA * (a18 + CT * (a19 + CT * (a20 + a21*CT))
+           + sqrtSA * (a22 + CT * (a23 + CT * (a24 + a25*CT))))
+           + p * (a26 + CT * (a27 + a28*CT) + a29*SA
+           + p * (a30 + a31*CT + a32*SA + a33*p)))
+
+def dvhatden_dSA(SA, CT, p, sqrtSA):
+    return(b01 + CT * (b02 + b03*CT)
+           + sqrtSA * (b04 + CT * (b05 + CT * (b06 + b07*CT)))
+           + p * (b08 + b09*CT + b10*p))
+
+def dvhatnum_dSA(SA, CT, p, sqrtSA):
+    return(b11 + CT * (b12 + CT * (b13 + CT * (b14 + b15*CT)))
+           + sqrtSA * (b16 + CT * (b17 + CT * (b18 + CT * (b19 + b20*CT))))
+           + b21*SA
+           + p * (b22 + CT * (b23 + b24*p)))
+
+
+@match_args_return
+def alpha_on_beta(SA, CT, p):
+    """
+     gsw_alpha_on_beta                           alpha/beta (48-term equation)
+    ==========================================================================
+
+     USAGE:
+     alpha_on_beta = gsw_alpha_on_beta(SA,CT,p)
+
+     DESCRIPTION:
+      Calculates alpha divided by beta, where alpha is the thermal expansion
+      coefficient and beta is the saline contraction coefficient of seawater
+      from Absolute Salinity and Conservative Temperature.  This function uses
+      the computationally-efficient 48-term expression for density in terms of
+      SA, CT and p (IOC et al., 2010).
+
+      Note that the 48-term equation has been fitted in a restricted range of
+      parameter space, and is most accurate inside the "oceanographic funnel"
+      described in IOC et al. (2010).  The GSW library function
+      "gsw_infunnel(SA,CT,p)" is avaialble to be used if one wants to test if
+      some of one's data lies outside this "funnel".
+
+     INPUT:
+      SA  =  Absolute Salinity                                        [ g/kg ]
+      CT  =  Conservative Temperature (ITS-90)                       [ deg C ]
+      p   =  sea pressure                                             [ dbar ]
+             ( i.e. absolute pressure - 10.1325 dbar )
+
+      SA & CT need to have the same dimensions.
+      p may have dimensions 1x1 or Mx1 or 1xN or MxN, where SA & CT are MxN.
+
+     OUTPUT:
+      alpha_on_beta  =  thermal expansion coefficient with respect to
+                        Conservative Temperature divided by the saline
+                        contraction coefficient at constant Conservative
+                        Temperature                           [ kg g^-1 K^-1 ]
+
+     AUTHOR:
+      Paul Barker and Trevor McDougall                    [ help@teos-10.org ]
+
+     VERSION NUMBER: 3.03 (10th May, 2013)
+
+     REFERENCES:
+      IOC, SCOR and IAPSO, 2010: The international thermodynamic equation of
+       seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.  Available from http://www.TEOS-10.org
+
+    """
+    SA = np.maximum(SA, 0)
+    sqrtSA = np.sqrt(SA)
+    args = SA, CT, p, sqrtSA
+
+    num = (dvhatnum_dCT(*args) * v_hat_denominator(*args) -
+           dvhatden_dCT(*args) * v_hat_numerator(*args))
+    denom = (dvhatden_dSA(*args) * v_hat_numerator(*args) -
+             dvhatnum_dSA(*args) * v_hat_denominator(*args))
+    return num / denom
+
+alpha_on_beta_CT = alpha_on_beta
 
 @match_args_return
 def alpha(SA, CT, p):
@@ -230,25 +323,14 @@ def alpha(SA, CT, p):
     Modifications:
     2011-03-23. Paul Barker and Trevor McDougall.
     """
-
     SA = np.maximum(SA, 0)
-
     sqrtSA = np.sqrt(SA)
+    args = SA, CT, p, sqrtSA
 
-    spec_vol = v_hat_numerator(SA, CT, p) / v_hat_denominator(SA, CT, p)
+    spec_vol = v_hat_numerator(*args) / v_hat_denominator(*args)
 
-    dvhatden_dCT = (a01 + CT * (a02 + a03 * CT) + SA * (a04 + a05 * CT +
-                    sqrtSA * (a06 + CT * (a07 + a08 * CT))) + p *
-                    (a09 + a10 * CT + a11 * SA + p * (a12 + a13 * CT)))
-
-    dvhatnum_dCT = (a14 + CT * (a15 + CT * (a16 + a17 * CT)) + SA *
-                   (a18 + CT * (a19 + CT * (a20 + a21 * CT)) + sqrtSA *
-                   (a22 + CT * (a23 + CT * (a24 + a25 * CT)))) + p *
-                   (a26 + CT * (a27 + a28 * CT) + a29 * SA + p *
-                   (a30 + a31 * CT + a32 * SA + a33 * p)))
-
-    return ((dvhatnum_dCT - dvhatden_dCT * spec_vol) /
-            v_hat_numerator(SA, CT, p))
+    return ((dvhatnum_dCT(*args) - dvhatden_dCT(*args) * spec_vol) /
+            v_hat_numerator(*args))
 
 
 @match_args_return
@@ -306,21 +388,13 @@ def beta(SA, CT, p):
     """
 
     SA = np.maximum(SA, 0)
-
     sqrtSA = np.sqrt(SA)
+    args = SA, CT, p, sqrtSA
 
-    spec_vol = v_hat_numerator(SA, CT, p) / v_hat_denominator(SA, CT, p)
+    spec_vol = v_hat_numerator(*args) / v_hat_denominator(*args)
 
-    dvhatden_dSA = (b01 + CT * (b02 + b03 * CT) + sqrtSA *
-                    (b04 + CT * (b05 + CT * (b06 + b07 * CT))) + p *
-                    (b08 + b09 * CT + b10 * p))
-
-    dvhatnum_dSA = (b11 + CT * (b12 + CT * (b13 + CT * (b14 + b15 * CT))) +
-                    sqrtSA * (b16 + CT * (b17 + CT * (b18 + CT * (b19 + b20 *
-                    CT)))) + b21 * SA + p * (b22 + CT * (b23 + b24 * p)))
-
-    return ((dvhatden_dSA * spec_vol - dvhatnum_dSA) /
-            v_hat_numerator(SA, CT, p))
+    return ((dvhatden_dSA(*args) * spec_vol - dvhatnum_dSA(*args)) /
+            v_hat_numerator(*args))
 
 
 @match_args_return

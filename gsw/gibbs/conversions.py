@@ -34,6 +34,7 @@ __all__ += ['Abs_Pressure_from_p',
            'depth_from_z',
            'entropy_from_CT',
            'entropy_from_pt',
+           'entropy_from_t',
            'ionic_strength_from_SA',
            'molality_from_SA',
            'p_from_Abs_Pressure',
@@ -46,6 +47,7 @@ __all__ += ['Abs_Pressure_from_p',
            't90_from_t48',
            't90_from_t68',
            't_from_CT',
+           't_from_entropy',
            'z_from_depth',
            'z_from_p']  # TODO: Test with geo_strf_dyn_height != None
 
@@ -698,6 +700,45 @@ def entropy_from_pt(SA, pt):
 
     SA = np.maximum(SA, 0)
     return -gibbs(n0, n1, n0, SA, pt, 0)
+
+@match_args_return
+def entropy_from_t(SA, t, p):
+    """
+     gsw_entropy_from_t                          specific entropy of seawater
+    ==========================================================================
+
+     USAGE:
+      entropy  =  gsw_entropy_from_t(SA,t,p)
+
+     DESCRIPTION:
+      Calculates specific entropy of seawater.
+
+     INPUT:
+      SA  =  Absolute Salinity                                        [ g/kg ]
+      t   =  in-situ temperature (ITS-90)                            [ deg C ]
+      p   =  sea pressure                                             [ dbar ]
+             ( i.e. absolute pressure - 10.1325 dbar )
+
+      SA & t need to have the same dimensions.
+      p may have dimensions 1x1 or Mx1 or 1xN or MxN, where SA & t are MxN.
+
+     OUTPUT:
+      entropy  =  specific entropy                                [ J/(kg*K) ]
+
+     AUTHOR:
+      David Jackett, Trevor McDougall and Paul Barker     [ help@teos-10.org ]
+
+     VERSION NUMBER: 3.03 (29th April, 2013)
+
+     REFERENCES:
+      IOC, SCOR and IAPSO, 2010: The international thermodynamic equation of
+       seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.  Available from http://www.TEOS-10.org
+
+    """
+
+    return -gibbs(n0, n1, n0, SA, t, p)
 
 
 @match_args_return
@@ -1488,6 +1529,51 @@ def t_from_CT(SA, CT, p):
 
     pt0 = pt_from_CT(SA, CT)
     return pt_from_t(SA, pt0, 0, p)
+
+@match_args_return
+def t_from_entropy(SA, entropy, p):
+    """
+    gsw_t_from_entropy                                    in-situ temperature
+                                                     as a function of entropy
+    =========================================================================
+
+    USAGE:
+     t = gsw_t_from_entropy(SA,entropy,p)
+
+    DESCRIPTION:
+     Calculates in-situ temperature with entropy as an input variable.
+
+    INPUT:
+     SA       =  Absolute Salinity                                   [ g/kg ]
+     entropy  =  specific entropy                                [ J/(kg*K) ]
+     p   =  sea pressure                                             [ dbar ]
+            ( i.e. absolute pressure - 10.1325 dbar )
+
+     SA & entropy need to have the same dimensions.
+     p may have dimensions 1x1 or Mx1 or 1xN or MxN, where SA & entropy are
+     MxN.
+
+    OUTPUT:
+     t   =  in-situ temperature (ITS-90)                            [ deg C ]
+
+    AUTHOR:
+     Trevor McDougall and Paul Barker                    [ help@teos-10.org ]
+
+    VERSION NUMBER: 3.03 (29th April, 2013)
+
+    REFERENCES:
+     IOC, SCOR and IAPSO, 2010: The international thermodynamic equation of
+      seawater - 2010: Calculation and use of thermodynamic properties.
+      Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+      UNESCO (English), 196 pp.  Available from http://www.TEOS-10.org
+       See appendix  A.10 of this TEOS-10 Manual.
+
+    """
+    pt = pt_from_entropy(SA, entropy);
+    #% Note that pt is potential temperature with a reference pressure of zero.
+    p0 = 0
+    return pt_from_t(SA, pt, p0, p)
+
 
 
 def z_from_depth(depth):
