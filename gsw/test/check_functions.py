@@ -95,6 +95,7 @@ class FunctionCheck(object):
         funcstr, argpart = tail.split('(', 1)
         self.name = funcstr.strip()
         self.argstrings = [s.strip() for s in argpart[:-1].split(',')]
+        self.argstr = ','.join(self.argstrings)
 
         # parse the line that checks the results
         head, tail = self.testline.split('=', 1)
@@ -145,8 +146,6 @@ cf = Bunch()
 for fc in checks:
     fc.run()
 
-#failures = [k[1:] for k, v in cf.items() if k.startswith('I') and len(v) > 0]
-#passes = [k[1:] for k, v in cf.items() if k.startswith('I') and len(v) == 0]
 passes = [f.name for f in checks if f.passed]
 failures = [f.name for f in checks if f.passed is False]
 
@@ -159,11 +158,12 @@ for exc in etypes:
                 if isinstance(f.exception, exc)]
     ex_dict[exc] = elist
 
+print "\n%s tests were translated from gsw_check_functions.m" % len(checks)
 print "\n%s tests ran with no error and with correct output" % len(passes)
-print "%s tests had an output mismatch:" % len(failures)
+print "\n%s tests had an output mismatch:" % len(failures)
 print " ", "\n  ".join(failures)
 
-print "\nExceptions were raised as follows:"
+print "\n%s exceptions were raised as follows:" % len(run_problems)
 for exc in etypes:
     print "  ", exc.__name__
     strings = ["     %s : %s" % e for e in ex_dict[exc]]
@@ -171,4 +171,20 @@ for exc in etypes:
     print ""
 
 checkbunch = Bunch([(c.name, c) for c in checks])
+
+def find_arguments():
+    argset = set()
+    for c in checks:
+        argset.update(c.argstrings)
+    argsetlist = list(argset)
+    argsetlist.sort()
+    return argsetlist
+
+def find_arglists():
+    alset = set()
+    for c in checks:
+        alset.update([c.argstr])
+    arglists = list(alset)
+    arglists.sort()
+    return arglists
 
