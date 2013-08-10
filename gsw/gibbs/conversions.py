@@ -10,7 +10,7 @@ from constants import db2Pascal, gamma, P0, M_S, valence_factor
 from library import (entropy_part, entropy_part_zerop, gibbs, gibbs_pt0_pt0,
                      enthalpy_SSO_0_p, specvol_SSO_0_p)
 
-from  library import SA_from_SP_Baltic, SAAR
+from  library import SA_from_SP_Baltic, SP_from_SA_Baltic, SAAR
 
 # This first set is moved over from absolute_salinity_sstar_ct,
 # which is being absorbed into this module.
@@ -25,7 +25,7 @@ __all__ += ['Abs_Pressure_from_p',
            'CT_from_pt',
            'SA_Sstar_from_SP',
            'SA_from_Sstar',
-           'SP_from_SA',  # TODO
+           'SP_from_SA',
            'SP_from_SR',
            'SP_from_Sstar',  # TODO
            'SR_from_SP',
@@ -262,6 +262,8 @@ def SA_from_Sstar(Sstar, p, lon, lat):
     """
     TODO: docstring
     """
+    # maybe add some input checking...
+
     saar, in_ocean = SAAR(p, lon, lat)
     SA = Sstar * (1 + saar) / (1.0 - r1 * saar)
 
@@ -270,8 +272,23 @@ def SA_from_Sstar(Sstar, p, lon, lat):
 
     return SA, in_ocean
 
-def SP_from_SA():
-    pass
+@match_args_return
+def SP_from_SA(SA, p, lon, lat):
+    """
+    TODO: docstring
+    """
+    # maybe add input checking...
+
+    saar, in_ocean = SAAR(p, lon, lat)
+    SP = (35 / 35.16504) * SA / (1.0 + saar)
+
+    SP_baltic = SP_from_SA_Baltic(SA, lon, lat)
+    bmask = SP_baltic.mask
+    if bmask is not np.ma.nomask and not bmask.all():
+        inbaltic = ~bmask
+        SP[inbaltic] = SP_baltic[inbaltic]
+
+    return SP, in_ocean
 
 
 @match_args_return
