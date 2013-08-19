@@ -4,15 +4,15 @@ from __future__ import division
 
 import numpy as np
 
-from constants import cp0
-from gsw.utilities import match_args_return
-from conversions import t_from_CT, CT_from_t, pt_from_CT
-from thermodynamics_from_t import (t_from_rho_exact, rho_t_exact,
-                                   alpha_wrt_CT_t_exact, t_maxdensity_exact,
-                                   enthalpy_t_exact, beta_const_CT_t_exact,
-                                   specvol_t_exact, internal_energy_t_exact,
-                                   sigma0_pt0_exact, specvol_anom_t_exact,
-                                   sound_speed_t_exact)
+from .constants import cp0
+from ..utilities import match_args_return
+from .conversions import t_from_CT, CT_from_t, pt_from_CT
+from .thermodynamics_from_t import (t_from_rho_exact, rho_t_exact,
+                                    alpha_wrt_CT_t_exact, t_maxdensity_exact,
+                                    enthalpy_t_exact, beta_const_CT_t_exact,
+                                    specvol_t_exact, internal_energy_t_exact,
+                                    sigma0_pt0_exact, specvol_anom_t_exact,
+                                    sound_speed_t_exact)
 
 __all__ = ['alpha_CT_exact',
            'beta_CT_exact',

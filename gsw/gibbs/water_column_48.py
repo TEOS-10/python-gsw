@@ -4,10 +4,10 @@ from __future__ import division
 
 import numpy as np
 
-from earth import grav
-from constants import db2Pascal
-from gsw.utilities import match_args_return
-from density_enthalpy_48 import rho_alpha_beta
+from .earth import grav
+from .constants import db2Pascal
+from ..utilities import match_args_return
+from .density_enthalpy_48 import rho_alpha_beta
 
 __all__ = ['IPV_vs_fNsquared_ratio',
            'Nsquared',

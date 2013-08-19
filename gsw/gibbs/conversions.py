@@ -4,23 +4,20 @@ from __future__ import division
 
 import numpy as np
 
-from constants import SSO, cp0, r1, Kelvin, sfac, uPS
-from gsw.utilities import match_args_return, strip_mask
-from constants import db2Pascal, gamma, P0, M_S, valence_factor
-from library import (entropy_part, entropy_part_zerop, gibbs, gibbs_pt0_pt0,
-                     enthalpy_SSO_0_p, specvol_SSO_0_p)
+from ..utilities import match_args_return, strip_mask
+from .constants import SSO, cp0, r1, Kelvin, sfac, uPS
+from .constants import db2Pascal, gamma, P0, M_S, valence_factor
+from .library import (entropy_part, entropy_part_zerop, gibbs, gibbs_pt0_pt0,
+                      enthalpy_SSO_0_p, specvol_SSO_0_p)
 
-from  library import SA_from_SP_Baltic, SP_from_SA_Baltic, SAAR
+from .library import SA_from_SP_Baltic, SP_from_SA_Baltic, SAAR
 
 # This first set is moved over from absolute_salinity_sstar_ct,
 # which is being absorbed into this module.
-__all__ = [#'check_input',   #  not for export
-           'CT_from_t',
+__all__ = ['CT_from_t',
            'SA_from_SP',
-           'Sstar_from_SP']
-
-# And these are the originals from this module.
-__all__ += ['Abs_Pressure_from_p',
+           'Sstar_from_SP',
+           'Abs_Pressure_from_p',
            'CT_from_entropy',
            'CT_from_pt',
            'SA_Sstar_from_SP',
@@ -64,7 +61,7 @@ def check_input(SP, p, lon, lat):
     cond2 = ((p >= 100) & (SP > 42))
     if cond1.any() or cond2.any():  # don't modify input array
         mask = np.ma.filled(cond1, False) | np.ma.filled(cond2, False)
-        SP = np.ma.array(SP, mask = mask)
+        SP = np.ma.array(SP, mask=mask)
 
     lon = lon % 360
 
@@ -83,10 +80,9 @@ def check_input(SP, p, lon, lat):
         if (np.abs(lat) > 90).any():
             raise(Exception, 'Sstar_from_SP: latitude is out of range')
 
-    SP = np.maximum(SP, 0)  #  works on masked array also
+    SP = np.maximum(SP, 0)  # Works on masked array also.
 
     return SP, p, lon, lat
-
 
 
 @match_args_return
@@ -233,6 +229,7 @@ def CT_from_pt(SA, pt):
 
     return np.ma.array(CT, mask=mask, copy=False)
 
+
 @match_args_return
 def SA_Sstar_from_SP(SP, p, lon, lat):
     """
@@ -257,6 +254,7 @@ def SA_Sstar_from_SP(SP, p, lon, lat):
 
     return SA, Sstar
 
+
 @match_args_return
 def SA_from_Sstar(Sstar, p, lon, lat):
     """
@@ -271,6 +269,7 @@ def SA_from_Sstar(Sstar, p, lon, lat):
     # % for dSA in the Baltic.
 
     return SA, in_ocean
+
 
 @match_args_return
 def SP_from_SA(SA, p, lon, lat):
@@ -587,6 +586,7 @@ def Sstar_from_SP(SP, p, lon, lat):
 
     return Sstar
 
+
 @match_args_return
 def deltaSA_from_SP(SP, p, lon, lat):
     """
@@ -635,6 +635,7 @@ def deltaSA_from_SP(SP, p, lon, lat):
 
     """
     return SA_from_SP(SP, p, lon, lat) - SR_from_SP(SP)
+
 
 def depth_from_z(z):
     r"""Calculates depth from height, z.  Note that in general height is
@@ -752,6 +753,7 @@ def entropy_from_pt(SA, pt):
 
     SA = np.maximum(SA, 0)
     return -gibbs(n0, n1, n0, SA, pt, 0)
+
 
 @match_args_return
 def entropy_from_t(SA, t, p):
@@ -1582,6 +1584,7 @@ def t_from_CT(SA, CT, p):
     pt0 = pt_from_CT(SA, CT)
     return pt_from_t(SA, pt0, 0, p)
 
+
 @match_args_return
 def t_from_entropy(SA, entropy, p):
     """
@@ -1621,11 +1624,10 @@ def t_from_entropy(SA, entropy, p):
        See appendix  A.10 of this TEOS-10 Manual.
 
     """
-    pt = pt_from_entropy(SA, entropy);
+    pt = pt_from_entropy(SA, entropy)
     #% Note that pt is potential temperature with a reference pressure of zero.
     p0 = 0
     return pt_from_t(SA, pt, p0, p)
-
 
 
 def z_from_depth(depth):

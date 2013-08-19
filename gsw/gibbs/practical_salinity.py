@@ -4,8 +4,8 @@ from __future__ import division
 
 import numpy as np
 
-from library import Hill_ratio_at_SP2
-from gsw.utilities import match_args_return
+from .library import Hill_ratio_at_SP2
+from ..utilities import match_args_return
 
 __all__ = ['C_from_SP',
            'R_from_SP',

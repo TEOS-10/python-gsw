@@ -4,8 +4,8 @@ from __future__ import division
 
 import numpy as np
 
-from constants import sfac, SSO, db2Pascal
-from gsw.utilities import match_args_return, strip_mask, read_data
+from .constants import sfac, SSO, db2Pascal
+from ..utilities import match_args_return, strip_mask, read_data
 
 __all__ = ['deltaSA_atlas',
            'enthalpy_SSO_0_p',

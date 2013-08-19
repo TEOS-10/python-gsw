@@ -4,9 +4,9 @@ from __future__ import division
 
 import numpy as np
 
-from constants import SSO
-from conversions import t_from_CT, CT_from_t
-from gsw.utilities import match_args_return
+from .constants import SSO
+from .conversions import t_from_CT, CT_from_t
+from ..utilities import match_args_return
 
 __all__ = ['brineSA_CT',
            'brineSA_t',

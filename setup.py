@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 import codecs
-from gsw import __version__
-from distutils.core import setup
-try:  # Python 3
-    from distutils.command.build_py import build_py_2to3 as build_py
-except ImportError:  # Python 2
-    from distutils.command.build_py import build_py
+from setuptools import setup
+
+from gsw import __version__, __authors__, __email__, __maintainer__
+
+install_requires = ['numpy', 'nose']
 
 classifiers = """\
 Development Status :: 5 - Production/Stable
@@ -23,24 +24,29 @@ Topic :: Education
 Topic :: Software Development :: Libraries :: Python Modules
 """
 
-readme = codecs.open('README.rst', encoding='utf-8')
+CHANGES = open('CHANGES.txt').read()
+README = codecs.open('README.rst', encoding='utf-8')
+LICENSE = open('LICENSE.txt').read()
+
 config = dict(name='gsw',
               version=__version__,
               packages=['gsw', 'gsw/gibbs', 'gsw/utilities', 'gsw/test'],
               package_data={'gsw': ['utilities/data/*.npz']},
-              license=open('LICENSE.txt').read(),
+              test_suite='tests',
+              use_2to3=True,
+              license=LICENSE,
+              #long_description='%s\n\n%s'.encode('utf-8') % (README, CHANGES),
+              long_description=u'%s\n\n%s' % (README, CHANGES),
+              classifiers=filter(None, classifiers.split("\n")),
               description='Gibbs SeaWater Oceanographic Package of TEOS-10',
-              long_description=readme.read(),
-              author=u'Filipe Fernandes, Eric Firing, Ådlandsvik Bjørn',
-              author_email='ocefpaf@gmail.com',
-              maintainer='Filipe Fernandes',
-              maintainer_email='ocefpaf@gmail.com',
+              author=__authors__,
+              author_email=__email__,
+              maintainer=__maintainer__,
+              maintainer_email=__email__,
               url='http://pypi.python.org/pypi/seawater/',
               download_url='https://pypi.python.org/pypi/gsw/',
-              classifiers=filter(None, classifiers.split("\n")),
               platforms='any',
-              cmdclass={'build_py': build_py},
-              keywords=['oceanography', 'seawater'],
-              install_requires=['numpy', 'nose'])
+              keywords=['oceanography', 'seawater', 'teos-10', 'gibbs'],
+              install_requires=install_requires)
 
 setup(**config)

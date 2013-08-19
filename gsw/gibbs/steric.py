@@ -3,8 +3,8 @@
 from __future__ import division
 
 import numpy as np
-from gsw.utilities import match_args_return
-from geostrophic_48 import geo_strf_dyn_height
+from ..utilities import match_args_return
+from .geostrophic_48 import geo_strf_dyn_height
 
 __all__ = ['steric_height']
 

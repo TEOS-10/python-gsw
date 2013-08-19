@@ -314,9 +314,9 @@ def generic_test(self, func=None, argnames=None):
     maxallowed = getattr(cv, func + '_ca')
     try:
         self.assertTrue(maxdiff < maxallowed)
-    except AssertionError, e:
-        print out
-        print target
+    except AssertionError as e:
+        print(out)
+        print(target)
         raise AssertionError("Error in %s %s, maxdiff is %s vs %s allowed"
                               % (func, e.args, maxdiff, maxallowed))
 

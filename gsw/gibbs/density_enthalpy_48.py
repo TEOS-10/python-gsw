@@ -4,9 +4,9 @@ from __future__ import division
 
 import numpy as np
 
-from library import specvol_SSO_0_p
-from constants import P0, db2Pascal, cp0
-from gsw.utilities import match_args_return
+from .library import specvol_SSO_0_p
+from .constants import P0, db2Pascal, cp0
+from ..utilities import match_args_return
 
 __all__ = ['alpha',
            'alpha_on_beta',
@@ -166,41 +166,49 @@ c21 = 1.817370746264060e-16
 # functions are done with ordinary ndarrays with nans, not
 # masked arrays.  We might need a different decorator for this.
 
+
 def v_hat_denominator(SA, CT, p, sqrtSA):
-    return(v01 + CT*(v02 + CT*(v03 + v04*CT))
-           + SA*(v05 + CT*(v06 + v07*CT)
-           + sqrtSA * (v08 + CT*(v09 + CT*(v10 + v11*CT))))
-           + p*(v12 + CT*(v13 + v14*CT) + SA*(v15 + v16*CT)
-           + p*(v17 + CT*(v18 + v19*CT) + v20*SA)))
+    return (v01 + CT * (v02 + CT * (v03 + v04*CT)) +
+            SA *
+            (v05 + CT * (v06 + v07 * CT) + sqrtSA *
+             (v08 + CT * (v09 + CT * (v10 + v11 * CT)))) +
+            p *
+            (v12 + CT * (v13 + v14 * CT) + SA * (v15 + v16 * CT) +
+             p * (v17 + CT * (v18 + v19 * CT) + v20 * SA)))
+
 
 def v_hat_numerator(SA, CT, p, sqrtSA):
-    return(v21 + CT*(v22 + CT*(v23 + CT*(v24 + v25*CT)))
-           + SA*(v26 + CT*(v27 + CT*(v28 + CT*(v29 + v30*CT))) + v36*SA
-           + sqrtSA *(v31 + CT*(v32 + CT*(v33 + CT*(v34 + v35*CT)))))
-           + p*(v37 + CT*(v38 + CT*(v39 + v40*CT))
-           + SA*(v41 + v42*CT)
-           + p*(v43 + CT*(v44 + v45*CT + v46*SA)
-           + p*(v47 + v48*CT))))
+    return (v21 + CT * (v22 + CT * (v23 + CT * (v24 + v25 * CT))) +
+            SA *
+            (v26 + CT * (v27 + CT * (v28 + CT * (v29 + v30 * CT))) +
+             v36 * SA + sqrtSA *
+             (v31 + CT * (v32 + CT * (v33 + CT * (v34 + v35 * CT))))) +
+            p *
+            (v37 + CT * (v38 + CT * (v39 + v40 * CT)) + SA *
+             (v41 + v42 * CT) + p *
+             (v43 + CT * (v44 + v45 * CT + v46 * SA) + p * (v47 + v48 * CT))))
 
-# next 4 are from alpha on beta:
+
+# Next 4 are from alpha on beta:
 def dvhatden_dCT(SA, CT, p, sqrtSA):
-    return(a01 + CT * (a02 + a03*CT)
-           + SA * (a04 + a05*CT
-           + sqrtSA * (a06 + CT * (a07 + a08*CT)))
-           + p * (a09 + a10*CT + a11*SA
-           + p * (a12 + a13*CT)))
+    return (a01 + CT * (a02 + a03 * CT) + SA *
+            (a04 + a05 * CT + sqrtSA * (a06 + CT * (a07 + a08 * CT))) +
+            p * (a09 + a10 * CT + a11 * SA + p * (a12 + a13 * CT)))
+
 
 def dvhatnum_dCT(SA, CT, p, sqrtSA):
-    return(a14 + CT * (a15 + CT * (a16 + a17*CT))
-           + SA * (a18 + CT * (a19 + CT * (a20 + a21*CT))
-           + sqrtSA * (a22 + CT * (a23 + CT * (a24 + a25*CT))))
-           + p * (a26 + CT * (a27 + a28*CT) + a29*SA
-           + p * (a30 + a31*CT + a32*SA + a33*p)))
+    return (a14 + CT * (a15 + CT * (a16 + a17 * CT)) + SA *
+            (a18 + CT * (a19 + CT * (a20 + a21 * CT)) + sqrtSA *
+             (a22 + CT * (a23 + CT * (a24 + a25 * CT)))) + p *
+            (a26 + CT * (a27 + a28 * CT) + a29 * SA + p *
+             (a30 + a31 * CT + a32 * SA + a33 * p)))
+
 
 def dvhatden_dSA(SA, CT, p, sqrtSA):
-    return(b01 + CT * (b02 + b03*CT)
-           + sqrtSA * (b04 + CT * (b05 + CT * (b06 + b07*CT)))
-           + p * (b08 + b09*CT + b10*p))
+    return (b01 + CT * (b02 + b03 * CT) + sqrtSA *
+            (b04 + CT * (b05 + CT * (b06 + b07 * CT))) +
+            p * (b08 + b09 * CT + b10 * p))
+
 
 def dvhatnum_dSA(SA, CT, p, sqrtSA):
     return(b11 + CT * (b12 + CT * (b13 + CT * (b14 + b15*CT)))
@@ -269,6 +277,7 @@ def alpha_on_beta(SA, CT, p):
     return num / denom
 
 alpha_on_beta_CT = alpha_on_beta
+
 
 @match_args_return
 def alpha(SA, CT, p):
@@ -462,7 +471,7 @@ def dynamic_enthalpy(SA, CT, p):
 
     a0 = (v21 + CT * (v22 + CT * (v23 + CT * (v24 + v25 * CT))) + SA *
           (v26 + CT * (v27 + CT * (v28 + CT * (v29 + v30 * CT))) + v36 * SA +
-          sqrtSA * (v31 + CT * (v32 + CT * (v33 + CT * (v34 + v35 * CT))))))
+           sqrtSA * (v31 + CT * (v32 + CT * (v33 + CT * (v34 + v35 * CT))))))
 
     a1 = v37 + CT * (v38 + CT * (v39 + v40 * CT)) + SA * (v41 + v42 * CT)
 
@@ -498,9 +507,9 @@ def dynamic_enthalpy(SA, CT, p):
     """
 
     return db2Pascal * (p * (a2 - 2 * a3 * b1 / b2 + 0.5 * a3 * p) / b2 +
-                        (M / (2 * b2)) * np.log(1 + p * (2 * b1 + b2 * p) /
-                        b0) + part * np.log(1 + (b2 * p * (B - A)) /
-                        (A * (B + b2 * p))))
+                        (M / (2 * b2)) *
+                        np.log(1 + p * (2 * b1 + b2 * p) / b0) + part *
+                        np.log(1 + (b2 * p * (B - A)) / (A * (B + b2 * p))))
 
 
 @match_args_return
@@ -564,7 +573,7 @@ def enthalpy(SA, CT, p):
 
     a0 = (v21 + CT * (v22 + CT * (v23 + CT * (v24 + v25 * CT))) + SA *
           (v26 + CT * (v27 + CT * (v28 + CT * (v29 + v30 * CT))) + v36 * SA +
-          sqrtSA * (v31 + CT * (v32 + CT * (v33 + CT * (v34 + v35 * CT))))))
+           sqrtSA * (v31 + CT * (v32 + CT * (v33 + CT * (v34 + v35 * CT))))))
 
     a1 = v37 + CT * (v38 + CT * (v39 + v40 * CT)) + SA * (v41 + v42 * CT)
 
@@ -679,7 +688,7 @@ def enthalpy_diff(SA, CT, p_shallow, p_deep):
 
     a0 = (v21 + CT * (v22 + CT * (v23 + CT * (v24 + v25 * CT))) + SA *
           (v26 + CT * (v27 + CT * (v28 + CT * (v29 + v30 * CT))) + v36 * SA +
-          sqrtSA * (v31 + CT * (v32 + CT * (v33 + CT * (v34 + v35 * CT))))))
+           sqrtSA * (v31 + CT * (v32 + CT * (v33 + CT * (v34 + v35 * CT))))))
 
     a1 = v37 + CT * (v38 + CT * (v39 + v40 * CT)) + SA * (v41 + v42 * CT)
 
@@ -727,9 +736,10 @@ def enthalpy_diff(SA, CT, p_shallow, p_deep):
     enthalpy_diff = enthalpy_diff_CT_exact(SA, CT, p_shallow, p_deep)
     """
 
-    return (db2Pascal * (delta_p * (a2 - 2 * a3 * b1 / b2 + 0.5 * a3 * p_sum) /
-            b2 + (M / (2 * b2)) * np.log(1 + delta_p * (2 * b1 + b2 * p_sum) /
-            part1) + part3 * np.log(1 + delta_p * b2 * (B - A) / part2)))
+    return db2Pascal * (delta_p * (a2 - 2 * a3 * b1 / b2 + 0.5 * a3 * p_sum) /
+                        b2 + (M / (2 * b2)) *
+                        np.log(1 + delta_p * (2 * b1 + b2 * p_sum) / part1) +
+                        part3 * np.log(1 + delta_p * b2 * (B - A) / part2))
 
 
 @match_args_return
@@ -1274,13 +1284,13 @@ def sound_speed(SA, CT, p):
     sqrtSA = np.sqrt(SA)
     args = SA, CT, p, sqrtSA
 
-
     dvden_dp = (c01 + CT * (c02 + c03 * CT) + SA * (c04 + c05 * CT) + p *
                 (c06 + CT * (c07 + c08 * CT) + c09 * SA))
 
     dvnum_dp = (c10 + CT * (c11 + CT * (c12 + c13 * CT)) + SA *
-               (c14 + c15 * CT) + p * (c16 + CT *
-               (c17 + c18 * CT + c19 * SA) + p * (c20 + c21 * CT)))
+                (c14 + c15 * CT) + p *
+                (c16 + CT * (c17 + c18 * CT + c19 * SA) + p *
+                 (c20 + c21 * CT)))
 
     drho_dp = ((dvden_dp * v_hat_numerator(*args) - dvnum_dp *
                v_hat_denominator(*args)) / (v_hat_numerator(*args) *

@@ -4,10 +4,10 @@ from __future__ import division
 
 import numpy as np
 
-from library import gibbs
-from constants import Kelvin, cp0, sfac
-from gsw.utilities import match_args_return
-from conversions import pt_from_CT, pt_from_t
+from .library import gibbs
+from .constants import Kelvin, cp0, sfac
+from ..utilities import match_args_return
+from .conversions import pt_from_CT, pt_from_t
 
 __all__ = ['CT_first_derivatives',
            'CT_second_derivatives',

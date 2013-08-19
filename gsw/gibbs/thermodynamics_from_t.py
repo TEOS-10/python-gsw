@@ -4,11 +4,12 @@ from __future__ import division
 
 import numpy as np
 
-from library import gibbs
-from freezing import t_freezing
-from gsw.utilities import match_args_return, strip_mask
-from conversions import pt_from_CT, pt_from_t, pt0_from_t, CT_from_t, t_from_CT
-from constants import Kelvin, db2Pascal, P0, SSO, cp0, R, sfac, M_S
+from .library import gibbs
+from .freezing import t_freezing
+from ..utilities import match_args_return, strip_mask
+from .conversions import (pt_from_CT, pt_from_t, pt0_from_t, CT_from_t,
+                          t_from_CT)
+from .constants import Kelvin, db2Pascal, P0, SSO, cp0, R, sfac, M_S
 
 __all__ = ['adiabatic_lapse_rate_from_t',
            'adiabatic_lapse_rate_from_CT',

@@ -2,8 +2,8 @@
 
 from __future__ import division
 
-from conversions import CT_from_pt
-from gsw.utilities import match_args_return
+from .conversions import CT_from_pt
+from ..utilities import match_args_return
 
 
 __all__ = ['latentheat_evap_CT',
