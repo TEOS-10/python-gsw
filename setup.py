@@ -25,8 +25,8 @@ Topic :: Software Development :: Libraries :: Python Modules
 """
 
 CHANGES = open('CHANGES.txt').read()
-README = codecs.open('README.rst', encoding='utf-8')
 LICENSE = open('LICENSE.txt').read()
+README = codecs.open('README.md', encoding='utf-8').read()
 
 config = dict(name='gsw',
               version=__version__,
@@ -35,7 +35,6 @@ config = dict(name='gsw',
               test_suite='tests',
               use_2to3=True,
               license=LICENSE,
-              #long_description='%s\n\n%s'.encode('utf-8') % (README, CHANGES),
               long_description=u'%s\n\n%s' % (README, CHANGES),
               classifiers=filter(None, classifiers.split("\n")),
               description='Gibbs SeaWater Oceanographic Package of TEOS-10',
