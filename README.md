@@ -1,6 +1,10 @@
-==========
 python gsw
 ==========
+
+[![Build](https://badge.fury.io/py/gsw.png)](http://badge.fury.io/py/gsw)
+[![Build](https://api.travis-ci.org/ocefpaf/python-gsw.png?branch=master)](https://travis-ci.org/ocefpaf/python-gsw)
+[![Downloads](https://pypip.in/d/gsw/badge.png)](https://crate.io/packages/gsw/)
+
 
 Python implementation of the Thermodynamic Equation Of Seawater - 2010 (TEOS-10)
 --------------------------------------------------------------------------------
@@ -10,10 +14,7 @@ For more information go to:
 
 
 gsw vs. csiro
-^^^^^^^^^^^^^
-
-.. role:: raw-math(raw)
-    :format: latex html
+-------------
 
 This table shows some function names in the gibbs library and the corresponding function names in the csiro library.
 
@@ -24,31 +25,28 @@ This table shows some function names in the gibbs library and the corresponding 
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
 | Conservative Temperature                  |          NA                         | gsw.CT_from_t(SA,t,p)                                 |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
-| density (i.e. in situ density)            |  sw.dens(SP,t,p)                    | gsw.rho_CT(SA,CT,p), or gsw.rho(SA,t,p), or           |
-|                                           |                                     | gsw.rho_CT25(SA,CT,p)                                 |
+| density (i.e. in situ density)            |  sw.dens(SP,t,p)                    | gsw.rho_CT(SA,CT,p), or gsw.rho(SA,t,p)               |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
-| potential density                         |  sw.pden(SP,t,p,pr)                 | gsw.rho_CT(SA,CT,pr), or                              |
-|                                           |                                     | gsw.rho_CT25(SA,CT,pr)                                |
+| potential density                         |  sw.pden(SP,t,p,pr)                 | gsw.rho_CT(SA,CT,pr)                                  |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
 | potential temperature                     |  sw.ptmp(SP,t,p,pr)                 | gsw.pt_from_t(SA,t,p,pr)                              |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
-| :math:`\sigma_0`, using                   |  sw.dens(SP, :math:`\theta_o`, 0)   | gsw.sigma0_CT(SA,CT)                                  |
-|  :math:`\theta_o` = sw.ptmp(SP,t,p,0)     |  -1000 kg m :sup:`-3`               |                                                       |
+| $\sigma_0$, using                         |  sw.dens(SP, $\theta_o$, 0)         | gsw.sigma0_CT(SA,CT)                                  |
+|  $\theta_o$ = sw.ptmp(SP,t,p,0)           |  -1000 kg m$^{-3}$                  |                                                       |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
-| :math:`\sigma_2`, using                   |  sw.dens(SP,:math:`\theta_2`, 2000) | gsw.sigma2_CT(SA,CT)                                  |
-|  :math:`\theta_2` = sw.ptmp(SP,t,p,2000)  |  -1000 kg m :sup:`-3`               |                                                       |
+| $\sigma_2$, using                         |  sw.dens(SP,$\theta_2$, 2000)       | gsw.sigma2_CT(SA,CT)                                  |
+|  $\theta_2$ = sw.ptmp(SP,t,p,2000)        |  -1000 kg m$^{-3}$                  |                                                       |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
-| :math:`\sigma_4`, using                   |  sw.dens(SP,:math:`\theta_4`, 4000) | gsw.sigma2_CT(SA,CT)                                  |
-|  :math:`\theta_4` = sw.ptmp(SP,t,p,2000)  |  -1000 kg m :sup:`-3`               |                                                       |
+| $\sigma_4$, using                         |  sw.dens(SP,$\theta_4$, 4000)       | gsw.sigma2_CT(SA,CT)                                  |
+| $\theta_4$ = sw.ptmp(SP,t,p,2000)         |  -1000 kg m$^{-3}$                  |                                                       |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
-| specific volume anomaly                   |  sw.svan(SP,t,p)                    | gsw.specvol_anom_CT(SA,CT,p)  or                      |
-|                                           |                                     | gsw.specvol_anom_CT25(SA,CT,p)                        |
+| specific volume anomaly                   |  sw.svan(SP,t,p)                    | gsw.specvol_anom_CT(SA,CT,p)                          |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
 | dynamic height anomaly                    | -sw.gpan(SP,t,p)                    | gsw.geo_strf_dyn_height(SA,CT,p,delta_p,interp_style) |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
 | geostrophic velocity                      |  sw.gvel(ga,lat,long)               | gsw.geostrophic_velocity(geo_str,long,lat,p)          |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
-| N :sup:`2`                                |  sw.bfrq(SP,t,p,lat)                | gsw.Nsquared_CT25(SA,CT,p,lat)                        |
+| N$^2$                                     |  sw.bfrq(SP,t,p,lat)                | gsw.Nsquared(SA,CT,p,lat)                             |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
 | pressure from height                      |  sw.pres(-z,lat)                    | gsw.p_from_z(z,lat)                                   |
 | (SW uses depth, not height)               |                                     |                                                       |
@@ -74,28 +72,25 @@ This table shows some function names in the gibbs library and the corresponding 
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
 | Coriolis parameter                        |  sw.f(lat)                          | gsw.f(lat)                                            |
 +-------------------------------------------+-------------------------------------+-------------------------------------------------------+
-| testing of all functions                  |  sw.test()                          | gsw.test()                                            |
-+-------------------------------------------+-------------------------------------+-------------------------------------------------------+
 
-\* The SW and GSW functions output the adiabatic lapse rate in different units, being  K (dbar) :sup:`-1`  and  K Pa :sup:`-1`  respectively.
+Note that the SW and GSW functions output the adiabatic lapse rate in different units, being  K (dbar)$^{-1}$  and  K Pa$^{-1}$
+respectively.
 
+
+Authors
+-------
+* Bjørn Ådlandsvik
+* Eric Firing
+* Filipe Fernandes
 
 Thanks
-======
+------
 
-* Bjørn Ådlandsvik - Testing unit and several bug fixes
-* Eric Firing - Support for masked arrays, re-write of _delta_SA
-* Trevor J. McDougall (and all of SCOR/IAPSO WG127) for making available the Matlab and Fortran versions of this software
+* Bjørn Ådlandsvik - Testing unit and several bug fixes.
+* Eric Firing - Support for masked arrays, re-write of _delta_SA.
+* Trevor J. McDougall (and all of SCOR/IAPSO WG127) for making available the Matlab version of this software.
 
 Acknowledgments
 ---------------
 
-* SCOR/IAPSO WG127. Most of module is derived from the GSW Oceanographic Toolbox of TEOS-10.
-
-The MAJOR.MINOR.MICRO will be used to represent:
-
-MAJOR == The matlab version from the TEOS-10 Group
-
-MINOR == Significant changes made in the python version
-
-MICRO == Bug fixes only
+* SCOR/IAPSO WG127.
