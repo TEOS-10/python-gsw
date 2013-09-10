@@ -125,7 +125,7 @@ class SA_table(object):
         w *= gm
         wsum = w.sum(axis=0)
         valid = wsum > 0  # Only need to prevent division by zero here.
-        w[:, valid] /= wsum[:, valid]
+        w[:, valid] /= wsum[valid]
         w[:, ~valid] = 0
         vv = self.dsa.data[ii, jj, k]
         vv *= w
@@ -231,7 +231,7 @@ def Fdelta(p, lon, lat):
               = (SA/Sstar) - 1
     with r1 being the constant 0.35 based on the work of Pawlowicz et al.
     (2011). Note that since SAAR is everywhere less than 0.001 in the global
-    ocean, Fdelta is only slighty different to 1.35*SAAR.
+    ocean, Fdelta is only slightly different to 1.35*SAAR.
     Parameters
     ----------
     p : array_like
@@ -266,7 +266,7 @@ def Fdelta(p, lon, lat):
     7, 363-387.  http://www.ocean-sci.net/7/363/2011/os-7-363-2011.pdf
     """
     r = 0.35
-    saar = SAAR(p, lon, lat)
+    saar, _ = SAAR(p, lon, lat)
     Fdelta = ((1 + r) * saar) / (1 - r * saar)
     return Fdelta
 
