@@ -6,12 +6,8 @@ python gsw
 [![Downloads](https://pypip.in/d/gsw/badge.png)](https://crate.io/packages/gsw/)
 
 
-Python implementation of the Thermodynamic Equation Of Seawater - 2010 (TEOS-10)
---------------------------------------------------------------------------------
-
-For more information go to:
-    http://www.teos-10.org/
-
+Python implementation of the Thermodynamic Equation Of Seawater - 2010 (TEOS-10)[http://www.teos-10.org/]
+---------------------------------------------------------------------------------------------------------
 
 gsw vs. csiro
 -------------
