@@ -5,18 +5,13 @@ These might become useful in a scheme for automating docstring
 generation.
 """
 
-import sys
 import os
+import sys
 import glob
 from collections import OrderedDict
 
 import logging
 
-import numpy as np
-
-from pycurrents.system import Bunch
-
-import gsw
 from gsw.gibbs import *
 
 log = logging.getLogger()
@@ -31,6 +26,7 @@ subdirs = ['./', 'library', 'thermodynamics_from_t']
 
 mfile = os.path.join(mfiledir, "gsw_check_functions.m")
 mfilelines = open(mfile, 'rt').readlines()
+
 
 def funcline_parts(base, topline):
     """
@@ -75,6 +71,7 @@ help_sections = ['USAGE:',
                  'REFERENCES:',
                  ]
 
+
 def helptext_parts(lines):
     """
     Parse the help text from gsw m-files.
@@ -101,7 +98,6 @@ def helptext_parts(lines):
                 parts[section] = i
 
     return helplines, parts
-
 
 
 def function_parts(subdir='./'):
@@ -133,6 +129,7 @@ def function_parts(subdir='./'):
 
     return partslist
 
+
 def arguments(partslist):
     args = set()
     for entry in partslist:
@@ -141,6 +138,7 @@ def arguments(partslist):
     arglist = list(args)
     arglist.sort()
     return arglist
+
 
 def arglists(partslist):
     args = set()
@@ -151,6 +149,7 @@ def arglists(partslist):
     arglist.sort()
     return arglist
 
+
 def funclist_by_arg(partslist):
     out = dict()
     for entry in partslist:
@@ -158,6 +157,7 @@ def funclist_by_arg(partslist):
             out[entry[1]] = []
         out[entry[1]].append(entry[0])
     return out
+
 
 def help_chunk(helptuple, sect):
     lines, secdict = helptuple
@@ -176,5 +176,3 @@ def help_chunk(helptuple, sect):
 def funcs_with_descriptions(partslist):
     fdlist = [(p[0], help_chunk(p[3], 'DESCRIPTION:')) for p in partslist]
     return OrderedDict(fdlist)
-
-
