@@ -45,7 +45,7 @@ config = dict(name='gsw',
               url='http://pypi.python.org/pypi/seawater/',
               download_url='https://pypi.python.org/pypi/gsw/',
               platforms='any',
-              keywords=['oceanography', 'seawater', 'teos-10', 'gibbs'],
+              keywords=['oceanography', 'seawater', 'TEOS-10', 'gibbs'],
               install_requires=install_requires)
 
 setup(**config)
