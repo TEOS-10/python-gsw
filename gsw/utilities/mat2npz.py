@@ -8,17 +8,20 @@
 # e-mail:   ocefpaf@gmail
 # web:      http://ocefpaf.tiddlyspot.com/
 # created:  06-Jun-2011
-# modified: Mon 01 Jul 2013 08:24:06 PM BRT
+# modified: Mon 16 Sep 2013 01:40:54 PM BRT
 #
-# obs: pycurrents.file.matfile.loadmatbunch is part of CODAS.
-# hg clone   http://currents.soest.hawaii.edu/hg/pycurrents
+# obs:
 #
 
 import numpy as np
-from pycurrents.file.matfile import loadmatbunch
+
+from gsw.utilities import loadmatbunch
 
 data_ver = 'v3_0'
 gsw_data = loadmatbunch('gsw_data_%s.mat' % data_ver, masked=False)
+
+print('Data version number: %s' % gsw_data.version_number)
+print('Data version date: %s' % gsw_data.version_date)
 
 # Delta SA Atlas.
 ref_table = dict()
@@ -39,9 +42,9 @@ cv_vars = gsw_data['gsw_cv']
 
 np.savez("data/gsw_cv_%s" % data_ver, **cv_vars)
 
-# NOTE: The matfile gsw_cf.mat is just the structure variable `gsw_cf` from
-# gsw_check_functions.m.
-
+# NOTE: The matfile gsw_cf.mat contains the results from
+# `gsw_check_functions.m.` and is used later for tests.  Remember to save it as
+# MatlabTM '-v6' otherwise will have to use hdf5 instead of loadmat to read it.
 if True:
     gsw_cf = loadmatbunch('gsw_cf.mat', masked=False)
     np.savez("data/gsw_cf", **gsw_cf)
