@@ -1,13 +1,13 @@
-import sys
 import os
+import sys
 import logging
 
 import numpy as np
 
-from pycurrents.system import Bunch
 
 import gsw
 from gsw.gibbs import *
+from gsw.utilities import Bunch
 
 log = logging.getLogger()
 logging.basicConfig()
@@ -19,6 +19,7 @@ except IndexError:
 
 mfile = os.path.join(mfiledir, "gsw_check_functions.m")
 mfilelines = open(mfile, 'rt').readlines()
+
 
 def find(x):
     """
@@ -57,7 +58,7 @@ for line in first_pass:
         line = line[1:].replace(']', '')
     if line.endswith(';'):
         line = line[:-1]
-    line = line.replace('(I)', '') # for deltaSA_atlas
+    line = line.replace('(I)', '')  # For deltaSA_atlas.
     second_pass.append(line)
 
 pairs = []
@@ -65,6 +66,7 @@ pairs = []
 for i in range(len(second_pass)):
     if 'find(' in second_pass[i] and not 'find(' in second_pass[i-1]:
         pairs.extend(second_pass[i-1:i+1])
+
 
 def group_or(line):
     """
@@ -81,6 +83,7 @@ def group_or(line):
     return new
 
 final = [group_or(line) for line in pairs]
+
 
 class FunctionCheck(object):
     def __init__(self, linepair):
@@ -99,8 +102,8 @@ class FunctionCheck(object):
 
         # parse the line that checks the results
         head, tail = self.testline.split('=', 1)
-        self.resultstr = head.strip()      # cv.I*
-        head, tail = tail.split('(',1)
+        self.resultstr = head.strip()  # cv.I*
+        head, tail = tail.split('(', 1)
         self.teststr = tail.strip()[:-1]   # argument of "find()"
 
         # To be set when run() is successful
@@ -154,8 +157,8 @@ run_problems = [f.name for f in checks if f.exception is not None]
 etypes = [NameError, UnboundLocalError, TypeError, AttributeError]
 ex_dict = dict()
 for exc in etypes:
-    elist = [(f.name, f.exception) for f in checks
-                if isinstance(f.exception, exc)]
+    elist = [(f.name, f.exception) for f in checks if
+             isinstance(f.exception, exc)]
     ex_dict[exc] = elist
 
 print "\n%s tests were translated from gsw_check_functions.m" % len(checks)
@@ -172,6 +175,7 @@ for exc in etypes:
 
 checkbunch = Bunch([(c.name, c) for c in checks])
 
+
 def find_arguments():
     argset = set()
     for c in checks:
@@ -180,6 +184,7 @@ def find_arguments():
     argsetlist.sort()
     return argsetlist
 
+
 def find_arglists():
     alset = set()
     for c in checks:
@@ -187,4 +192,3 @@ def find_arglists():
     arglists = list(alset)
     arglists.sort()
     return arglists
-
