@@ -9,7 +9,7 @@
 #        maxdiff = np.nanmax(abs(out - cv.func)
 #        self.assertTrue(maxdiff < cv.func_ca)
 #
-# cv is a Dict2Struc instance with all the check values from
+# cv is a Bunch instance with all the check values from
 # the profile-file
 # The func, args are taken from the main dictionary below
 # giving a alphabetical table of all functions and their arguments
@@ -29,13 +29,13 @@ import functools  # Requires python 2.5.
 import numpy as np
 
 import gsw
-from gsw.utilities import Dict2Struc
+from gsw.utilities import Bunch
 
 
 # Read data file with check value profiles.
 datadir = os.path.join(os.path.dirname(gsw.utilities.__file__), 'data')
-cv = Dict2Struc(np.load(os.path.join(datadir, 'gsw_cv_v3_0.npz')))
-cf = Dict2Struc(np.load(os.path.join(datadir, 'gsw_cf.npz')))
+cv = Bunch(np.load(os.path.join(datadir, 'gsw_cv_v3_0.npz')))
+cf = Bunch(np.load(os.path.join(datadir, 'gsw_cf.npz')))
 
 # Main dictionary of functions with arguments. Could perhaps be auto-generated.
 function_arguments = dict(
@@ -246,8 +246,7 @@ function_arguments = dict(
     # water_column_48.py
     Nsquared=('SA', 'CT', 'p', 'lat'),
     Turner_Rsubrho=('SA', 'CT', 'p'),
-    IPV_vs_fNsquared_ratio=('SA', 'CT', 'p')
-   )
+    IPV_vs_fNsquared_ratio=('SA', 'CT', 'p'))
 
 
 # Make aliases for some values to be used as arguments
@@ -288,8 +287,7 @@ not_match = {
     'Nsquared': 'n2',
     #'chem_potential_relative_t_exact': 'chem_potential_t_exact',
     'rho_alpha_beta_CT_exact': 'rho_CTrab_exact',
-    'rho_alpha_beta': 'rho_rab',
-    }
+    'rho_alpha_beta': 'rho_rab'}
 
 # Add target aliases to cv.
 for f in not_match:
@@ -317,15 +315,15 @@ def generic_test(self, func=None, argnames=None):
     except AssertionError as e:
         print(out)
         print(target)
-        raise AssertionError("Error in %s %s, maxdiff is %s vs %s allowed"
-                              % (func, e.args, maxdiff, maxallowed))
+        raise AssertionError("Error in %s %s, maxdiff is %s vs %s allowed" %
+                             (func, e.args, maxdiff, maxallowed))
 
 
 # Dictionary of functions with corresponding test methods.
 function_test = {}
 for f in function_arguments:
-    function_test[f] = functools.partial(generic_test,
-                      func=f, argnames=function_arguments[f])
+    function_test[f] = functools.partial(generic_test, func=f,
+                                         argnames=function_arguments[f])
 
 
 # Auto-generated TestCase.
@@ -333,7 +331,7 @@ class Test_profiles(unittest.TestCase):
 
     for f in function_test:
         method_def = ("test_" + f +
-            " = lambda self: function_test['" + f + "'](self)")
+                      " = lambda self: function_test['" + f + "'](self)")
         exec(method_def)
 
 
