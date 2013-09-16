@@ -1652,7 +1652,7 @@ def z_from_depth(depth):
 
 
 @match_args_return
-def z_from_p(p, lat, geo_strf_dyn_height=None):
+def z_from_p(p, lat, geo_strf_dyn_height=0):
     r"""Calculates height from sea pressure using the computationally-efficient
     48-term expression for density in terms of SA, CT and p (McDougall et
     al., 2011).  Dynamic height anomaly, geo_strf_dyn_height, if provided, must
@@ -1709,9 +1709,6 @@ def z_from_p(p, lat, geo_strf_dyn_height=None):
     Modifications:
     2011-03-26. Trevor McDougall, Claire Roberts-Thomson and Paul Barker.
     """
-
-    if not geo_strf_dyn_height:
-        geo_strf_dyn_height = np.zeros_like(p)
 
     X = np.sin(lat * DEG2RAD)
     sin2 = X ** 2
