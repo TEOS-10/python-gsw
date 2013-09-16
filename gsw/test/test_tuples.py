@@ -9,14 +9,14 @@ import functools  # Requires python 2.5.
 import numpy as np
 
 import gsw
-from gsw.utilities import Dict2Struc
+from gsw.utilities import Bunch
 
 
 # Read data file with check value profiles
 datadir = os.path.join(os.path.dirname(gsw.utilities.__file__), 'data')
 fname = 'gsw_cv_v3_0.npz'
-cv = Dict2Struc(np.load(os.path.join(datadir, fname)))
-cf = Dict2Struc(np.load(os.path.join(datadir, 'gsw_cf_.npz')))
+cv = Bunch(np.load(os.path.join(datadir, fname)))
+cf = Bunch(np.load(os.path.join(datadir, 'gsw_cf.npz')))
 
 # derivatives.py
 #CT_first_derivatives=('SA', 'pt'),  # NOTE: TI, BUG
