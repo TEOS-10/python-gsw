@@ -124,24 +124,6 @@ The composition of Standard Seawater and the definition of the
 Reference-Composition Salinity Scale, Deep-Sea Res. I, 55, 50-72. See section
 5 below Eqn. (5.5)."""
 
-atomic_weight = 31.4038218
-r"""This function returns the mole-weighted atomic weight of sea salt of
-Reference Composition, which is 31.4038218 g/mol.  This has been
-defined as part of the Reference-Composition Salinity Scale of 2008
-(Millero et al., 2008).
-
-References:
------------
-.. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation of
-seawater - 2010: Calculation and use of thermodynamic properties.
-Intergovernmental Oceanographic Commission, Manuals and Guides No. 56, UNESCO
-(English), 196 pp. See Table D.4 of this TEOS-10 Manual.
-
-.. [2] Millero, F. J., R. Feistel, D. G. Wright, and T. J. McDougall, 2008:
-The composition of Standard Seawater and the definition of the
-Reference-Composition Salinity Scale, Deep-Sea Res. I, 55, 50-72.
-See Eqn. (5.3)"""
-
 valence_factor = 1.2452898
 r"""This function returns the valence factor of sea salt of Reference
 Composition, 1.2452898.  This valence factor is exact, and follows from
