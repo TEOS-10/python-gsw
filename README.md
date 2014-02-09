@@ -1,3 +1,5 @@
+# This python module is incomplete and should be used with caution.
+
 python gsw
 ==========
 
@@ -66,4 +68,4 @@ Caveats
 -------
 
 * This python module is incomplete and should be used with caution.
-* The database used in `_delta_SA` comes from the MatlabTM gsw version
+* The database used in `_delta_SA` comes from the MatlabTM gsw version.
