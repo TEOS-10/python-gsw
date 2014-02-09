@@ -11,7 +11,7 @@ from gsw import __version__, __authors__, __email__, __maintainer__
 install_requires = ['numpy', 'nose']
 
 classifiers = """\
-Development Status :: 5 - Production/Stable
+Development Status :: 4 - Beta
 Environment :: Console
 Intended Audience :: Science/Research
 Intended Audience :: Developers
