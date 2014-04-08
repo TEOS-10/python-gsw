@@ -263,7 +263,7 @@ def strip_mask(*args):
 
 
 def _unicode(arr):
-    """
+    r"""
     loadmat seems to be mishandling strings when there is a difference
     in byte order between the machine that wrote the file and the one
     that is reading the file.  The result is, e.g.,
