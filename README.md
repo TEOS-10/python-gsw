@@ -1,3 +1,7 @@
+<!--
+pandoc --from markdown_github README.md --to rst --output README.txt
+-->
+
 # This python module is incomplete and should be used with caution.
 
 python gsw
