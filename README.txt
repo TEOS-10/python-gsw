@@ -10,8 +10,8 @@ python gsw
 .. |Gittip| image:: http://bottlepy.org/docs/dev/_static/Gittip.png
    :target: https://www.gittip.com/ocefpaf/
 
-Python implementation of the Thermodynamic Equation Of Seawater - 2010 `TEOS-10 <http://www.teos-10.org/>`__
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Python implementation of the Thermodynamic Equation Of Seawater - 2010 (`TEOS-10 <http://www.teos-10.org/>`__)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This module is an python alternative to the gsw MatlabTM toolbox. The
 table below shows some function names in the gibbs library and the
