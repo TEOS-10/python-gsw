@@ -1,24 +1,19 @@
-<!--
-pandoc --from markdown_github README.md --to rst --output README.txt
--->
+# python gsw
 
-# This python module is incomplete and should be used with caution.
+(This python module is incomplete and should be used with caution!)
 
-python gsw
-==========
-
-[![Build](https://badge.fury.io/py/gsw.png)](http://badge.fury.io/py/gsw)
+[![PyPI](https://badge.fury.io/py/gsw.png)](http://badge.fury.io/py/gsw)
 [![Build](https://api.travis-ci.org/ocefpaf/python-gsw.png?branch=master)](https://travis-ci.org/ocefpaf/python-gsw)
-[![Downloads](https://pypip.in/d/gsw/badge.png)](https://crate.io/packages/gsw/)
+[![Gittip](http://bottlepy.org/docs/dev/_static/Gittip.png)](https://www.gittip.com/ocefpaf/)
 
 
-Python implementation of the Thermodynamic Equation Of Seawater - 2010 (TEOS-10)[http://www.teos-10.org/]
----------------------------------------------------------------------------------------------------------
+### Python implementation of the Thermodynamic Equation Of Seawater - 2010 [TEOS-10](http://www.teos-10.org/)
 
-gsw vs. csiro
--------------
+This module is an python alternative to the gsw MatlabTM toolbox.  The table
+below shows some function names in the gibbs library and the corresponding
+function names in the seawater library.
 
-This table shows some function names in the gibbs library and the corresponding function names in the csiro library.
+### TEOS-10 vs. EOS-80
 
 | **Variable**                                        | **SeaWater (EOS 80)**                           | **Gibbs SeaWater (GSW TEOS 10)**                      |
 |:---------------------------------------------------:|:-----------------------------------------------:|:-----------------------------------------------------:|
@@ -50,26 +45,20 @@ Note that the SW and GSW functions output the adiabatic lapse rate in different 
 respectively.
 
 
-Authors
--------
+### Authors
 * Bjørn Ådlandsvik
 * Eric Firing
 * Filipe Fernandes
 
-Thanks
-------
-
+### Thanks
 * Bjørn Ådlandsvik - Testing unit and several bug fixes.
 * Eric Firing - Support for masked arrays, re-write of _delta_SA.
 * Trevor J. McDougall (and all of SCOR/IAPSO WG127) for making available the Matlab version of this software.
 
-Acknowledgments
----------------
+### Acknowledgments
+* SCOR/IAPSO WG127 for the original MatlabTM code.
 
-* SCOR/IAPSO WG127.
-
-Caveats
--------
+### Caveats
 
 * This python module is incomplete and should be used with caution.
 * The database used in `_delta_SA` comes from the MatlabTM gsw version.
