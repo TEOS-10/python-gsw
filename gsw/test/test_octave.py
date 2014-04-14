@@ -24,14 +24,14 @@ from collections import OrderedDict
 import numpy as np
 
 from oct2py import octave
-from oct2py._utils import Oct2PyError
+from oct2py import Oct2PyError
 
 import gsw
 
 try:
     path = sys.argv[1]
 except IndexError:
-    path = "./matlab_gsw_v3_03"
+    path = "gsw_matlab_v3_04"
 
 
 # We have to supply a fake superiorfloat function for octave.
@@ -193,7 +193,7 @@ if __name__ == '__main__':
     outcomes = ['passed', 'no_octave', 'no_python', 'failed', 'no_comparison']
     results = dict([(k, list()) for k in outcomes])
 
-    for name, (function, args) in library.iteritems():
+    for name, (function, args) in library.items():
         ret = compare_results(name=name, function=function, args=args)
         results[ret].append(name)
 
