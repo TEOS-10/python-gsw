@@ -4,6 +4,8 @@
 
 [![PyPI](https://badge.fury.io/py/gsw.png)](http://badge.fury.io/py/gsw)
 [![Build](https://api.travis-ci.org/ocefpaf/python-gsw.png?branch=master)](https://travis-ci.org/ocefpaf/python-gsw)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.11397.png)](http://dx.doi.org/10.5281/zenodo.11397)
+
 [![Gittip](http://bottlepy.org/docs/dev/_static/Gittip.png)](https://www.gittip.com/ocefpaf/)
 
 
