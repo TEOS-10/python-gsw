@@ -3,6 +3,7 @@
 from __future__ import division
 
 import numpy as np
+import numpy.ma as ma
 
 from .library import gibbs
 from .freezing import t_freezing
@@ -50,83 +51,65 @@ n0, n1, n2 = 0, 1, 2
 
 @match_args_return
 def adiabatic_lapse_rate_from_t(SA, t, p):
-    """
-     gsw_adiabatic_lapse_rate_from_t                      adiabatic lapse rate
-    ==========================================================================
+    """Calculates the adiabatic lapse rate of sea water
 
-     USAGE:
-      adiabatic_lapse_rate = gsw_adiabatic_lapse_rate_from_t(SA,t,p)
-
-     DESCRIPTION:
-      Calculates the adiabatic lapse rate of sea water
-
-     INPUT:
-      SA  =  Absolute Salinity                                        [ g/kg ]
-      t   =  in-situ temperature (ITS-90)                            [ deg C ]
-      p   =  sea pressure                                             [ dbar ]
-             ( i.e. absolute pressure - 10.1325 dbar )
+    Parameters
+    ----------
+    SA : array_like
+        Absolute salinity [g kg :sup:`-1`]
+    t : array_like
+        in situ temperature [:math:`^\circ` C (ITS-90)]
+    p : array_like
+        sea pressure [dbar]
 
       SA & t need to have the same dimensions.
       p may have dimensions 1x1 or Mx1 or 1xN or MxN, where SA & t are MxN.
 
-     OUTPUT:
-      adiabatic_lapse_rate  =  adiabatic lapse rate                   [ K/Pa ]
+    Returns
+    -------
+    adiabatic_lapse_rate : array_like
+        adiabatic lapse rate [K Pa:sup:`-1`]
         Note.  The output is in unit of degress Celsius per Pa,
-          (or equivilently K/Pa) not in units of K/dbar.
+        (or equivilently K/Pa) not in units of K/dbar.
 
-     AUTHOR:
-      Trevor McDougall and Paul Barker                    [ help@teos-10.org ]
 
-     VERSION NUMBER: 3.03 (29th April, 2013)
-
-     REFERENCES:
-      IOC, SCOR and IAPSO, 2010: The international thermodynamic equation of
-       seawater - 2010: Calculation and use of thermodynamic properties.
-       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-       UNESCO (English), 196 pp.  Available from http://www.TEOS-10.org.
-        See Eqn. (2.22.1) of this TEOS-10 Manual.
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp.
 
     """
     return -gibbs(n0, n1, n1, SA, t, p) / (gibbs(n0, n2, n0, SA, t, p))
 
 @match_args_return
 def adiabatic_lapse_rate_from_CT(SA, CT, p):
-    """
-     gsw_adiabatic_lapse_rate_from_CT                     adiabatic lapse rate
-    ==========================================================================
+    """Calculates the adiabatic lapse rate of sea water from Conservative
+    Temperature.
 
-     USAGE:
-      adiabatic_lapse_rate = gsw_adiabatic_lapse_rate_from_CT(SA,CT,p)
+    Parameters
+    ----------
+    SA : array_like
+         Absolute salinity [g kg :sup:`-1`]
+    CT : array_like
+         Conservative temperature [:math:`^\circ` C (ITS-90)]
+    p : array_like
+        sea pressure [dbar]
 
-     DESCRIPTION:
-      Calculates the adiabatic lapse rate of sea water from Conservative
-      Temperature.
-
-     INPUT:
-      SA  =  Absolute Salinity                                        [ g/kg ]
-      CT  =  Conservative Temperature (ITS-90)                       [ deg C ]
-      p   =  sea pressure                                             [ dbar ]
-             ( i.e. absolute pressure - 10.1325 dbar )
-
-      SA & CT need to have the same dimensions.
-      p may have dimensions 1x1 or Mx1 or 1xN or MxN, where SA & CT are MxN.
-
-     OUTPUT:
-      adiabatic_lapse_rate  =  adiabatic lapse rate                   [ K/Pa ]
+    Returns
+    -------
+    adiabatic_lapse_rate : array_like
+        adiabatic lapse rate [K Pa:sup:`-1`]
         Note.  The output is in unit of degress Celsius per Pa,
-          (or equivilently K/Pa) not in units of K/dbar.
+        (or equivilently K/Pa) not in units of K/dbar.
 
-     AUTHOR:
-      Trevor McDougall and Paul Barker                    [ help@teos-10.org ]
-
-     VERSION NUMBER: 3.03 (29th April, 2013)
-
-     REFERENCES:
-      IOC, SCOR and IAPSO, 2010: The international thermodynamic equation of
-       seawater - 2010: Calculation and use of thermodynamic properties.
-       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-       UNESCO (English), 196 pp.  Available from http://www.TEOS-10.org.
-        See Eqn. (2.22.1) of this TEOS-10 Manual.
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+    of seawater - 2010: Calculation and use of thermodynamic properties.
+    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+    UNESCO (English), 196 pp.
 
     """
     t = t_from_CT(SA, CT, p)
@@ -136,8 +119,9 @@ def adiabatic_lapse_rate_from_CT(SA, CT, p):
 
 @match_args_return
 def alpha_wrt_CT_t_exact(SA, t, p):
-    r"""Calculates the thermal expansion coefficient of seawater with respect
+    """Calculates the thermal expansion coefficient of seawater with respect
     to Conservative Temperature.
+
     Parameters
     ----------
     SA : array_like
@@ -146,16 +130,12 @@ def alpha_wrt_CT_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     alpha_wrt_CT : array_like
                    thermal expansion coefficient [K :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -165,6 +145,7 @@ def alpha_wrt_CT_t_exact(SA, t, p):
     >>> gsw.alpha_wrt_CT_t_exact(SA, t, p)
     array([ 0.00032471,  0.00032272,  0.00028118,  0.00017314,  0.00014627,
             0.00012943])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -173,6 +154,7 @@ def alpha_wrt_CT_t_exact(SA, t, p):
     UNESCO (English), 196 pp. See Eqn. (2.18.3).
     Modifications:
     2011-03-29. Trevor McDougall and Paul Barker
+
     """
     pt0 = pt0_from_t(SA, t, p)
     factor = -cp0 / ((Kelvin + pt0) * gibbs(n0, n2, n0, SA, t, p))
@@ -181,8 +163,9 @@ def alpha_wrt_CT_t_exact(SA, t, p):
 
 @match_args_return
 def alpha_wrt_pt_t_exact(SA, t, p):
-    r"""Calculates the thermal expansion coefficient of seawater with respect
+    """Calculates the thermal expansion coefficient of seawater with respect
     to potential temperature, with a reference pressure of zero.
+
     Parameters
     ----------
     SA : array_like
@@ -191,16 +174,12 @@ def alpha_wrt_pt_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     alpha_wrt_pt : array_like
                    thermal expansion coefficient [K :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -210,14 +189,14 @@ def alpha_wrt_pt_t_exact(SA, t, p):
     >>> gsw.alpha_wrt_pt_t_exact(SA, t, p)
     array([ 0.00032562,  0.00032355,  0.00028164,  0.00017314,  0.00014623,
             0.00012936])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.18.2).
-    Modifications:
-    2011-03-29. David Jackett, Trevor McDougall and Paul Barker
+
     """
     pt0 = pt0_from_t(SA, t, p)
     factor = gibbs(n0, n2, n0, SA, pt0, 0) / gibbs(n0, n2, n0, SA, t, p)
@@ -226,8 +205,9 @@ def alpha_wrt_pt_t_exact(SA, t, p):
 
 @match_args_return
 def alpha_wrt_t_exact(SA, t, p):
-    r"""Calculates the thermal expansion coefficient of seawater with respect
+    """Calculates the thermal expansion coefficient of seawater with respect
     to in situ temperature.
+
     Parameters
     ----------
     SA : array_like
@@ -236,16 +216,12 @@ def alpha_wrt_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     alpha_wrt_t : array_like
                   thermal expansion coefficient [K :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -255,25 +231,26 @@ def alpha_wrt_t_exact(SA, t, p):
     >>> gsw.alpha_wrt_t_exact(SA, t, p)
     array([ 0.0003256 ,  0.00032345,  0.00028141,  0.00017283,  0.00014557,
             0.00012836])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.18.1)
+
     .. [2] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
     for estimating Absolute Salinity in the global ocean. Submitted to Ocean
     Science. A preliminary version is available at Ocean Sci. Discuss.,
     6, 215-242.
-    Modifications:
-    2011-03-29. David Jackett, Trevor McDougall and Paul Barker
+
     """
     return gibbs(n0, n1, n1, SA, t, p) / gibbs(n0, n0, n1, SA, t, p)
 
 
 @match_args_return
 def beta_const_CT_t_exact(SA, t, p):
-    r"""Calculates the saline (i.e. haline) contraction coefficient of seawater
+    """Calculates the saline (i.e. haline) contraction coefficient of seawater
     at constant Conservative Temperature.
     Parameters
     ----------
@@ -283,16 +260,14 @@ def beta_const_CT_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     beta_const_CT : array_like
                     saline contraction coefficient [kg g :sup:`-1`]
     See Also
     --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -302,16 +277,16 @@ def beta_const_CT_t_exact(SA, t, p):
     >>> gsw.beta_const_CT_t_exact(SA, t, p)
     array([ 0.00071749,  0.00071765,  0.00072622,  0.00075051,  0.00075506,
             0.00075707])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.19.3)
-    Modifications:
-    2010-07-23. David Jackett, Trevor McDougall and Paul Barker
+
     """
-    # TODO: Original GSW-V3 re-implements gibbs, check what to do here!
+    # TODO: gsw-v3.04 implements a shorter gibbs.  The results seems similar.
     pt0 = pt0_from_t(SA, t, p)
     factora = (gibbs(n1, n1, n0, SA, t, p) - gibbs(n1, n0, n0, SA, pt0, 0) /
                (Kelvin + pt0))
@@ -323,8 +298,9 @@ def beta_const_CT_t_exact(SA, t, p):
 
 @match_args_return
 def beta_const_pt_t_exact(SA, t, p):
-    r"""Calculates the saline (i.e. haline) contraction coefficient of seawater
+    """Calculates the saline (i.e. haline) contraction coefficient of seawater
     at constant potential temperature with a reference pressure of 0 dbar.
+
     Parameters
     ----------
     SA : array_like
@@ -333,16 +309,12 @@ def beta_const_pt_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     beta_const_pt : array_like
                     saline contraction coefficient [kg g :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -352,14 +324,14 @@ def beta_const_pt_t_exact(SA, t, p):
     >>> gsw.beta_const_pt_t_exact(SA, t, p)
     array([ 0.00073112,  0.00073106,  0.00073599,  0.00075375,  0.00075712,
             0.00075843])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.19.2)
-    Modifications:
-    2011-04-10. Trevor McDougall and Paul Barker
+
     """
     # NOTE: The original Matlab toolbox re-implement some code here.  Why?
     pt0 = pt0_from_t(SA, t, p)
@@ -372,8 +344,9 @@ def beta_const_pt_t_exact(SA, t, p):
 
 @match_args_return
 def beta_const_t_exact(SA, t, p):
-    r"""Calculates the saline (i.e. haline) contraction coefficient of seawater
+    """Calculates the saline (i.e. haline) contraction coefficient of seawater
     at constant in situ temperature.
+
     Parameters
     ----------
     SA : array_like
@@ -382,16 +355,12 @@ def beta_const_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     beta_const_t : array_like
                    saline contraction coefficient [kg g :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -401,6 +370,7 @@ def beta_const_t_exact(SA, t, p):
     >>> gsw.beta_const_t_exact(SA, t, p)
     array([ 0.00073112,  0.00073107,  0.00073602,  0.00075381,  0.00075726,
             0.00075865])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -409,13 +379,14 @@ def beta_const_t_exact(SA, t, p):
     UNESCO (English), 196 pp. See Eqn. (2.19.1)
     Modifications:
     2011-03-29. David Jackett, Trevor McDougall and Paul Barker
+
     """
     return -gibbs(n1, n0, n1, SA, t, p) / gibbs(n0, n0, n1, SA, t, p)
 
 
 @match_args_return
 def chem_potential_relative_t_exact(SA, t, p):
-    r"""Calculates the adiabatic lapse rate of seawater.
+    """Calculates the chemical potential of water in seawater.
     Parameters
     ----------
     SA : array_like
@@ -427,13 +398,8 @@ def chem_potential_relative_t_exact(SA, t, p):
     Returns
     -------
     chem_potential_relative : array_like
-                              relative chemical potential [J/g]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+                              relative chemical potential [J g:sup:`-1`]
+
     Examples
     --------
     >>> import gsw
@@ -443,23 +409,22 @@ def chem_potential_relative_t_exact(SA, t, p):
     >>> gsw.chem_potential_relative_t_exact(SA, t, p)
     array([ 79.4254481 ,  79.25989214,  74.69154859,  65.64063719,
             61.22685656,  57.21298557])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
-    Modifications:
-    2013-04-15. Trevor McDougall and Paul Barker
+
     """
-    n0 = 0
-    n1 = 1
     return gibbs(n1, n0, n0, SA, t, p)
 
 
 @match_args_return
 def chem_potential_salt_t_exact(SA, t, p):
-    r"""Calculates the chemical potential of salt in seawater.
+    """Calculates the chemical potential of salt in seawater.
+
     Parameters
     ----------
     SA : array_like
@@ -468,16 +433,12 @@ def chem_potential_salt_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     chem_potential_salt : array_like
         chemical potential of salt in seawater [J kg :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -487,6 +448,7 @@ def chem_potential_salt_t_exact(SA, t, p):
     >>> gsw.chem_potential_salt_t_exact(SA, t, p)
     array([-8466.13569818, -7928.8256562 , -5029.28859129,  -568.42714556,
             3396.79366004,  7612.64743154])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -495,6 +457,7 @@ def chem_potential_salt_t_exact(SA, t, p):
     UNESCO (English), 196 pp. See section 2.9.
     Modifications:
     2010-03-29. Trevor McDougall and Paul Barker
+
     """
     return (chem_potential_relative_t_exact(SA, t, p) +
             chem_potential_water_t_exact(SA, t, p))
@@ -502,7 +465,8 @@ def chem_potential_salt_t_exact(SA, t, p):
 
 @match_args_return
 def chem_potential_water_t_exact(SA, t, p):
-    r"""Calculates the chemical potential of water in seawater.
+    """Calculates the chemical potential of water in seawater.
+
     Parameters
     ----------
     SA : array_like
@@ -511,17 +475,12 @@ def chem_potential_water_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     chem_potential_water : array_like
-                           chemical potential of water in seawater
-                           [J/g]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+                           chemical potential of water in seawater [J/g]
+
     Examples
     --------
     >>> import gsw
@@ -531,6 +490,7 @@ def chem_potential_water_t_exact(SA, t, p):
     >>> gsw.chem_potential_water_t_exact(SA, t, p)
     array([-8545.56114628, -8008.08554834, -5103.98013987,  -634.06778275,
             3335.56680347,  7555.43444597])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -539,6 +499,7 @@ def chem_potential_water_t_exact(SA, t, p):
     UNESCO (English), 196 pp.
     Modifications:
     2013-04-15. Trevor McDougall and Paul Barker
+
     """
     SA, t, p, mask = strip_mask(SA, t, p)
     # FIXME: Ugly copy from gibbs, why?
@@ -611,12 +572,13 @@ def chem_potential_water_t_exact(SA, t, p):
     # V3.03: convert from J/kg to J/g.
     # See section 2.9 of TEOS-10 manual.
     chem_potential_water *= 1e-3
-    return np.ma.array(chem_potential_water, mask=mask, copy=False)
+    return ma.array(chem_potential_water, mask=mask, copy=False)
 
 
 @match_args_return
 def cp_t_exact(SA, t, p):
-    r"""Calculates the isobaric heat capacity of seawater.
+    """Calculates the isobaric heat capacity of seawater.
+
     Parameters
     ----------
     SA : array_like
@@ -625,16 +587,12 @@ def cp_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     cp_t_exact : array_like
         heat capacity of seawater [J kg :sup:`-1` K :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -644,12 +602,14 @@ def cp_t_exact(SA, t, p):
     >>> gsw.cp_t_exact(SA, t, p)
     array([ 4002.88800396,  4000.98028393,  3995.54646889,  3985.07676902,
             3973.59384348,  3960.18408479])
+
+    References
+    ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
-    Modifications:
-    2011-03-29. David Jackett, Trevor McDougall and Paul Barker
+
     """
     return -(t + Kelvin) * gibbs(n0, n2, n0, SA, t, p)
 
@@ -661,12 +621,13 @@ def deltaSA_from_rho_t_exact(rho, SP, t, p):
 
 @match_args_return
 def dynamic_enthalpy_t_exact(SA, t, p):
-    r"""Calculates the dynamic enthalpy of seawater from Absolute Salinity, in
+    """Calculates the dynamic enthalpy of seawater from Absolute Salinity, in
     situ temperature and pressure.  Dynamic enthalpy was defined by Young
     (2010) as the difference between enthalpy and potential enthalpy. Note that
     this function uses the full TEOS-10 Gibbs function (i.e. the sum of the
     IAPWS-09 and IAPWS-08 Gibbs functions, see the TEOS-10 Manual, IOC et al.
     (2010)).
+
     Parameters
     ----------
     SA : array_like
@@ -675,29 +636,26 @@ def dynamic_enthalpy_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     dynamic_enthalpy_t_exact : array_like
         dynamic enthalpy [J :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
+
     .. [2] Young, W.R., 2010: Dynamic enthalpy, Conservative Temperature, and
     the seawater. Boussinesq approximation. Journal of Physical Oceanography,
     40, 394-400.
-    Modifications:
-    2011-04-11. Trevor McDougall and Paul Barker
+
     """
     CT = CT_from_t(SA, t, p)
     return enthalpy_t_exact(SA, t, p) - cp0 * CT
@@ -705,11 +663,13 @@ def dynamic_enthalpy_t_exact(SA, t, p):
 
 @match_args_return
 def enthalpy_t_exact(SA, t, p):
-    r"""Calculates the specific enthalpy of seawater.
+    """Calculates the specific enthalpy of seawater.
     The specific enthalpy of seawater :math:`h` is given by:
+
     .. math::
         h(SA, t, p) = g + (T_0 + t)\eta =
                       g - (T_0 + t) \frac{\partial g}{\partial T}\Big|_{SA,p}
+
     Parameters
     ----------
     SA : array_like
@@ -718,16 +678,12 @@ def enthalpy_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     enthalpy : array_like
                specific enthalpy [J kg :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -737,6 +693,7 @@ def enthalpy_t_exact(SA, t, p):
     >>> gsw.enthalpy(SA, t, p)
     array([ 115103.26047838,  114014.8036012 ,   92179.9209311 ,
              43255.32838089,   33087.21597002,   26970.5880448 ])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -745,6 +702,7 @@ def enthalpy_t_exact(SA, t, p):
     UNESCO (English), 196 pp. See appendix A.11.
     Modifications:
     2011-03-29. David Jackett, Trevor McDougall and Paul Barker.
+
     """
     return (gibbs(n0, n0, n0, SA, t, p) -
             (t + Kelvin) * gibbs(n0, n1, n0, SA, t, p))
@@ -752,13 +710,16 @@ def enthalpy_t_exact(SA, t, p):
 
 @match_args_return
 def entropy_t_exact(SA, t, p):
-    r"""Calculates specific entropy of seawater.
+    """Calculates specific entropy of seawater.
     The specific entropy of seawater :math:`\eta` is given by:
+
     .. math::
         \eta(SA, t, p) = -g_T = \frac{\partial g}{\partial T}\Big|_{SA,p}
+
     When taking derivatives with respect to *in situ* temperature, the symbol
     :math:`T` will be used for temperature in order that these derivatives not
     be confused with time derivatives.
+
     Parameters
     ----------
     SA : array_like
@@ -767,16 +728,12 @@ def entropy_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     entropy : array_like
               specific entropy [J kg :sup:`-1` K :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -786,25 +743,27 @@ def entropy_t_exact(SA, t, p):
     >>> gsw.entropy_t_exact(SA, t, p)
     array([ 400.38942528,  395.43817843,  319.8664982 ,  146.79088159,
              98.64734087,   62.79150873])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
-    Modifications:
-    2011-03-29. David Jackett, Trevor McDougall and Paul Barker.
+
     """
     return -gibbs(n0, n1, n0, SA, t, p)
 
 
 @match_args_return
 def Helmholtz_energy_t_exact(SA, t, p):
-    r"""Calculates the Helmholtz energy of seawater.
+    """Calculates the Helmholtz energy of seawater.
     The specific Helmholtz energy of seawater :math:`f` is given by:
+
     .. math::
         f(SA, t, p) = g - (p + P_0) \nu =
                       g - (p + P_0) \frac{\partial g}{\partial P}\Big|_{SA,T}
+
     Parameters
     ----------
     SA : array_like
@@ -813,16 +772,12 @@ def Helmholtz_energy_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     Helmholtz_energy : array_like
                        Helmholtz energy [J kg :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -832,14 +787,14 @@ def Helmholtz_energy_t_exact(SA, t, p):
     >>> gsw.Helmholtz_energy_t_exact(SA, t, p)
     array([-5985.58288209, -5830.81845224, -3806.96617841,  -877.66369421,
             -462.17033905,  -245.50407205])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 2.13.
-    Modifications:
-    2011-03-29. Trevor McDougall
+
     """
     return (gibbs(n0, n0, n0, SA, t, p) -
             (db2Pascal * p + P0) * gibbs(n0, n0, n1, SA, t, p))
@@ -847,14 +802,17 @@ def Helmholtz_energy_t_exact(SA, t, p):
 
 @match_args_return
 def internal_energy_t_exact(SA, t, p):
-    r"""Calculates the Helmholtz energy of seawater.
+    """Calculates the Helmholtz energy of seawater.
     The specific internal energy of seawater :math:`u` is given by:
+
     .. math::
         u(SA, t, p) = g + (T_0 + t)\eta - (p + P_0)\nu =
                       g - (T_0 + t)\frac{\partial g}{\partial T}\Big|_{SA,p} -
                           (p + P_0)\frac{\partial g}{\partial P}\Big|_{SA,T}
+
     where :math:`T_0` is the Celsius zero point, 273.15 K and
     :math:`P_0` = 101 325 Pa is the standard atmosphere pressure.
+
     Parameters
     ----------
     SA : array_like
@@ -863,16 +821,12 @@ def internal_energy_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     internal_energy (u) : array_like
                           specific internal energy [J kg :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -882,6 +836,7 @@ def internal_energy_t_exact(SA, t, p):
     >>> gsw.internal_energy_t_exact(SA, t, p)
     array([ 114906.23847309,  113426.57417062,   90860.81858842,
              40724.34005719,   27162.66600185,   17182.50522667])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -890,6 +845,7 @@ def internal_energy_t_exact(SA, t, p):
     UNESCO (English), 196 pp. See Eqn. (2.11.1)
     Modifications:
     2011-03-29. Trevor McDougall
+
     """
     return (gibbs(n0, n0, n0, SA, t, p) -
             (Kelvin + t) * gibbs(n0, n1, n0, SA, t, p) -
@@ -898,7 +854,8 @@ def internal_energy_t_exact(SA, t, p):
 
 @match_args_return
 def isochoric_heat_cap_t_exact(SA, t, p):
-    r"""Calculates the isochoric heat capacity of seawater.
+    """Calculates the isochoric heat capacity of seawater.
+
     Parameters
     ----------
     SA : array_like
@@ -907,16 +864,12 @@ def isochoric_heat_cap_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     isochoric_heat_cap : array_like
                          isochoric heat capacity [J kg :sup:`-1` K :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -926,14 +879,14 @@ def isochoric_heat_cap_t_exact(SA, t, p):
     >>> gsw.isochoric_heat_cap_t_exact(SA, t, p)
     array([ 3928.13708702,  3927.27381633,  3941.36418525,  3966.26126146,
             3960.50903222,  3950.13901342])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 2.21.
-    Modifications:
-    2011-03-29. Trevor McDougall
+
     """
     return (-(Kelvin + t) * (gibbs(n0, n2, n0, SA, t, p) -
             gibbs(n0, n1, n1, SA, t, p) ** 2 / gibbs(n0, n0, n2, SA, t, p)))
@@ -941,13 +894,15 @@ def isochoric_heat_cap_t_exact(SA, t, p):
 
 @match_args_return
 def kappa_const_t_exact(SA, t, p):
-    r"""Calculates isothermal compressibility of seawater at constant in situ
+    """Calculates isothermal compressibility of seawater at constant in situ
     temperature.
+
     .. math::
         \kappa^t(SA, t, p) =
                        \rho^{-1}\frac{\partial \rho}{\partial P}\Big|_{SA,T} =
                        -\nu^{-1}\frac{\partial \nu}{\partial P}\Big|_{SA,T} =
                        -\frac{g_{PP}}{g_P}
+
     Parameters
     ----------
     SA : array_like
@@ -956,16 +911,16 @@ def kappa_const_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     kappa : array_like
             Isothermal compressibility [Pa :sup:`-1`]
-    See Also
-    --------
-    TODO
+
     Notes
     -----
     This is the compressibility of seawater at constant in situ temperature.
+
     Examples
     --------
     >>> import gsw
@@ -975,24 +930,25 @@ def kappa_const_t_exact(SA, t, p):
     >>> gsw.kappa_const_t_exact(SA, t, p)
     array([  4.19071646e-10,   4.18743202e-10,   4.22265764e-10,
              4.37735100e-10,   4.40373818e-10,   4.41156577e-10])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (2.15.1)
-    Modifications:
-    2011-03-29. David Jackett, Trevor McDougall and Paul Barker
+
     """
     return -gibbs(n0, n0, n2, SA, t, p) / gibbs(n0, n0, n1, SA, t, p)
 
 
 @match_args_return
 def kappa_t_exact(SA, t, p):
-    r"""Calculates the isentropic compressibility of seawater.
+    """Calculates the isentropic compressibility of seawater.
     When the entropy and Absolute Salinity are held constant while the pressure
     is changed, the isentropic and isohaline compressibility
     :math:`kappa` is obtained:
+
     .. math::
         \kappa(SA, t, p) =
                    \rho^{-1}\frac{\partial \rho}{\partial P}\Big|_{SA,\eta} =
@@ -1000,10 +956,12 @@ def kappa_t_exact(SA, t, p):
                    \rho^{-1}\frac{\partial \rho}{\partial P}\Big|_{SA,\theta} =
                    -\nu^{-1}\frac{\partial \nu}{\partial P}\Big|_{SA,\theta} =
                    -\frac{ (g_{TP}^2 - g_{TT} g_{PP} ) }{g_P g_{TT}}
+
     The isentropic and isohaline compressibility is sometimes called simply the
     isentropic compressibility (or sometimes the "adiabatic compressibility"),
     on the unstated understanding that there is also no transfer of salt during
     the isentropic or adiabatic change in pressure.
+
     Parameters
     ----------
     SA : array_like
@@ -1012,16 +970,16 @@ def kappa_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     kappa : array_like
             Isentropic compressibility [Pa :sup:`-1`]
-    See Also
-    --------
-    TODO
+
     Notes
     -----
     The output is Pascal and not dbar.
+
     Examples
     --------
     >>> import gsw
@@ -1031,6 +989,7 @@ def kappa_t_exact(SA, t, p):
     >>> gsw.kappa_t_exact(SA, t, p)
     array([  4.11245799e-10,   4.11029072e-10,   4.16539558e-10,
              4.35668338e-10,   4.38923693e-10,   4.40037576e-10])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -1038,8 +997,7 @@ def kappa_t_exact(SA, t, p):
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqns. (2.16.1) and the row for kappa in
     Table P.1 of appendix P
-    Modifications:
-    2011-03-23. David Jackett, Trevor McDougall and Paul Barker
+
     """
     return ((gibbs(n0, n1, n1, SA, t, p) ** 2 - gibbs(n0, n2, n0, SA, t, p) *
             gibbs(n0, n0, n2, SA, t, p)) / (gibbs(n0, n0, n1, SA, t, p) *
@@ -1048,7 +1006,8 @@ def kappa_t_exact(SA, t, p):
 
 @match_args_return
 def osmotic_coefficient_t_exact(SA, t, p):
-    r"""Calculates the osmotic coefficient of seawater.
+    """Calculates the osmotic coefficient of seawater.
+
     Parameters
     ----------
     SA : array_like
@@ -1057,16 +1016,12 @@ def osmotic_coefficient_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     osmotic_coefficient : array_like
                           osmotic coefficient of seawater [unitless]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -1076,15 +1031,14 @@ def osmotic_coefficient_t_exact(SA, t, p):
     >>> gsw.osmotic_coefficient_t_exact(SA,t , p)
     array([ 0.90284718,  0.90298624,  0.90238866,  0.89880927,  0.89801054,
             0.89767912])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
-    Modifications:
-    2011-04-01. Trevor McDougall and Paul Barker.
-    2012-11-15. Trevor McDougall and Paul Barker.
+
     """
     SA = np.maximum(SA, 0)
     k = M_S / R
@@ -1119,7 +1073,8 @@ def osmotic_coefficient_t_exact(SA, t, p):
 
 @match_args_return
 def osmotic_pressure_t_exact(SA, t, pw):
-    r"""Calculates the osmotic pressure of seawater.
+    """Calculates the osmotic pressure of seawater.
+
     Parameters
     ----------
     SA : array_like
@@ -1128,26 +1083,23 @@ def osmotic_pressure_t_exact(SA, t, pw):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     pw : array_like
         sea pressure of the pure water side [dbar]
+
     Returns
     -------
     osmotic_pressure_t_exact : array_like
         dynamic osmotic pressure of seawater [dbar]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
+    TODO
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 3.41.
-    Modifications:
-    2011-05-26. Trevor McDougall and Paul Barker
+
     """
     SA = np.maximum(SA, 0)
     gibbs_pure_water = gibbs(0, 0, 0, 0, t, pw)
@@ -1173,7 +1125,8 @@ def osmotic_pressure_t_exact(SA, t, pw):
 
 @match_args_return
 def pot_rho_t_exact(SA, t, p, p_ref=0):
-    r"""Calculates potential density of seawater.
+    """Calculates potential density of seawater.
+
     Parameters
     ----------
     SA : array_like
@@ -1184,16 +1137,12 @@ def pot_rho_t_exact(SA, t, p, p_ref=0):
         pressure [dbar]
     p_ref : int, float, optional
         reference pressure, default = 0
+
     Returns
     -------
     pot_rho : array_like
               potential density  [kg m :sup:`-3`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -1206,6 +1155,7 @@ def pot_rho_t_exact(SA, t, p, p_ref=0):
     >>> gsw.pot_rho(SA, t, p, p_ref=1000)
     array([ 1025.95554512,  1026.21306986,  1028.12563226,  1031.1204547 ,
             1031.63768355,  1032.00240412])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -1214,6 +1164,7 @@ def pot_rho_t_exact(SA, t, p, p_ref=0):
     UNESCO (English), 196 pp. See section 3.4.
     Modifications:
     2011-03-29. David Jackett, Trevor McDougall and Paul Barker
+
     """
     pt = pt_from_t(SA, t, p, p_ref=p_ref)
     return rho_t_exact(SA, pt, p_ref)
@@ -1221,8 +1172,9 @@ def pot_rho_t_exact(SA, t, p, p_ref=0):
 
 @match_args_return
 def rho_t_exact(SA, t, p):
-    r"""Calculates in situ density of seawater from Absolute Salinity and in
+    """Calculates in situ density of seawater from Absolute Salinity and in
     situ temperature.
+
     Parameters
     ----------
     SA : array_like
@@ -1231,16 +1183,12 @@ def rho_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     rho_t_exact : array_like
         in situ density [kg m :sup:`-3`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -1250,14 +1198,14 @@ def rho_t_exact(SA, t, p):
     >>> gsw.rho(SA, t, p)
     array([ 1021.84017319,  1022.26268993,  1024.42771594,  1027.79020181,
             1029.83771473,  1032.00240412])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 2.8.
-    Modifications:
-    2011-03-29. Paul Barker, David Jackett and Trevor McDougal
+
     """
     return 1. / gibbs(n0, n0, n1, SA, t, p)
 
@@ -1269,13 +1217,14 @@ def SA_from_rho_t(rho, t, p):
 
 @match_args_return
 def SA_from_rho_t_exact(rho, t, p):
-    r"""Calculates the Absolute Salinity of a seawater sample, for given values
+    """Calculates the Absolute Salinity of a seawater sample, for given values
     of its density, in situ temperature and sea pressure (in dbar).
     One use for this function is in the laboratory where a measured value of
     the in situ density :math:`\rho` of a seawater sample may have been made at
     the laboratory temperature :math:`t` and at atmospheric pressure :math:`p`.
     The present function will return the Absolute Salinity SA of this seawater
     sample.
+
     Parameters
     ----------
     rho : array_like
@@ -1284,20 +1233,21 @@ def SA_from_rho_t_exact(rho, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     SA : array_like
          Absolute salinity [g kg :sup:`-1`]
-    See Also
-    --------
-    TODO
+
     Notes
     -----
     This is expressed on the Reference-Composition Salinity Scale of
     Millero et al. (2008).
     After two iterations of a modified Newton-Raphson iteration,
     the error in SA is typically no larger than
+
     2 :math:`^\times` 10 :sup:`-13` [g kg :sup:`-1`]
+
     Examples
     --------
     >>> import gsw
@@ -1307,17 +1257,18 @@ def SA_from_rho_t_exact(rho, t, p):
     >>> gsw.SA_from_rho_t_exact(rho, t, p)
     array([ 34.71022966,  34.89057683,  35.02332421,  34.84952096,
             34.73824809,  34.73188384])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See section 2.5.
+
     .. [2] Millero, F. J., R. Feistel, D. G. Wright, and T. J. McDougall, 2008:
     The composition of Standard Seawater and the definition of the
     Reference-Composition Salinity Scale, Deep-Sea Res. I, 55, 50-72.
-    Modifications:
-    2011-03-28. Trevor McDougall and Paul Barker.
+
     """
     v_lab = np.ones_like(rho) / rho
     v_0 = gibbs(n0, n0, n1, 0, t, p)
@@ -1335,15 +1286,16 @@ def SA_from_rho_t_exact(rho, t, p):
         SA_mean = 0.5 * (SA + SA_old)
         v_SA = gibbs(n1, n0, n1, SA_mean, t, p)
         SA = SA_old - delta_v / v_SA
-    SA[Ior] = np.ma.masked
+    SA[Ior] = ma.masked
     return SA
 
 
 @match_args_return
 def sigma0_pt0_exact(SA, pt0):
-    r"""Calculates potential density anomaly with reference sea pressure of
+    """Calculates potential density anomaly with reference sea pressure of
     zero (0) dbar.  The temperature input to this function is potential
     temperature referenced to zero dbar.
+
     Parameters
     ----------
     SA : array_like
@@ -1351,17 +1303,13 @@ def sigma0_pt0_exact(SA, pt0):
     pt0 : array_like
           potential temperature [:math:`^\circ` C (ITS-90)]
           with respect to a reference sea pressure of 0 dbar
+
     Returns
     -------
     sigma0_pt0_exact : array_like
                        potential density anomaly [kg m :sup:`-3`]
                        respect to a reference pressure of 0 dbar
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -1371,14 +1319,14 @@ def sigma0_pt0_exact(SA, pt0):
     >>> gsw.rho(SA, t, p)
     array([ 1021.84017319,  1022.26268993,  1024.42771594,  1027.79020181,
             1029.83771473,  1032.00240412])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp. See Eqn. (3.6.1).
-    Modifications:
-    2011-03-29. Trevor McDougal and Paul Barker.
+
     """
     SA = np.maximum(SA, 0)  # Ensure that SA is non-negative.
     x2 = sfac * SA
@@ -1413,7 +1361,7 @@ def sigma0_pt0_exact(SA, pt0):
 
 @match_args_return
 def sound_speed_t_exact(SA, t, p):
-    r"""Calculates the speed of sound in seawater.
+    """Calculates the speed of sound in seawater.
     The speed of sound in seawater :math:`c` is given by:
     .. math::
         c(SA, t, p) = \sqrt{ \partial P  / \partial \rho |_{SA,\eta}} =
@@ -1425,6 +1373,7 @@ def sound_speed_t_exact(SA, t, p):
     :math:`kappa` must have units of Pa :sup:`-1`. The sound speed c produced
     by both the SIA and the GSW software libraries (appendices M and N) has
     units of m s :sup:`-1`.
+
     Parameters
     ----------
     SA : array_like
@@ -1433,16 +1382,12 @@ def sound_speed_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     sound_speed : array_like
                   speed of sound in seawater [m s :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -1452,6 +1397,7 @@ def sound_speed_t_exact(SA, t, p):
     >>> gsw.sound_speed_t_exact(SA, t, p)
     array([ 1542.61580359,  1542.70353407,  1530.84497914,  1494.40999692,
             1487.37710252,  1483.93460908])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -1460,6 +1406,7 @@ def sound_speed_t_exact(SA, t, p):
     UNESCO (English), 196 pp. See Eqn. (2.17.1)
     Modifications:
     2011-03-29. David Jackett, Paul Barker and Trevor McDougall.
+
     """
     return (gibbs(n0, n0, n1, SA, t, p) * np.sqrt(gibbs(n0, n2, n0, SA, t, p) /
             (gibbs(n0, n1, n1, SA, t, p) ** 2 - gibbs(n0, n2, n0, SA, t, p) *
@@ -1468,10 +1415,11 @@ def sound_speed_t_exact(SA, t, p):
 
 @match_args_return
 def specvol_anom_t_exact(SA, t, p):
-    r"""Calculates specific volume anomaly from Absolute Salinity, in situ
+    """Calculates specific volume anomaly from Absolute Salinity, in situ
     temperature and pressure, using the full TEOS-10 Gibbs function.
     The reference value of Absolute Salinity is SSO and the reference value of
     Conservative Temperature is equal to 0 :math:`^\circ` C.
+
     Parameters
     ----------
     SA : array_like
@@ -1480,16 +1428,12 @@ def specvol_anom_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     specvol_anom_t_exact : array_like
         specific volume anomaly  [m :sup:`3` kg :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -1499,6 +1443,7 @@ def specvol_anom_t_exact(SA, t, p):
     >>> gsw.specvol_anom_t_exact(SA, t, p)
     array([  6.01044463e-06,   5.78602432e-06,   4.05564999e-06,
              1.42198662e-06,   1.04351837e-06,   7.63964850e-07])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -1507,6 +1452,7 @@ def specvol_anom_t_exact(SA, t, p):
     UNESCO (English), 196 pp. See Eqn. (3.7.3)
     Modifications:
     2011-03-23. Trevor McDougall and Paul Barker
+
     """
     pt_zero = pt_from_CT(SSO, 0)
     t_zero = pt_from_t(SSO, pt_zero, 0, p)
@@ -1516,7 +1462,8 @@ def specvol_anom_t_exact(SA, t, p):
 
 @match_args_return
 def specvol_t_exact(SA, t, p):
-    r"""Calculates the specific volume of seawater.
+    """Calculates the specific volume of seawater.
+
     Parameters
     ----------
     SA : array_like
@@ -1525,16 +1472,12 @@ def specvol_t_exact(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     specvol : array_like
               specific volume [m :sup:`3` kg :sup:`-1`]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
     >>> import gsw
@@ -1544,6 +1487,7 @@ def specvol_t_exact(SA, t, p):
     >>> gsw.specvol(SA, t, p)
     array([ 0.00097863,  0.00097822,  0.00097615,  0.00097296,  0.00097103,
             0.00096899])
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -1552,14 +1496,16 @@ def specvol_t_exact(SA, t, p):
     UNESCO (English), 196 pp. See section 2.7.
     Modifications:
     2011-03-23. David Jackett and Paul Barker.
+
     """
     return gibbs(n0, n0, n1, SA, t, p)
 
 
 @match_args_return
 def t_from_rho_exact(rho, SA, p):
-    r"""Calculates the in-situ temperature of a seawater sample, for given
+    """Calculates the in-situ temperature of a seawater sample, for given
     values of its density, Absolute Salinity and sea pressure (in dbar).
+
     Parameters
     ----------
     rho : array_like
@@ -1568,33 +1514,34 @@ def t_from_rho_exact(rho, SA, p):
          Absolute salinity [g kg :sup:`-1`]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     t : array_like
         in situ temperature [:math:`^\circ` C (ITS-90)]
     t_multiple : array_like
                  in situ temperature [:math:`^\circ` C (ITS-90)]
-    See Also
-    --------
-    TODO
+
     Notes
     -----
     At low salinities, in brackish water, there are two possible temperatures
     for a single density.  This program will output both valid solutions
     (t, t_multiple), if there is only one possible solution the second variable
     will be set to NaN.
+
     Examples
     --------
     TODO
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
     of seawater - 2010: Calculation and use of thermodynamic properties.
     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
     UNESCO (English), 196 pp.
-    Modifications:
-    2011-04-21. Trevor McDougall and Paul Barker.
+
     """
+
     """alpha_limit is the positive value of the thermal expansion coefficient
     which is used at the freezing temperature to distinguish between I_salty
     and I_fresh."""
@@ -1609,9 +1556,9 @@ def t_from_rho_exact(rho, SA, p):
     I_SA = np.logical_or(SA < 0, SA > 42)
     I_p = np.logical_or(p < -1.5, p > 12000)
     I_SA_p = np.logical_or(I_SA, I_p)
-    SA[I_SA_p] = np.ma.masked
+    SA[I_SA_p] = ma.masked
     rho_40 = rho_t_exact(SA, 40 * np.ones_like(SA), p)
-    SA[(rho - rho_40) < 0] = np.ma.masked
+    SA[(rho - rho_40) < 0] = ma.masked
     t_max_rho = t_maxdensity_exact(SA, p)
     rho_max = rho_t_exact(SA, t_max_rho, p)
     rho_extreme = rho_max.copy()
@@ -1621,8 +1568,8 @@ def t_from_rho_exact(rho, SA, p):
     # freezing point.
     I_fr_gr_max = (t_freeze - t_max_rho) > 0
     rho_extreme[I_fr_gr_max] = rho_freezing[I_fr_gr_max]
-    SA[rho > rho_extreme] = np.ma.masked
-    SA[np.isnan(SA * p * rho)] = np.ma.masked
+    SA[rho > rho_extreme] = ma.masked
+    SA[np.isnan(SA * p * rho)] = ma.masked
     alpha_freezing = alpha_wrt_t_exact(SA, t_freeze, p)
     I_salty = alpha_freezing > alpha_limit
     if I_salty.any():
@@ -1659,7 +1606,7 @@ def t_from_rho_exact(rho, SA, p):
                 rho_old = rho_t_exact(SA, t_old, p)
                 factorqa = (rho_max - rho) / (rho_max - rho_old)
                 t_a = t_max_rho + (t_old - t_max_rho) * np.sqrt(factorqa)
-            t_a[t_freezing - t_a < 0] = np.ma.masked
+            t_a[t_freezing - t_a < 0] = ma.masked
             t_b = np.zeros_like(SA) * np.NaN
             # Set the initial value of the quadratic solution routes.
             t_b[I_fresh[I_quad]] = (t_max_rho[I_fresh[I_quad]] -
@@ -1673,7 +1620,7 @@ def t_from_rho_exact(rho, SA, p):
                 t_b = t_max_rho + (t_old - t_max_rho) * np.sqrt(factorqb)
                 # After seven iterations of this quadratic iterative procedure,
                 # the error in rho is no larger than 4.6x10^-13 kg/m^3.
-            t_b[t_freezing - t_b < 0] = np.ma.masked
+            t_b[t_freezing - t_b < 0] = ma.masked
             # Begin the modified Newton-Raphson iterative method, which will
             # only operate on non-masked data.
     v_lab = np.ones_like(rho) / rho
@@ -1696,28 +1643,27 @@ def t_from_rho_exact(rho, SA, p):
 
 @match_args_return
 def t_maxdensity_exact(SA, p):
-    r"""Calculates the in-situ temperature of maximum density of seawater.
+    """Calculates the in-situ temperature of maximum density of seawater.
     This function returns the in-situ temperature at which the density of
     seawater is a maximum, at given Absolute Salinity, SA, and sea pressure, p
     (in dbar).
+
     Parameters
     ----------
     SA : array_like
         Absolute salinity [g kg :sup:`-1`]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     t_maxdensity_exact : array_like
         max in-situ temperature [:math:`^\circ` C]
-    See Also
-    --------
-    TODO
-    Notes
-    -----
-    TODO
+
     Examples
     --------
+    TODO
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
@@ -1726,6 +1672,7 @@ def t_maxdensity_exact(SA, p):
     UNESCO (English), 196 pp. See section 3.42.
     Modifications:
     2011-04-03. Trevor McDougall and Paul Barker
+
     """
     # The temperature increment for calculating the gibbs_PTT derivative.
     dt = 0.001
