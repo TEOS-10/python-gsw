@@ -23,7 +23,7 @@ from collections import OrderedDict
 
 import numpy as np
 
-from oct2py import octave
+from oct2py import Oct2Py
 from oct2py import Oct2PyError
 
 import gsw
@@ -47,8 +47,21 @@ open('superiorfloat.m', 'wt').write(_sfloat)
 if not os.path.exists(path):
     raise ValueError("matlab gsw path %s not found" % path)
 
-_ = octave.addpath(octave.genpath(path))
-_ = octave.addpath('./')
+
+def get_octave(path):
+    """
+    Return an Oct2Py instance with a suitable path.
+
+    It can be useful to have this as a function because
+    an exception in oct2py kills the module-level instance.
+    """
+    engine = Oct2Py(oned_as='column')  # 'column' makes interp_SA_CT work
+    _ = engine.addpath(engine.genpath(path))
+    _ = engine.addpath('./')
+    return engine
+
+octave = get_octave(path)
+#print('\n'.join(octave.path().split(':')))
 
 
 def compare_results(name, function, args):
@@ -62,19 +75,19 @@ def compare_results(name, function, args):
         raise
         return 'no_python'
 
-    nout = 1
     if isinstance(res, tuple):
-        nout = len(res)
         res = res[0]
 
     try:  # Octave.
-        val = octave.call('gsw_%s' % name, *args, verbose=True, nout=nout)
-        if nout > 1:
-            val = val[0]
-    except Oct2PyError:
-        print('%s: Octave runtime error' % name)
+        ocmd = octave.__getattr__('gsw_%s' % (name,))
+        val = ocmd(*args)
+    except Exception as err: #Oct2PyError as err:
+        print('%s: Octave runtime error; %s' % (name, err))
         print("python:\n%s" % res)
         return 'no_octave'
+
+    if isinstance(val, tuple):
+        val = val[0]
 
     try:
         val = val.flatten()
@@ -133,7 +146,6 @@ library = OrderedDict({
     'gibbs_pt0_pt0': (gsw.library.gibbs_pt0_pt0, ('SA', 'pt0')),
     'Hill_ratio_at_SP2': (gsw.library.Hill_ratio_at_SP2, ('t')),
     'infunnel': (gsw.library.infunnel, ('SA', 'CT', 'p')),
-    # FIXME: There is a problem with the argument handling in interp_SA_CT.
     'interp_ref_cast': (gsw.library.interp_ref_cast, ('spycnl', 'A')),
     'interp_SA_CT': (gsw.library.interp_SA_CT, ('SA', 'CT', 'p', 'p_i')),
     'SAAR': (gsw.library.SAAR, ('p', 'lon', 'lat')),
