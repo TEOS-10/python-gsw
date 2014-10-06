@@ -15,7 +15,10 @@ __all__ = ['Bunch',
            'strip_mask']
 
 
-# Based on Robert Kern's Bunch.
+# Based on Robert Kern's Bunch; taken from
+# http://currents.soest.hawaii.edu/hgstage/pycurrents/
+# pycurrents/system/utilities.py
+
 class Bunch(dict):
     """
     A dictionary that also provides access via attributes.
@@ -56,9 +59,9 @@ class Bunch(dict):
     def __str__(self):
         return self.formatted()
 
-    def formatted(self, fmt=None):
+    def formatted(self, fmt=None, types=False):
         """
-        Return a string with keys and/or values.
+        Return a string with keys and/or values or types.
 
         *fmt* is a format string as used in the str.format() method.
 
@@ -69,14 +72,46 @@ class Bunch(dict):
         """
         if fmt is None:
             fmt = self.str_fmt
-        klens = [len(str(k)) for k in self.keys()]
-        vlens = [len(str(v)) for v in self.values()]
+
+        items = list(self.items())
+        items.sort()
+
+        klens = []
+        vlens = []
+        for i, (k, v) in enumerate(items):
+            lenk = len(str(k))
+            if types:
+                v = type(v).__name__
+            lenv = len(str(v))
+            items[i] = (k, v)
+            klens.append(lenk)
+            vlens.append(lenv)
+
         klen = min(20, max(klens))
         vlen = min(40, max(vlens))
-        items = self.items()
-        items.sort()
         slist = [fmt.format(k, v, klen=klen, vlen=vlen) for k, v in items]
         return ''.join(slist)
+
+    def from_pyfile(self, filename):
+        """
+        Read in variables from a python code file.
+        """
+        # We can't simply exec the code directly, because in
+        # Python 3 the scoping for list comprehensions would
+        # lead to a NameError.  Wrapping the code in a function
+        # fixes this.
+        d = dict()
+        lines = ["def _temp_func():\n"]
+        with open(filename) as f:
+            lines.extend(["    " + line for line in f])
+        lines.extend(["\n    return(locals())\n",
+                      "_temp_out = _temp_func()\n",
+                      "del(_temp_func)\n"])
+        codetext = "".join(lines)
+        code = compile(codetext, filename, 'exec')
+        exec(code, globals(), d)
+        self.update(d["_temp_out"])
+        return self
 
     def update_values(self, *args, **kw):
         """
@@ -108,8 +143,8 @@ class Bunch(dict):
             newkw.update(d)
         newkw.update(kw)
         self._check_strict(strict, newkw)
-        dsub = dict([(k, v) for (k, v) in newkw.items() if k in self and
-                     self[k] is None])
+        dsub = dict([(k, v) for (k, v) in newkw.items()
+                                if k in self and self[k] is None])
         self.update(dsub)
 
     def _check_strict(self, strict, kw):
@@ -118,7 +153,7 @@ class Bunch(dict):
             if bad:
                 bk = list(bad)
                 bk.sort()
-                ek = self.keys()
+                ek = list(self.keys())
                 ek.sort()
                 raise KeyError(
                     "Update keys %s don't match existing keys %s" % (bk, ek))
@@ -261,73 +296,110 @@ def strip_mask(*args):
     newargs.append(mask)
     return newargs
 
+# The following functions ending with loadmatbunch() and showmatbunch()
+# are taken from the repo
+#     http://currents.soest.hawaii.edu/hgstage/pycurrents/,
+# pycurrents/file/matfile.py.
 
-def _unicode(arr):
-    r"""
-    loadmat seems to be mishandling strings when there is a difference
-    in byte order between the machine that wrote the file and the one
-    that is reading the file.  The result is, e.g.,
-
-        u'\U31000000\U34000000'  instead of u'14'
-
+def _crunch(arr, masked=True):
     """
-    try:
-        return unicode(arr)
-    except UnicodeEncodeError:
-        dt = arr.dtype.newbyteorder('S')
-        return unicode(arr.view(dt))
+    Handle all arrays that are not Matlab structures.
+    """
+    if arr.size == 1:
+        arr = arr.item()  # Returns the contents.
+        return arr
 
-
-def crunch(arr, masked=True):
+    # The following squeeze is discarding some information;
+    # we might want to make it optional.
     arr = arr.squeeze()
-    if arr.ndim == 0:
-        kind = arr.dtype.kind
-        if kind == 'f':
-            return float(arr)
-        if kind in 'ui':
-            return int(arr)
-        if kind == 'U':
-            try:
-                return _unicode(arr)
-            except UnicodeDecodeError:
-                return "Could not decode."
-        if kind == 'S':
-            return str(arr)
-        if kind == 'O':
-            return arr
-        return arr  # Warn?  Other kinds need to be handled?
-    if masked and arr.dtype.kind == 'f':  # Check for complex also.
+
+    if masked and arr.dtype.kind == 'f':  # check for complex also
         arrm = np.ma.masked_invalid(arr)
         if arrm.count() < arrm.size:
             arr = arrm
         else:
-            arr = np.array(arr)  # Copy to force a read.
+            arr = np.array(arr) # copy to force a read
     else:
         arr = np.array(arr)
     return arr
 
-
-def structured_to_bunch(arr, masked=True):
-    if arr.dtype.kind == 'V' and arr.shape == (1, 1):
+def _structured_to_bunch(arr, masked=True):
+    """
+    Recursively move through the structure tree, creating
+    a Bunch for each structure.  When a non-structure is
+    encountered, process it with crunch().
+    """
+    # A single "void" object comes from a Matlab structure.
+    # Each Matlab structure field corresponds to a field in
+    # a numpy structured dtype.
+    if arr.dtype.kind == 'V' and arr.shape == (1,1):
         b = Bunch()
-        x = arr[0, 0]
+        x = arr[0,0]
         for name in x.dtype.names:
-            b[name] = structured_to_bunch(x[name], masked=masked)
+            b[name] = _structured_to_bunch(x[name], masked=masked)
         return b
-    return crunch(arr, masked=masked)
+
+    return _crunch(arr, masked=masked)
+
+def _showmatbunch(b, elements=None, origin=None):
+    if elements is None:
+        elements = []
+    if origin is None:
+        origin = ''
+    items = list(b.items())
+    for k, v in items:
+        _origin = "%s.%s" % (origin, k)
+        if isinstance(v, Bunch):
+            _showmatbunch(v, elements, _origin)
+        else:
+            if isinstance(v, (str, str)):
+                slen = len(v)
+                if slen < 50:
+                    entry = v
+                else:
+                    entry = 'string, %d characters' % slen
+            elif isinstance(v, np.ndarray):
+                if np.ma.isMA(v):
+                    entry = 'masked array, shape %s, dtype %s' % (v.shape, v.dtype)
+                else:
+                    entry = 'ndarray, shape %s, dtype %s' % (v.shape, v.dtype)
+            else:
+                entry = '%s %s' % (type(v).__name__, v)
+            elements.append((_origin, entry))
+    elements.sort()
+    return elements
+
+def showmatbunch(b):
+    """
+    Show the contents of a matfile as it has been, or would be, loaded
+    by loadmatbunch.
+
+    *b* can be either the name of a matfile or the output of loadmatbunch.
+
+    Returns a multi-line string suitable for printing.
+    """
+    if isinstance(b, (str, str)):
+        b = loadmatbunch(b)
+    elist = _showmatbunch(b)
+    names = [n for n, v in elist]
+    namelen = min(40, max([len(n) for n in names]))
+    str_fmt = "{0!s:<{namelen}} : {1!s}\n"
+    strlist = [str_fmt.format(n[1:], v, namelen=namelen) for (n, v) in elist]
+    return ''.join(strlist)
 
 
 def loadmatbunch(fname, masked=True):
     """
     Wrapper for loadmat that dereferences (1,1) object arrays,
     converts floating point arrays to masked arrays, and uses
-    nested Bunch objects in place of the MatlabTM structures.
+    nested Bunch objects in place of the matlab structures.
     """
     out = Bunch()
     fobj = open(fname, 'rb')
     xx = loadmat(fobj)
     keys = [k for k in xx.keys() if not k.startswith("__")]
     for k in keys:
-        out[k] = structured_to_bunch(xx[k], masked=masked)
+        out[k] = _structured_to_bunch(xx[k], masked=masked)
     fobj.close()
     return out
+
