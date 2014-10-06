@@ -100,17 +100,12 @@ def Abs_Pressure_from_p(p):
     Absolute_Pressure : array_like
         Absolute Pressure [Pa]
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
 
     Examples
     --------
-    TODO
+    >>> import gsw
+    >>> gsw.Abs_Pressure_from_p([0, 500, 1000])
+    array([   101325.,   5101325.,  10101325.])
 
     References
     ----------
