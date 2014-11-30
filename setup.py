@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
@@ -41,7 +40,7 @@ config = dict(name='gsw',
               packages=['gsw', 'gsw/gibbs', 'gsw/utilities', 'gsw/test'],
               package_data={'gsw': ['utilities/data/*.npz']},
               test_suite='tests',
-              use_2to3=True,
+              use_2to3=False,
               license=LICENSE,
               long_description=long_description,
               classifiers=['Development Status :: 4 - Beta',

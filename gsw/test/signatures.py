@@ -161,8 +161,8 @@ def funclist_by_arg(partslist):
 
 def help_chunk(helptuple, sect):
     lines, secdict = helptuple
-    sections = secdict.keys()
-    ind = secdict.values()
+    sections = list(secdict.keys())
+    ind = list(secdict.values())
     try:
         i0 = sections.index(sect)
     except ValueError:

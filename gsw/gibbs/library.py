@@ -143,7 +143,7 @@ class SA_table(object):
         p, lon, lat = np.broadcast_arrays(p, lon, lat)
         if p.ndim > 1:
             shape_in = p.shape
-            p, lon, lat = map(np.ravel, (p, lon, lat))
+            p, lon, lat = list(map(np.ravel, (p, lon, lat)))
             reshaped = True
         else:
             reshaped = False
@@ -432,7 +432,7 @@ def SA_from_SP_Baltic(SP, lon, lat):
         input_mask = input_mask | lon.mask
     if np.ma.is_masked(lat):
         input_mask = input_mask | lat.mask
-    SP, lon, lat = map(np.atleast_1d, (SP, lon, lat))
+    SP, lon, lat = list(map(np.atleast_1d, (SP, lon, lat)))
     SP, lon, lat = np.broadcast_arrays(SP, lon, lat)
     inds_baltic = in_Baltic(lon, lat)
     #SA_baltic = np.ma.masked_all(SP.shape, dtype=np.float)
@@ -488,7 +488,7 @@ def SP_from_SA_Baltic(SA, lon, lat):
     Modifications:
     2010-07-23. David Jackett, Trevor McDougall & Paul Barker
     """
-    SA, lon, lat = map(np.ma.masked_invalid, (SA, lon, lat))
+    SA, lon, lat = list(map(np.ma.masked_invalid, (SA, lon, lat)))
     lon, lat, SA = np.broadcast_arrays(lon, lat, SA)
     inds_baltic = in_Baltic(lon, lat)
     if not inds_baltic.sum():
@@ -543,7 +543,7 @@ def SP_from_SA_Baltic_old(SA, lon, lat):
     Modifications:
     2010-07-23. David Jackett, Trevor McDougall & Paul Barker
     """
-    SA, lon, lat = map(np.ma.masked_invalid, (SA, lon, lat))
+    SA, lon, lat = list(map(np.ma.masked_invalid, (SA, lon, lat)))
     lon, lat, SA = np.broadcast_arrays(lon, lat, SA)
     xb1, xb2, xb3 = 12.6, 7., 26.
     xb1a, xb3a = 45., 26.

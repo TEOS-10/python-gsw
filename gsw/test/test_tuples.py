@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
-"""Unit check for standard profiles for the Gibbs Sea Water python package."""
+"""
+Unit check for standard profiles for the Gibbs Sea Water python package.
+"""
+
+from __future__ import print_function
 
 import os
 import sys
 import unittest
-import functools  # Requires python 2.5.
+import functools
 import numpy as np
 
 import gsw
@@ -58,7 +62,7 @@ def generic_test(self, func=None, argnames=None):
     maxdiff = np.nanmax(abs(out - getattr(cv, func)))
     try:
         self.assertTrue(maxdiff < getattr(cv, func + '_ca'))
-    except AssertionError, e:
+    except AssertionError as e:
         raise AssertionError("Error in %s %s" % (func, e.args))
 
 
@@ -95,5 +99,5 @@ gsw_cf.ICT_first_deriv = np.where(np.abs(gsw_cv.CT_SA - gsw_cf.CT_SA) >=
                                   (gsw_cv.CT_pt - gsw_cf.CT_pt) >=
                                   gsw_cv.CT_pt_ca)
 if gsw_cf.ICT_first_deriv:
-    print(2, 'gsw_CT_first_derivatives:   Failed\n')
+    print((2, 'gsw_CT_first_derivatives:   Failed\n'))
     gsw_cf.gsw_chks = 0
