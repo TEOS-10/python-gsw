@@ -35,6 +35,13 @@ log = logging.getLogger()
 logging.basicConfig()
 
 
+def find(x):
+    """
+    Numpy equivalent to Matlab find.
+    """
+    return np.nonzero(x.flatten())[0]
+
+
 def group_or(line):
     """
     Translate matlab 'find' functions including logical or operators.
@@ -52,7 +59,6 @@ def group_or(line):
     parts = tail.replace('|', ') | (')
     new = head + '(' + parts + ')'
     return new
-
 
 
 class FunctionCheck(object):
@@ -115,6 +121,7 @@ class FunctionCheck(object):
 
         except Exception as e:
             self.exception = e
+
 
 def find_arguments(checks):
     """
