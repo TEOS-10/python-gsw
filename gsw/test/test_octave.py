@@ -1,4 +1,20 @@
 # -*- coding: utf-8 -*-
+"""
+Script to test by comparing output from python with that from octave.
+
+Usage (run from this test directory):
+    python test_octave.py [gsw_matlab_dir]
+
+At present, this assumes by default that the matlab code resides
+in a "gsw_matlab_v3_04" directory which has been symlinked into
+the test directory.  Alternatively, you may specify the directory
+as an optional argument.
+
+For functions that return more than one variable, only the
+first is tested.
+
+"""
+
 #
 # test_octave.py
 #
@@ -30,25 +46,6 @@ from oct2py import Oct2PyError
 
 import gsw
 
-try:
-    path = sys.argv[1]
-except IndexError:
-    path = "gsw_matlab_v3_04"
-
-
-# We have to supply a fake superiorfloat function for octave.
-# We are writing it in the local directory, which is not a nice
-# thing to do; maybe this can be improved later.
-
-_sfloat = """function out = superiorfloat(varargin)
-out = 'double';
-"""
-open('superiorfloat.m', 'wt').write(_sfloat)
-
-
-if not os.path.exists(path):
-    raise ValueError("matlab gsw path %s not found" % path)
-
 
 def get_octave(path):
     """
@@ -62,11 +59,8 @@ def get_octave(path):
     _ = engine.addpath('./')
     return engine
 
-octave = get_octave(path)
-#print('\n'.join(octave.path().split(':')))
 
-
-def compare_results(name, function, args):
+def compare_results(name, function, args, octave):
     args = [values.get(arg) for arg in args]
     print(name)
 
@@ -99,15 +93,19 @@ def compare_results(name, function, args):
         print("octave:\n%s" % val)
         print("python:\n%s" % res)
         return 'no_comparison'
-    if np.allclose(val, res, rtol=1e-15, atol=0):
+    if (np.allclose(val, res, rtol=1e-15, atol=0) or
+        (np.all(np.isnan(val)) and np.all(np.isnan(res)))):
         print('%s: Passed' % name)
         return 'passed'
     else:
         print('%s: Failed' % name)
         print("octave:\n%s" % val)
         print("python:\n%s" % res)
+        print("python - octave:\n%s" % (res -val))
         return 'failed'
     print('')
+
+#############################################################################
 
 values = dict(C=np.array([34.5487, 34.7275, 34.8605, 34.6810, 34.568, 34.56]),
               t=np.array([28.7856, 28.4329, 22.8103, 10.2600, 6.8863, 4.4036]),
@@ -204,11 +202,36 @@ library = OrderedDict({
 
 
 if __name__ == '__main__':
+    try:
+        path = sys.argv[1]
+    except IndexError:
+        path = "gsw_matlab_v3_04"
+
+    if not os.path.exists(path):
+        raise ValueError("matlab gsw path %s not found" % path)
+
+    octave = get_octave(path)
+    #print('\n'.join(octave.path().split(':')))
+
+
+    # We have to supply a fake superiorfloat function for octave.
+    # We are writing it in the local directory, which is not a nice
+    # thing to do; maybe this can be improved later.
+
+    _sfloat = """function out = superiorfloat(varargin)
+    out = 'double';
+    """
+    open('superiorfloat.m', 'wt').write(_sfloat)
+
+
+
+
+
     outcomes = ['passed', 'no_octave', 'no_python', 'failed', 'no_comparison']
     results = dict([(k, list()) for k in outcomes])
 
     for name, (function, args) in library.items():
-        ret = compare_results(name=name, function=function, args=args)
+        ret = compare_results(name, function, args, octave)
         results[ret].append(name)
 
     #os.remove('superiorfloat.m')
