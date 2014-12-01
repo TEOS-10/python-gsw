@@ -51,7 +51,8 @@ u = (5.180529787390576e-3, 1.052097167201052e-3, 3.666193708310848e-5,
      6.797409608973845e-7, 3.345074990451475e-10, 8.285687652694768e-13)
 k = 0.0162
 
-a, b, c, d, e, P, q, r, u, k = map(np.asarray, (a, b, c, d, e, P, q, r, u, k))
+a, b, c, d, e, P, q, r, u, k = (np.asarray(x)
+                                for x in (a, b, c, d, e, P, q, r, u, k))
 
 
 def C_from_SP(SP, t, p):

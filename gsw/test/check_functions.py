@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import sys
 import logging
@@ -161,17 +162,17 @@ for exc in etypes:
              isinstance(f.exception, exc)]
     ex_dict[exc] = elist
 
-print "\n%s tests were translated from gsw_check_functions.m" % len(checks)
-print "\n%s tests ran with no error and with correct output" % len(passes)
-print "\n%s tests had an output mismatch:" % len(failures)
-print " ", "\n  ".join(failures)
+print("\n%s tests were translated from gsw_check_functions.m" % len(checks))
+print("\n%s tests ran with no error and with correct output" % len(passes))
+print("\n%s tests had an output mismatch:" % len(failures))
+print(" ", "\n  ".join(failures))
 
-print "\n%s exceptions were raised as follows:" % len(run_problems)
+print("\n%s exceptions were raised as follows:" % len(run_problems))
 for exc in etypes:
-    print "  ", exc.__name__
+    print("  ", exc.__name__)
     strings = ["     %s : %s" % e for e in ex_dict[exc]]
-    print "\n".join(strings)
-    print ""
+    print("\n".join(strings))
+    print("")
 
 checkbunch = Bunch([(c.name, c) for c in checks])
 

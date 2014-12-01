@@ -193,7 +193,7 @@ def repair_npzfile_with_objects(infile, outfile):
     """
     dat = np.load(infile)
     out = dict()
-    for k, v in dat.iteritems():
+    for k, v in dat.items():
         if v.dtype.kind == 'O':
             v = v.item()
         out[k] = v
@@ -352,7 +352,7 @@ def _showmatbunch(b, elements=None, origin=None):
         if isinstance(v, Bunch):
             _showmatbunch(v, elements, _origin)
         else:
-            if isinstance(v, (str, str)):
+            if isinstance(v, str):
                 slen = len(v)
                 if slen < 50:
                     entry = v
@@ -378,7 +378,7 @@ def showmatbunch(b):
 
     Returns a multi-line string suitable for printing.
     """
-    if isinstance(b, (str, str)):
+    if isinstance(b, str):
         b = loadmatbunch(b)
     elist = _showmatbunch(b)
     names = [n for n, v in elist]

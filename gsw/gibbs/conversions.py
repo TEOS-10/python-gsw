@@ -74,11 +74,11 @@ def check_input(SP, p, lon, lat):
     # needed, it should not just be for the "from_SP" functions.
     if False:
         if ((p < -1.5) | (p > 12000)).any():
-            raise(Exception, 'Sstar_from_SP: pressure is out of range')
+            raise Exception('Sstar_from_SP: pressure is out of range')
         if ((lon < 0) | (lon > 360)).any():
-            raise(Exception, 'Sstar_from_SP: longitude is out of range')
+            raise Exception('Sstar_from_SP: longitude is out of range')
         if (np.abs(lat) > 90).any():
-            raise(Exception, 'Sstar_from_SP: latitude is out of range')
+            raise Exception('Sstar_from_SP: latitude is out of range')
 
     SP = np.maximum(SP, 0)  # Works on masked array also.
 

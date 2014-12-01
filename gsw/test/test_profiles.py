@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """Unit check for standard profiles for the Gibbs Sea Water python package."""
+from __future__ import print_function
 
 # Auto generates and perform a set of test methods like:
 #
