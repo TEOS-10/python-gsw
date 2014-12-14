@@ -64,3 +64,16 @@ respectively.
 
 * This python module is incomplete and should be used with caution.
 * The database used in `_delta_SA` comes from the MatlabTM gsw version.
+
+
+If you use the GSW Oceanographic Toolbox we ask that you include a reference to
+McDougall and Barker (2011), whose full citation is:
+
+```bibtex
+@techreport{teos10,
+  title={Getting started with TEOS-10 and the Gibbs Seawater (GSW) Oceanographic Toolbox, 28pp., SCOR/IAPSO WG127},
+  author={McDougall, TJ and Barker, PM},
+  year={2011},
+  isbn={978-0-646-55621-5}
+}
+```
