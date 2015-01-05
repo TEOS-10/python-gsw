@@ -17,22 +17,32 @@ includes functions that are missing entirely from python-gsw;
 the TypeError category can include functions that are incomplete
 or otherwise not functioning.
 
+For functions that run but yield results that fail the check,
+the error arrays are printed.
 """
 
 from __future__ import print_function
 import os
 import sys
-import logging
 
 import numpy as np
-
 
 import gsw
 from gsw.gibbs import *
 from gsw.utilities import Bunch
 
-log = logging.getLogger()
-logging.basicConfig()
+# If we switch to using the logging module, uncomment:
+# import logging
+# log = logging.getLogger()
+# logging.basicConfig()
+
+# There is probably a better way to handle the "invalid value"
+# problem, but for now we will ignore it.  (Nans in the test arrays...)
+np.seterr(invalid='ignore')
+
+# There are also divide-by-zero warnings, which we will leave in
+# place. (library.py lines 1238, 1239; maybe something should be
+# done to block this, so we don't get inf values.)
 
 
 def find(x):
@@ -91,6 +101,7 @@ class FunctionCheck(object):
         self.resultstr = head.strip()  # cv.I*
         head, tail = tail.split('(', 1)
         self.teststr = tail.strip()[:-1]   # argument of "find()"
+        self.teststr = self.teststr.replace('abs(', 'np.abs(')
 
         # To be set when run() is successful
         self.outlist = None
@@ -102,6 +113,27 @@ class FunctionCheck(object):
 
     def __str__(self):
         return self.runline
+
+    def record_details(self):
+        tline = self.testline
+        i0 = 5 + tline.index('find(')
+        tline = tline[i0:-1]
+        checks = tline.split('|')
+        parts = []
+        for check in checks:
+            check = check.strip()
+            if check.startswith('('):
+                check = check[1:-1].strip()
+            part = Bunch(check=check)
+            LHS, RHS = check.split('>=')
+            part.tolerance = eval(RHS)
+            LHS = LHS.strip()[4:-1]  # chop off abs(...)
+            target, calculated = LHS.split('-')
+            part.checkval = eval(target)
+            part.val = eval(calculated)
+            parts.append(part)
+
+        self.details = parts
 
     def run(self):
         try:
@@ -118,6 +150,7 @@ class FunctionCheck(object):
             exec(self.testline)
             self.result = eval(self.resultstr)
             self.passed = len(self.result) == 0
+            self.record_details()
 
         except Exception as e:
             self.exception = e
@@ -148,17 +181,13 @@ def find_arglists(checks):
     arglists.sort()
     return arglists
 
+def parse_check_functions(mfile):
+    """
+    Return a list of FunctionCheck instances from gsw_check_functions.m
+    """
 
-if __name__ == '__main__':
-
-    try:
-        mfiledir = sys.argv[1]
-    except IndexError:
-        mfiledir = "gsw_matlab_v3_04"
-
-    mfile = os.path.join(mfiledir, "gsw_check_functions.m")
-    mfilelines = open(mfile, 'rt').readlines()
-
+    with open(mfile, 'rt') as fid:
+        mfilelines = fid.readlines()
 
     first_pass = []
 
@@ -206,18 +235,42 @@ if __name__ == '__main__':
         pair = final[i:i+2]
         checks.append(FunctionCheck(pair))
 
+    return checks
+
+if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser(
+                description='Run checks from gsw_check_functions.m')
+
+    parser.add_argument('--path', dest='mfiledir',
+                        default="gsw_matlab_v3_04",
+                       help='location of gsw_check_functions.m')
+    parser.add_argument('-v', '--verbose',
+                        action='store_true',
+                        help='print output mismatch arrays')
+    parser.add_argument('--find',
+                        help='run functions with this substring')
+
+    args = parser.parse_args()
+
+    mfile = os.path.join(args.mfiledir, "gsw_check_functions.m")
+    checks = parse_check_functions(mfile)
 
     datadir = os.path.join(os.path.dirname(gsw.utilities.__file__), 'data')
     cv = Bunch(np.load(os.path.join(datadir, 'gsw_cv_v3_0.npz')))
     cf = Bunch()
 
+    if args.find:
+        checks = [c for c in checks if args.find in c.runline]
+
     for fc in checks:
         fc.run()
 
-    passes = [f.name for f in checks if f.passed]
-    failures = [f.name for f in checks if f.passed is False]
+    passes = [f for f in checks if f.passed]
+    failures = [f for f in checks if f.passed is False]
 
-    run_problems = [f.name for f in checks if f.exception is not None]
+    run_problems = [f for f in checks if f.exception is not None]
 
     etypes = [NameError, UnboundLocalError, TypeError, AttributeError]
     ex_dict = dict()
@@ -229,7 +282,19 @@ if __name__ == '__main__':
     print("\n%s tests were translated from gsw_check_functions.m" % len(checks))
     print("\n%s tests ran with no error and with correct output" % len(passes))
     print("\n%s tests had an output mismatch:" % len(failures))
-    print(" ", "\n  ".join(failures))
+    for f in failures:
+        print(f.name)
+        print(f.runline)
+        print(f.testline)
+        if args.verbose:
+            print(f.result)
+            for part in f.details:
+                print("tolerance: ", part.tolerance)
+                print("error:")
+                print(part.checkval - part.val)
+                print('')
+
+        print('')
 
     print("\n%s exceptions were raised as follows:" % len(run_problems))
     for exc in etypes:
