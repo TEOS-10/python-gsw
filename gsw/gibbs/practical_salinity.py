@@ -56,7 +56,8 @@ a, b, c, d, e, P, q, r, u, k = (np.asarray(x)
 
 
 def C_from_SP(SP, t, p):
-    r"""Calculates conductivity, C, from (SP, t, p) using PSS-78 in the range
+    """
+    Calculates conductivity, C, from (SP, t, p) using PSS-78 in the range
     2 < SP < 42. If the input Practical Salinity is less than 2 then a modified
     form of the Hill et al. (1986) fomula is used for Practical Salinity. The
     modification of the Hill et al. (1986) expression is to ensure that it is
@@ -86,10 +87,6 @@ def C_from_SP(SP, t, p):
     C : array
         conductivity [mS cm :sup:`-1`]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     Note that strictly speaking PSS-78 (Unesco, 1983) defines Practical
@@ -104,16 +101,16 @@ def C_from_SP(SP, t, p):
     References
     ----------
     .. [1] Hill, K.D., T.M. Dauphinee and D.J. Woods, 1986: The extension of
-    the Practical Salinity Scale 1978 to low salinities. IEEE J. Oceanic Eng.,
-    OE-11, 1, 109 - 112.
+       the Practical Salinity Scale 1978 to low salinities. IEEE J. Oceanic
+       Eng., OE-11, 1, 109 - 112.
 
     .. [2] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See appendix E.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See appendix E.
 
     .. [3] Unesco, 1983: Algorithms for computation of fundamental properties
-    of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
+       of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
     """
 
     C = 42.9140 * R_from_SP(SP, t, p)
@@ -123,7 +120,8 @@ def C_from_SP(SP, t, p):
 
 @match_args_return
 def R_from_SP(SP, t, p):
-    r"""Calculates conductivity ratio from (SP, t, p) using PSS-78 in the range
+    """
+    Calculates conductivity ratio from (SP, t, p) using PSS-78 in the range
     2 < SP < 42.  If the input Practical Salinity is less than 2 then a
     modified form of the Hill et al. (1986) formula is used for Practical
     Salinity.  The modification of the Hill et al. (1986) expression is to
@@ -157,10 +155,6 @@ def R_from_SP(SP, t, p):
     --------
     TODO
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     Strictly speaking PSS-78 (Unesco, 1983) defines Practical Salinity in terms
@@ -171,24 +165,21 @@ def R_from_SP(SP, t, p):
     References
     ----------
     .. [1] Culkin and Smith, 1980:  Determination of the Concentration of
-    Potassium Chloride Solution Having the Same Electrical Conductivity, at
-    15C and Infinite Frequency, as Standard Seawater of Salinity 35.0000
-    (Chlorinity 19.37394), IEEE J. Oceanic Eng, 5, 22-23.
+       Potassium Chloride Solution Having the Same Electrical Conductivity, at
+       15C and Infinite Frequency, as Standard Seawater of Salinity 35.0000
+       (Chlorinity 19.37394), IEEE J. Oceanic Eng, 5, 22-23.
 
     .. [2] Hill, K.D., T.M. Dauphinee & D.J. Woods, 1986: The extension of the
-    Practical Salinity Scale 1978 to low salinities. IEEE J. Oceanic Eng.,
-    11, 109 - 112.
+       Practical Salinity Scale 1978 to low salinities. IEEE J. Oceanic Eng.,
+       11, 109 - 112.
 
     .. [3] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.  Appendix E.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.  Appendix E.
 
     .. [4] Unesco, 1983: Algorithms for computation of fundamental properties
-    of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
-
-    Modifications:
-    2011-04-06. Paul Barker, Trevor McDougall and Rich Pawlowicz.
+       of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
     """
 
     # These few lines ensure that SP is non-negative.
@@ -376,7 +367,8 @@ def R_from_SP(SP, t, p):
 
 @match_args_return
 def SK_from_SP(SP):
-    r"""Calculates Knudsen Salinity from Practical Salinity.
+    """
+    Calculates Knudsen Salinity from Practical Salinity.
 
     Parameters
     ----------
@@ -392,23 +384,12 @@ def SK_from_SP(SP):
     --------
     TODO
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.  See Appendix A.3.
-
-    Modifications:
-    2011-11-16. Trevor McDougall and Paul Barker.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.  See Appendix A.3.
     """
     SP = np.maximum(SP, 0)  # Ensure that SP is non-negative.
 
@@ -417,7 +398,8 @@ def SK_from_SP(SP):
 
 @match_args_return
 def SP_from_C(C, t, p):
-    r"""Calculates Practical Salinity, SP, from conductivity, C, primarily
+    """
+    Calculates Practical Salinity, SP, from conductivity, C, primarily
     using the PSS-78 algorithm.  Note that the PSS-78 algorithm for Practical
     Salinity is only valid in the range 2 < SP < 42.  If the PSS-78 algorithm
     produces a Practical Salinity that is less than 2 then the Practical
@@ -445,35 +427,24 @@ def SP_from_C(C, t, p):
     --------
     TODO
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     References
     ----------
     .. [1] Culkin and Smith, 1980:  Determination of the Concentration of
-    Potassium Chloride Solution Having the Same Electrical Conductivity, at
-    15C and Infinite Frequency, as Standard Seawater of Salinity 35.0000
-    (Chlorinity 19.37394), IEEE J. Oceanic Eng, 5, 22-23.
+       Potassium Chloride Solution Having the Same Electrical Conductivity, at
+       15C and Infinite Frequency, as Standard Seawater of Salinity 35.0000
+       (Chlorinity 19.37394), IEEE J. Oceanic Eng, 5, 22-23.
 
     .. [2] Hill, K.D., T.M. Dauphinee & D.J. Woods, 1986: The extension of the
-    Practical Salinity Scale 1978 to low salinities. IEEE J. Oceanic Eng., 11,
-    109 - 112.
+       Practical Salinity Scale 1978 to low salinities. IEEE J. Oceanic Eng.,
+       11, 109 - 112.
 
     .. [3] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.  Appendix E.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.  Appendix E.
 
     .. [4] Unesco, 1983: Algorithms for computation of fundamental properties
-    of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
-
-    Modifications:
-    2011-04-01. Paul Barker, Trevor McDougall and Rich Pawlowicz.
+       of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
     """
 
     C, t, p = np.broadcast_arrays(C, t, p)
@@ -522,7 +493,8 @@ def SP_from_C(C, t, p):
 
 @match_args_return
 def SP_from_R(R, t, p):
-    r"""Calculates Practical Salinity, SP, from the conductivity ratio, R,
+    """
+    Calculates Practical Salinity, SP, from the conductivity ratio, R,
     primarily using the PSS-78 algorithm.  Note that the PSS-78 algorithm for
     Practical Salinity is only valid in the range 2 < SP < 42.  If the PSS-78
     algorithm produces a Practical Salinity that is less than 2 then the
@@ -549,35 +521,24 @@ def SP_from_R(R, t, p):
     --------
     TODO
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     References
     ----------
     .. [1] Culkin and Smith, 1980:  Determination of the Concentration of
-    Potassium Chloride Solution Having the Same Electrical Conductivity, at
-    15C and Infinite Frequency, as Standard Seawater of Salinity 35.0000
-    (Chlorinity 19.37394), IEEE J. Oceanic Eng, 5, 22-23.
+       Potassium Chloride Solution Having the Same Electrical Conductivity, at
+       15C and Infinite Frequency, as Standard Seawater of Salinity 35.0000
+       (Chlorinity 19.37394), IEEE J. Oceanic Eng, 5, 22-23.
 
     .. [2] Hill, K.D., T.M. Dauphinee & D.J. Woods, 1986: The extension of the
-    Practical Salinity Scale 1978 to low salinities. IEEE J. Oceanic Eng.,
-    11, 109 - 112.
+       Practical Salinity Scale 1978 to low salinities. IEEE J. Oceanic Eng.,
+       11, 109 - 112.
 
     .. [3] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.  Appendix E.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.  Appendix E.
 
     .. [4] Unesco, 1983: Algorithms for computation of fundamental properties
-    of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
-
-    Modifications:
-    2011-04-01. Paul Barker, Trevor McDougall and Rich Pawlowicz.
+       of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
     """
 
     R, t, p = np.broadcast_arrays(R, t, p)
@@ -620,7 +581,7 @@ def SP_from_R(R, t, p):
 
 @match_args_return
 def SP_from_SK(SK):
-    r"""Calculates Practical Salinity from Knudsen Salinity.
+    """Calculates Practical Salinity from Knudsen Salinity.
 
     Parameters
     ----------
@@ -636,23 +597,12 @@ def SP_from_SK(SK):
     --------
     TODO
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.  See Appendix A.3.
-
-    Modifications:
-    2011-11-16. Trevor McDougall and Paul Barker.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.  See Appendix A.3.
     """
 
     SP = (SK - 0.03) * (1.80655 / 1.805)
@@ -661,7 +611,8 @@ def SP_from_SK(SK):
 
 @match_args_return
 def SP_salinometer(Rt, t):
-    r"""Calculates Practical Salinity SP from a salinometer, primarily using
+    """
+    Calculates Practical Salinity SP from a salinometer, primarily using
     the PSS-78 algorithm.  Note that the PSS-78 algorithm for Practical
     Salinity is only valid in the range 2 < SP < 42.  If the PSS-78 algorithm
     produces a Practical Salinity that is less than 2 then the Practical
@@ -688,36 +639,25 @@ def SP_salinometer(Rt, t):
     SP : array
          Practical Salinity [psu (PSS-78), unitless]
 
-    See Also
-    --------
-    TODO: sw.sals
-
-    Notes
-    -----
-    TODO
-
     Examples
     --------
     TODO
 
     References
     -----------
-    ..[1] Fofonoff, P. and R.C. Millard Jr. 1983: Algorithms for computation of
-    fundamental properties of seawater.  Unesco Tech. Pap. in Mar. Sci., 44,
-    53 pp.
+    .. [1] Fofonoff, P. and R.C. Millard Jr. 1983: Algorithms for computation
+       of fundamental properties of seawater.  Unesco Tech. Pap. in Mar. Sci.,
+       44, 53 pp.
 
-    ..[2] Hill, K.D., T.M. Dauphinee & D.J. Woods, 1986: The extension of the
-    Practical Salinity Scale 1978 to low salinities. IEEE J. Oceanic Eng., 11,
-    109 - 112.
+    .. [2] Hill, K.D., T.M. Dauphinee & D.J. Woods, 1986: The extension of the
+       Practical Salinity Scale 1978 to low salinities. IEEE J. Oceanic Eng.,
+       11, 109 - 112.
 
     .. [3] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See appendix E of this TEOS-10 Manual, and in
-    particular, Eqns. (E.2.1) and (E.2.6).
-
-    Modifications:
-    2011-04-30. Paul Barker, Trevor McDougall and Rich Pawlowicz. Version 3.0
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See appendix E of this TEOS-10 Manual, and in
+       particular, Eqns. (E.2.1) and (E.2.6).
     """
 
     Rt, t = np.broadcast_arrays(Rt, t)

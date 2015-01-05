@@ -1,9 +1,9 @@
 language: python
 
 env:
-    - CONDA="python=2.7 numpy"
-    - CONDA="python=3.3 numpy"
-    - CONDA="python=3.4 numpy"
+    - CONDA="python=2.7"
+    - CONDA="python=3.3"
+    - CONDA="python=3.4"
 
 
 before_install:
@@ -20,18 +20,20 @@ before_install:
     - conda info -a
     - travis_retry conda create -n test $CONDA numpy pip nose scipy
     - source activate test
-    - travis_retry pip install coveralls
     - travis_retry pip install oct2py
+    - travis_retry pip install pytest
+    - travis_retry pip install coveralls
+    - travis_retry pip install pytest-cov
 
 install:
     - export PYTHONWARNINGS=all
-    - python setup.py install
+    #- python setup.py install
 
 script:
     - if [[ $CONDA == python=2.7* ]]; then
-        nosetests --verbose gsw;
+        py.test ;
       else
-        nosetests --verbose --with-doctest --with-cov --cover-package gsw;
+        py.test ;
       fi
 
 after_success:
