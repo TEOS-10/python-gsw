@@ -14,9 +14,9 @@ __all__ = ['IPV_vs_fNsquared_ratio',
            'Turner_Rsubrho']
 
 
-#FIXME: @match_args_return
 def IPV_vs_fNsquared_ratio(SA, CT, p, p_ref=0):
-    r"""Calculates the ratio of the vertical gradient of potential density to
+    """
+    Calculates the ratio of the vertical gradient of potential density to
     the vertical gradient of locally-referenced potential density.  This
     ratio is also the ratio of the planetary Isopycnal Potential Vorticity
     (IPV) to f times N^2, hence the name for this variable,
@@ -51,10 +51,6 @@ def IPV_vs_fNsquared_ratio(SA, CT, p, p_ref=0):
     p_mid : array_like
             Mid pressure between p grid [dbar]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     The 48-term equation has been fitted in a restricted range of parameter
@@ -70,23 +66,20 @@ def IPV_vs_fNsquared_ratio(SA, CT, p, p_ref=0):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqn. (3.20.5).
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqn. (3.20.5).
 
-    ..[2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-03-23. Trevor McDougall & Paul Barker
+    .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
     """
     p_ref = np.unique(np.asanyarray(p_ref))
 
     # BUG
-    #if not np.isscalar(p_ref):
-        #raise ValueError('The reference pressure p_ref must be unique')
+    # if not np.isscalar(p_ref):
+    #     raise ValueError('The reference pressure p_ref must be unique')
 
     if SA.ndim == 1:
         raise ValueError('There must be at least 2 columns.')
@@ -109,41 +102,41 @@ def IPV_vs_fNsquared_ratio(SA, CT, p, p_ref=0):
     _, alpha, beta = rho_alpha_beta(SA_mid, CT_mid, p_mid)
     _, alpha_pref, beta_pref = rho_alpha_beta(SA_mid, CT_mid, p_ref)
 
-    """This function calculates IPV_vs_fNsquared_ratio using the
-    computationally efficient 48-term expression for density in terms of SA,
-    CT and p.  If one wanted to compute this with the full TEOS-10 Gibbs
-    function expression for density, the following lines of code will enable
-    this.
-
-    pt_mid = pt_from_CT(SA_mid, CT_mid)
-    pr0 = np.zeros_like(SA_mid)
-    t_mid = pt_from_t(SA_mid, pt_mid, pr0, p_mid)
-    beta = beta_const_CT_t_exact(SA_mid, t_mid, p_mid)
-    alpha = alpha_wrt_CT_t_exact(SA_mid, t_mid, p_mid)
-    beta_pref = beta_const_CT_t_exact(SA_mid, t_mid, p_ref)
-    alpha_pref = alpha_wrt_CT_t_exact(SA_mid, t_mid, p_ref)
-    """
+    # This function calculates IPV_vs_fNsquared_ratio using the
+    # computationally efficient 48-term expression for density in terms of SA,
+    # CT and p.  If one wanted to compute this with the full TEOS-10 Gibbs
+    # function expression for density, the following lines of code will enable
+    # this.
+    #
+    # pt_mid = pt_from_CT(SA_mid, CT_mid)
+    # pr0 = np.zeros_like(SA_mid)
+    # t_mid = pt_from_t(SA_mid, pt_mid, pr0, p_mid)
+    # beta = beta_const_CT_t_exact(SA_mid, t_mid, p_mid)
+    # alpha = alpha_wrt_CT_t_exact(SA_mid, t_mid, p_mid)
+    # beta_pref = beta_const_CT_t_exact(SA_mid, t_mid, p_ref)
+    # alpha_pref = alpha_wrt_CT_t_exact(SA_mid, t_mid, p_ref)
 
     numerator = dCT * alpha_pref - dSA * beta_pref
     denominator = dCT * alpha - dSA * beta
 
-    """IPV_vs_fNsquared_ratio = np.zeros_like(SA_mid) * np.NaN
-    I = denominator != 0.
-    IPV_vs_fNsquared_ratio[I] = numerator[I] / denominator[I]"""
+    # IPV_vs_fNsquared_ratio = np.zeros_like(SA_mid) * np.NaN
+    # I = denominator != 0.
+    # IPV_vs_fNsquared_ratio[I] = numerator[I] / denominator[I]
 
     IPV_vs_fNsquared_ratio = numerator / denominator
 
     return IPV_vs_fNsquared_ratio, p_mid
 
 
-## In the following, we are assuming the p dimension comes
-#  first.  This follows the matlab code, (Fortran order)
-#  but is unnatural in Python (C order).
-#  We might need to deal with this in a better way.
+# In the following, we are assuming the p dimension comes
+# first.  This follows the matlab code, (Fortran order)
+# but is unnatural in Python (C order).
+# We might need to deal with this in a better way.
 
 @match_args_return
 def Nsquared(SA, CT, p, lat=None):
-    r"""Calculates the buoyancy frequency squared (N^2)
+    """
+    Calculates the buoyancy frequency squared (N^2)
     (i.e. the Brunt-Väisälä frequency squared) at the
     mid pressure from the equation::
 
@@ -191,15 +184,12 @@ def Nsquared(SA, CT, p, lat=None):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See section 3.10 and Eqn. (3.10.2).
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See section 3.10 and Eqn. (3.10.2).
 
-    ..[2] Griffies, S. M., 2004: Fundamentals of Ocean Climate Models.
-    Princeton, NJ: Princeton University Press, 518 pp + xxxiv.
-
-    Modifications:
-    2013-04-29. Trevor McDougall & Paul Barker
+    .. [2] Griffies, S. M., 2004: Fundamentals of Ocean Climate Models.
+       Princeton, NJ: Princeton University Press, 518 pp + xxxiv.
     """
 
     if lat is not None:
@@ -235,9 +225,9 @@ def Nsquared(SA, CT, p, lat=None):
     return N2, p_mid
 
 
-#FIXME: @match_args_return
 def Turner_Rsubrho(SA, CT, p):
-    r"""Calculates the Turner angle and the Rsubrho as a function of pressure
+    """
+    Calculates the Turner angle and the Rsubrho as a function of pressure
     down a vertical water column.  These quantities express the relative
     contributions of the vertical gradients of Conservative Temperature and
     Absolute Salinity to the vertical stability (the square of the
@@ -267,10 +257,6 @@ def Turner_Rsubrho(SA, CT, p):
     p_mid : array_like
             Mid pressure between p grid [dbar]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     The 48-term equation has been fitted in a restricted range of parameter
@@ -286,17 +272,14 @@ def Turner_Rsubrho(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqns. (3.15.1) and (3.16.1).
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqns. (3.15.1) and (3.16.1).
 
-    ..[2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-03-26. Trevor McDougall & Paul Barker
+    .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
     """
 
     if SA.ndim == 1:
@@ -315,17 +298,16 @@ def Turner_Rsubrho(SA, CT, p):
 
     [dummy, alpha, beta] = rho_alpha_beta(SA_mid, CT_mid, p_mid)
 
-    """This function evaluates Tu and Rsubrho using the computationally
-    efficient 48-term expression for density in terms of SA, CT and p. If one
-    wanted to compute Tu and Rsubrho using the full TEOS-10 Gibbs function
-    expression for density, the following lines of code would do that.
-
-    pt_mid = pt_from_CT(SA_mid, CT_mid)
-    pr0 = np.zeros_like(SA_mid)
-    t_mid = pt_from_t(SA_mid, pt_mid, pr0, p_mid)
-    beta = beta_const_CT_t_exact(SA_mid, t_mid, p_mid)
-    alpha = alpha_wrt_CT_t_exact(SA_mid, t_mid, p_mid)
-    """
+    # This function evaluates Tu and Rsubrho using the computationally
+    # efficient 48-term expression for density in terms of SA, CT and p. If one
+    # wanted to compute Tu and Rsubrho using the full TEOS-10 Gibbs function
+    # expression for density, the following lines of code would do that.
+    #
+    # pt_mid = pt_from_CT(SA_mid, CT_mid)
+    # pr0 = np.zeros_like(SA_mid)
+    # t_mid = pt_from_t(SA_mid, pt_mid, pr0, p_mid)
+    # beta = beta_const_CT_t_exact(SA_mid, t_mid, p_mid)
+    # alpha = alpha_wrt_CT_t_exact(SA_mid, t_mid, p_mid)
 
     Tu = np.arctan2((alpha * dCT + beta * dSA), (alpha * dCT - beta * dSA))
 

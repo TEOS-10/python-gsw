@@ -18,7 +18,8 @@ DEG2RAD = np.pi / 180
 
 @match_args_return
 def distance(lon, lat, p=0):
-    r"""Calculates the distance in met res between successive points in the
+    """
+    Calculates the distance in met res between successive points in the
     vectors lon and lat, computed using the Haversine formula on a spherical
     earth of radius 6,371 km, being the radius of a sphere having the same
     volume as Earth.  For a spherical Earth of radius 6,371,000 m, one nautical
@@ -49,10 +50,6 @@ def distance(lon, lat, p=0):
     dist: array_like
           distance between points on a spherical Earth at pressure (p) [m]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     z is height and is negative in the oceanographic.
@@ -69,26 +66,17 @@ def distance(lon, lat, p=0):
     array([[ 10030974.652916]])
     >>> p = [200, 1000]
     >>> gsw.distance(lon, lat, p)
-    array([[ 10030661.63878009]])
+    array([[ 10030661.63927133]])
     >>> p = [[200], [1000]]
     >>> gsw.distance(lon, lat, p)
-    array([[ 10030661.63878009],
-           [ 10029412.58776001]])
+    array([[ 10030661.63927133],
+           [ 10029412.58932955]])
 
     References
     ----------
     .. [1] http://www.eos.ubc.ca/~rich/map.html
 
-    Modifications:
-    2000-11-06. Rich Pawlowicz
-    2011-04-04. Paul Barker and Trevor McDougall
     """
-    # FIXME? The argument handling seems much too complicated.
-    # Maybe we can come up with some simple specifications of
-    # what argument combinations are permitted, and handle everything
-    # with broadcasting. - EF
-
-    # FIXME: Eric what do you think? This assume p(stations, depth)
     lon, lat, = np.atleast_2d(lon), np.atleast_2d(lat)
 
     if (lon.size == 1) & (lat.size == 1):
@@ -117,7 +105,8 @@ def distance(lon, lat, p=0):
 
 
 def f(lat):
-    r"""Calculates the Coriolis parameter (f) defined by:
+    """
+    Calculates the Coriolis parameter (f) defined by:
         f = 2*omega*sin(lat)
     where,
         omega = 7.292115e-5 (Groten, 2004) [radians s :sup:`-1`]
@@ -135,17 +124,13 @@ def f(lat):
     References
     ----------
     .. [1] Groten, E., 2004: Fundamental Parameters and Current (2004) Best
-    Estimates of the Parameters of Common Relevance to Astronomy, Geodesy, and
-    Geodynamics. Journal of Geodesy, 77, pp. 724-797.
+       Estimates of the Parameters of Common Relevance to Astronomy, Geodesy,
+       and Geodynamics. Journal of Geodesy, 77, pp. 724-797.
 
     .. [2] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater -  2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.
-
-    Modifications:
-    1993-04-20. Phil Morgan
-    2010-07-28. Paul Barker
+       of seawater -  2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.
     """
 
     lat = np.asanyarray(lat)
@@ -154,7 +139,8 @@ def f(lat):
 
 @match_args_return
 def grav(lat, p=0):
-    r"""Calculates acceleration due to gravity as a function of latitude and as
+    """
+    Calculates acceleration due to gravity as a function of latitude and as
     a function of pressure in the ocean.
 
     Parameters
@@ -168,10 +154,6 @@ def grav(lat, p=0):
     -------
     g : array_like
         gravity [m s :sup:`2`]
-
-    See Also
-    --------
-    TODO
 
     Notes
     -----
@@ -190,18 +172,15 @@ def grav(lat, p=0):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater -  2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.
+       of seawater -  2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.
 
     .. [2] Moritz (2000) Goedetic reference system 1980. J. Geodesy, 74,
-    128-133.
+       128-133.
 
     .. [3] Saunders, P.M., and N.P. Fofonoff (1976) Conversion of pressure to
-    depth in the ocean. Deep-Sea Res.,pp. 109 - 111.
-
-    Modifications:
-    2011-03-29. Trevor McDougall & Paul Barker
+       depth in the ocean. Deep-Sea Res.,pp. 109 - 111.
     """
 
     X = np.sin(lat * DEG2RAD)

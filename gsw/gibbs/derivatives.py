@@ -23,7 +23,8 @@ n0, n1, n2 = 0, 1, 2
 
 @match_args_return
 def CT_first_derivatives(SA, pt):
-    r"""Calculates the following two derivatives of Conservative Temperature
+    """
+    Calculates the following two derivatives of Conservative Temperature
     (1) CT_SA, the derivative with respect to Absolute Salinity at constant
         potential temperature (with pr = 0 dbar), and
     (2) CT_pt, the derivative with respect to potential temperature (the
@@ -49,39 +50,25 @@ def CT_first_derivatives(SA, pt):
             The derivative of CT with respect to pt at constant SA.
             [ unitless ]
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     Examples
     --------
     >>> import gsw
-    >>> SA = [34.7118, 34.8915, 35.0256, 34.8472, 34.7366, 34.7324]
-    >>> pt = [28.7832, 28.4209, 22.7850, 10.2305, 6.8292, 4.3245]
+    >>> SA = 34.7118
+    >>> pt = 28.7832
     >>> gsw.CT_first_derivatives(SA, pt)
-    array([[-0.04198109, -0.04155814, -0.03473921, -0.0187111 , -0.01407594,
-            -0.01057172],
-           [ 1.00281494,  1.00255482,  1.00164514,  1.00000377,  0.99971636,
-             0.99947433]])
+    (-0.041981092877805957, 1.0028149372966355)
 
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater -  2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqns. (A.12.3) and (A.12.9a,b).
+       of seawater -  2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqns. (A.12.3) and (A.12.9a,b).
 
     .. [2] McDougall T. J., D. R. Jackett, P. M. Barker, C. Roberts-Thomson, R.
-    Feistel and R. W. Hallberg, 2010:  A computationally efficient 25-term
-    expression for the density of seawater in terms of Conservative
-    Temperature, and related properties of seawater.
-
-    Modifications:
-    2010-08-05. Trevor McDougall and Paul Barker.
+       Feistel and R. W. Hallberg, 2010:  A computationally efficient 25-term
+       expression for the density of seawater in terms of Conservative
+       Temperature, and related properties of seawater.
     """
 
     # FIXME: Matlab version 3.0 has a copy-and-paste of the gibbs function here
@@ -129,8 +116,9 @@ def CT_first_derivatives(SA, pt):
 
 @match_args_return
 def CT_second_derivatives(SA, pt):
-    r"""Calculates the following three, second-order derivatives of
-    Conservative Temperature
+    """
+    Calculates the following three, second-order derivatives of Conservative
+    Temperature
     (1) CT_SA_SA, the second derivative with respect to Absolute Salinity at
         constant potential temperature (with p_ref = 0 dbar),
     (2) CT_SA_pt, the derivative with respect to potential temperature (the
@@ -163,14 +151,6 @@ def CT_second_derivatives(SA, pt):
                to potential temperature (the regular one with p_ref = 0 dbar)
                at constant SA. [1/K]
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     Examples
     --------
     TODO
@@ -178,17 +158,14 @@ def CT_second_derivatives(SA, pt):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater -  2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See appendix A.12.
+       of seawater -  2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See appendix A.12.
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011: A
-    computationally efficient 48-term expression for the density of seawater in
-    terms of Conservative Temperature, and related properties of seawater.  To
-    be submitted to Ocean Science Discussions.
-
-    Modifications:
-    2011-03-29. Trevor McDougall.
+       computationally efficient 48-term expression for the density of seawater
+       in terms of Conservative Temperature, and related properties of
+       seawater.  To be submitted to Ocean Science Discussions.
     """
 
     dSA = 1e-3
@@ -219,7 +196,8 @@ def CT_second_derivatives(SA, pt):
 
 @match_args_return
 def enthalpy_first_derivatives(SA, CT, p):
-    r"""Calculates the following three derivatives of specific enthalpy (h)
+    """
+    Calculates the following three derivatives of specific enthalpy (h)
     (1) h_SA, the derivative with respect to Absolute Salinity at
         constant CT and p, and
     (2) h_CT, derivative with respect to CT at constant SA and p.
@@ -247,24 +225,16 @@ def enthalpy_first_derivatives(SA, CT, p):
           pressure (in Pa) at fixed SA and CT.  Note that h_P is specific
           volume (1/rho.)
 
-    See Also
+    Examples
     --------
     TODO
-
-    Notes
-    -----
-    TODO
-
 
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater -  2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqns. (A.11.18), (A.11.15) and (A.11.12.)
-
-    Modifications:
-    2010-09-24. Trevor McDougall.
+       of seawater -  2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqns. (A.11.18), (A.11.15) and (A.11.12.)
     """
 
     # FIXME: The gsw 3.0 has the gibbs derivatives "copy-and-pasted" here
@@ -291,8 +261,9 @@ def enthalpy_first_derivatives(SA, CT, p):
 
 @match_args_return
 def enthalpy_second_derivatives(SA, CT, p):
-    r"""Calculates the following three second-order derivatives of specific
-    enthalpy (h),
+    """
+    Calculates the following three second-order derivatives of specific
+    enthalpy (h)
     (1) h_SA_SA, second-order derivative with respect to Absolute Salinity
         at constant CT & p.
     (2) h_SA_CT, second-order derivative with respect to SA & CT at
@@ -321,20 +292,21 @@ def enthalpy_second_derivatives(SA, CT, p):
               The second derivative of specific enthalpy with respect to CT at
               constant SA and p. [J/(kg K^2)]
 
+    Examples
+    --------
+    TODO
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater -  2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqns. (A.11.18), (A.11.15) and (A.11.12.)
+       of seawater -  2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqns. (A.11.18), (A.11.15) and (A.11.12.)
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of seawater in
-    terms of Conservative Temperature, and related properties of seawater.  To
-    be submitted to Ocean Science Discussions.
-
-    Modifications:
-    2011-03-29. Trevor McDougall.
+       computationally efficient 48-term expression for the density of seawater
+       in terms of Conservative Temperature, and related properties of
+       seawater.  To be submitted to Ocean Science Discussions.
     """
 
     # NOTE: The Matlab version 3.0 mentions that this function is unchanged,
@@ -371,10 +343,10 @@ def enthalpy_second_derivatives(SA, CT, p):
                 gST_t ** 2 * rec_gTT_t - 2.0 * gS_pt0 * part +
                 factor ** 2 * h_CT_CT)
 
-    """h_SA_CT should not blow up as SA approaches zero. The following lines of
-    code ensure that the h_SA_CT output of this function does not blow up in
-    this limit.  That is, when SA < 1e-100 g/kg, we force the h_SA_CT output to
-    be the same as if SA = 1e-100 g/kg."""
+    # h_SA_CT should not blow up as SA approaches zero. The following lines of
+    # code ensure that the h_SA_CT output of this function does not blow up in
+    # this limit.  That is, when SA < 1e-100 g/kg, we force the h_SA_CT output
+    # to be the same as if SA = 1e-100 g/kg.
 
     def enthalpy_derivative_SA_CT(SA, CT, p):
         h_CT_CT = enthalpy_derivative_CT_CT(SA, CT, p)
@@ -387,7 +359,8 @@ def enthalpy_second_derivatives(SA, CT, p):
 
 @match_args_return
 def entropy_first_derivatives(SA, CT):
-    r"""Calculates the following two partial derivatives of specific entropy
+    """
+    Calculates the following two partial derivatives of specific entropy
     (eta)
     (1) eta_SA, the derivative with respect to Absolute Salinity at constant
         Conservative Temperature, and
@@ -410,34 +383,20 @@ def entropy_first_derivatives(SA, CT):
              The derivative of specific entropy with respect to CT at constant
              SA [ J (kg K :sup:`-2`) :sup:`-1` ]
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     Examples
     --------
     >>> import gsw
-    >>> SA = [34.7118, 34.8915, 35.0256, 34.8472, 34.7366, 34.7324]
-    >>> CT = [28.8099, 28.4392, 22.7862, 10.2262, 6.8272, 4.3236]
+    >>> SA = 34.7118
+    >>> CT = 28.8099
     >>> gsw.entropy_first_derivatives(SA, CT)
-    array([[ -0.2632868 ,  -0.26397728,  -0.2553675 ,  -0.23806659,
-             -0.23443826,  -0.23282068],
-           [ 13.22103121,  13.23691119,  13.48900463,  14.08659902,
-             14.25772958,  14.38642995]])
+    (-0.26328680071165517, 13.221031210083824)
 
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater -  2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqns. (A.12.8) and (P.14a,c).
-
-    Modifications:
-    2011-03-29. Trevor McDougall.
+       of seawater -  2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqns. (A.12.8) and (P.14a,c).
     """
     pt = pt_from_CT(SA, CT)
 
@@ -448,7 +407,8 @@ def entropy_first_derivatives(SA, CT):
 
 @match_args_return
 def entropy_second_derivatives(SA, CT):
-    r"""Calculates the following three second-order partial derivatives of
+    """
+    Calculates the following three second-order partial derivatives of
     specific entropy (eta)
     (1) eta_SA_SA, the second derivative with respect to Absolute Salinity at
         constant Conservative Temperature, and
@@ -476,31 +436,20 @@ def entropy_second_derivatives(SA, CT):
                 The second derivative of specific entropy with respect to CT at
                 constant SA [J (kg K :sup:`3`) :sup:`-1` ]
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     Examples
     --------
     >>> import gsw
-    >>> SA = [34.7118, 34.8915, 35.0256, 34.8472, 34.7366, 34.7324]
-    >>> CT = [28.8099, 28.4392, 22.7862, 10.2262, 6.8272, 4.3236]
+    >>> SA = 34.7118
+    >>> CT = 28.8099
     >>> gsw.entropy_second_derivatives(SA, CT)
-    TODO
+    (-0.0076277189296690626, -0.0018331042167510211, -0.043665023731108685)
 
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater -  2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqns. (P.14b) and (P.15a,b).
-
-    Modifications:
-    2011-03-29. Trevor McDougall and Paul Barker.
+       of seawater -  2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqns. (P.14b) and (P.15a,b).
     """
 
     pt = pt_from_CT(SA, CT)
@@ -522,7 +471,8 @@ def entropy_second_derivatives(SA, CT):
 
 @match_args_return
 def pt_first_derivatives(SA, CT):
-    r"""Calculates the following two partial derivatives of potential
+    """
+    Calculates the following two partial derivatives of potential
     temperature (the regular potential temperature whose reference sea
     pressure is 0 dbar)
     (1) pt_SA, the derivative with respect to Absolute Salinity at
@@ -546,14 +496,6 @@ def pt_first_derivatives(SA, CT):
             The derivative of potential temperature with respect to
             Conservative Temperature at constant Absolute Salinity. [unitless]
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     Examples
     --------
     TODO
@@ -561,17 +503,14 @@ def pt_first_derivatives(SA, CT):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater -  2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqns. (A.12.6), (A.12.3), (P.6) and (P.8).
+       of seawater -  2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqns. (A.12.6), (A.12.3), (P.6) and (P.8).
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011: A
-    computationally efficient 48-term expression for the density of seawater in
-    terms of Conservative Temperature, and related properties of seawater.  To
-    be submitted to Ocean Science Discussions.
-
-    Modifications:
-    2011-03-29. Trevor McDougall and Paul Barker.
+       computationally efficient 48-term expression for the density of seawater
+       in terms of Conservative Temperature, and related properties of
+       seawater.  To be submitted to Ocean Science Discussions.
     """
 
     pt = pt_from_CT(SA, CT)
@@ -591,7 +530,8 @@ def pt_first_derivatives(SA, CT):
 
 @match_args_return
 def pt_second_derivatives(SA, CT):
-    r"""Calculates the following three second-order derivatives of potential
+    """
+    Calculates the following three second-order derivatives of potential
     temperature (the regular potential temperature which has a reference
     sea pressure of 0 dbar),
     (1) pt_SA_SA, the second derivative with respect to Absolute Salinity at
@@ -623,14 +563,6 @@ def pt_second_derivatives(SA, CT):
                with p_ref = 0 dbar) with respect to Conservative Temperature at
                constant SA. [1/K]
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     Examples
     --------
     TODO
@@ -638,18 +570,17 @@ def pt_second_derivatives(SA, CT):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater -  2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqns. (A.12.9) and (A.12.10).
+       of seawater -  2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqns. (A.12.9) and (A.12.10).
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011: A
-    computationally efficient 48-term expression for the density of seawater in
-    terms of Conservative Temperature, and related properties of seawater.  To
-    be submitted to Ocean Science Discussions.
-
-    Modifications:
-    2011-03-29. Trevor McDougall and Paul Barker.
+       computationally efficient 48-term expression for the density of seawater
+       in
+       terms of Conservative Temperature, and related properties of seawater.
+       To be submitted to Ocean Science Discussions.
     """
+
     # Increment of Absolute Salinity is 0.001 g/kg.
     dSA = 1e-3
     SA_l = SA - dSA

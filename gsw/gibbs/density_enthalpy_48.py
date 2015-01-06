@@ -261,11 +261,11 @@ def alpha_on_beta(SA, CT, p):
 
      REFERENCES:
       IOC, SCOR and IAPSO, 2010: The international thermodynamic equation of
-       seawater - 2010: Calculation and use of thermodynamic properties.
-       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-       UNESCO (English), 196 pp.  Available from http://www.TEOS-10.org
-
+      seawater - 2010: Calculation and use of thermodynamic properties.
+      Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+      UNESCO (English), 196 pp.  Available from http://www.TEOS-10.org
     """
+
     SA = np.maximum(SA, 0)
     sqrtSA = np.sqrt(SA)
     args = SA, CT, p, sqrtSA
@@ -281,7 +281,8 @@ alpha_on_beta_CT = alpha_on_beta
 
 @match_args_return
 def alpha(SA, CT, p):
-    r"""Calculates the thermal expansion coefficient of seawater with respect
+    """
+    Calculates the thermal expansion coefficient of seawater with respect
     to Conservative Temperature using the computationally-efficient 48-term
     expression for density in terms of SA, CT and p (McDougall et al., 2011)
 
@@ -301,10 +302,6 @@ def alpha(SA, CT, p):
             thermal expansion coefficient [K :math:`-1`]
             with respect to Conservative Temperature
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     The 48-term equation has been fitted in a restricted range of parameter
@@ -320,18 +317,16 @@ def alpha(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqn. (2.18.3).
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqn. (2.18.3).
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-03-23. Paul Barker and Trevor McDougall.
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
     """
+
     SA = np.maximum(SA, 0)
     sqrtSA = np.sqrt(SA)
     args = SA, CT, p, sqrtSA
@@ -344,7 +339,8 @@ def alpha(SA, CT, p):
 
 @match_args_return
 def beta(SA, CT, p):
-    r"""Calculates the saline (i.e. haline) contraction coefficient of seawater
+    """
+    Calculates the saline (i.e. haline) contraction coefficient of seawater
     at constant Conservative Temperature using the computationally-efficient
     48-term expression for density in terms of SA, CT and p (McDougall et al.,
     2011).
@@ -364,10 +360,6 @@ def beta(SA, CT, p):
            saline contraction coefficient [kg g :math:`-1`]
            at constant Conservative Temperature.
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     The 48-term equation has been fitted in a restricted range of parameter
@@ -383,17 +375,14 @@ def beta(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqn. (2.19.3).
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqn. (2.19.3).
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-03-23. Paul Barker and Trevor McDougall.
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
     """
 
     SA = np.maximum(SA, 0)
@@ -408,11 +397,11 @@ def beta(SA, CT, p):
 
 @match_args_return
 def dynamic_enthalpy(SA, CT, p):
-    r"""Calculates dynamic enthalpy of seawater using the computationally-
+    """
+    Calculates dynamic enthalpy of seawater using the computationally-
     efficient 48-term expression for density in terms of SA, CT and p
     (McDougall et al., 2011).  Dynamic enthalpy is defined as enthalpy minus
     potential enthalpy (Young, 2010).
-
 
     Parameters
     ----------
@@ -428,10 +417,6 @@ def dynamic_enthalpy(SA, CT, p):
     dynamic_enthalpy : array_like
                        dynamic enthalpy [J/kg]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     The 48-term equation has been fitted in a restricted range of parameter
@@ -440,7 +425,6 @@ def dynamic_enthalpy(SA, CT, p):
     available to be used if one wants to test if some of one's data lies
     outside this "funnel".
 
-
     Examples
     --------
     TODO
@@ -448,21 +432,18 @@ def dynamic_enthalpy(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See section 3.2
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See section 3.2
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
 
     .. [3] Young, W.R., 2010: Dynamic enthalpy, Conservative Temperature, and
-    the seawater Boussinesq approximation. Journal of Physical Oceanography,
-    40, 394-400.
-
-    Modifications:
-    2011-04-05. Trevor McDougall and Paul Barker.
+       the seawater Boussinesq approximation. Journal of Physical Oceanography,
+       40, 394-400.
     """
 
     SA = np.maximum(SA, 0)
@@ -514,10 +495,10 @@ def dynamic_enthalpy(SA, CT, p):
 
 @match_args_return
 def enthalpy(SA, CT, p):
-    r"""Calculates specific enthalpy of seawater using the computationally-
+    """
+    Calculates specific enthalpy of seawater using the computationally-
     efficient 48-term expression for density in terms of SA, CT and p
     (McDougall et al., 2011)
-
 
     Parameters
     ----------
@@ -533,10 +514,6 @@ def enthalpy(SA, CT, p):
     enthalpy : array_like
                specific enthalpy [J/kg]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     The 48-term equation has been fitted in a restricted range of parameter
@@ -545,7 +522,6 @@ def enthalpy(SA, CT, p):
     available to be used if one wants to test if some of one's data lies
     outside this "funnel".
 
-
     Examples
     --------
     TODO
@@ -553,18 +529,14 @@ def enthalpy(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqn. (A.30.6).
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqn. (A.30.6).
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-04-05. Trevor McDougall, David Jackett, Claire Roberts-Thomson and
-                Paul Barker.
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
     """
 
     SA = np.maximum(SA, 0)
@@ -600,19 +572,18 @@ def enthalpy(SA, CT, p):
 
     part = (N * b2 - M * b1) / (b2 * (B - A))
 
-    """This function calculates enthalpy using the computationally-efficient
-    48-term expression for density in terms of SA, CT and p.  If one wanted to
-    compute enthalpy from SA, CT, and p with the full TEOS-10 Gibbs function,
-    the following lines of code will enable this.
+    # This function calculates enthalpy using the computationally-efficient
+    # 48-term expression for density in terms of SA, CT and p.  If one wanted to
+    # compute enthalpy from SA, CT, and p with the full TEOS-10 Gibbs function,
+    # the following lines of code will enable this.
 
-    pt = pt_from_CT(SA, CT)
-    t = pt_from_t(SA, pt, 0, p)
-    enthalpy = enthalpy_t_exact(SA, t, p)
+    # pt = pt_from_CT(SA, CT)
+    # t = pt_from_t(SA, pt, 0, p)
+    # enthalpy = enthalpy_t_exact(SA, t, p)
 
-    or call the following, it is identical to the lines above.
+    # or call the following, it is identical to the lines above.
 
-    enthalpy = enthalpy_CT_exact(SA, CT, p)
-    """
+    # enthalpy = enthalpy_CT_exact(SA, CT, p)
 
     return (cp0 * CT + db2Pascal *
             (p * (a2 - 2 * a3 * b1 / b2 + 0.5 * a3 * p) / b2 + (M / (2 * b2)) *
@@ -622,15 +593,14 @@ def enthalpy(SA, CT, p):
 
 @match_args_return
 def enthalpy_diff(SA, CT, p_shallow, p_deep):
-    r"""Calculates the difference of the specific enthalpy of seawater between
+    """
+    Calculates the difference of the specific enthalpy of seawater between
     two different pressures, p_deep (the deeper pressure) and p_shallow (the
     shallower pressure), at the same values of SA and CT.  This function uses
     the computationally-efficient 48-term expression for density in terms of
     SA, CT and p (McDougall et al., 2011).  The output (enthalpy_diff_CT) is
     the specific enthalpy evaluated at (SA, CT, p_deep) minus the specific
     enthalpy at (SA, CT, p_shallow).
-
-
 
     Parameters
     ----------
@@ -649,10 +619,6 @@ def enthalpy_diff(SA, CT, p_shallow, p_deep):
                     difference of specific enthalpy [J/kg]
                     (deep minus shallow)
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     The 48-term equation has been fitted in a restricted range of parameter
@@ -661,7 +627,6 @@ def enthalpy_diff(SA, CT, p_shallow, p_deep):
     available to be used if one wants to test if some of one's data lies
     outside this "funnel".
 
-
     Examples
     --------
     TODO
@@ -669,17 +634,14 @@ def enthalpy_diff(SA, CT, p_shallow, p_deep):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqns. (3.32.2) and (A.30.6).
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqns. (3.32.2) and (A.30.6).
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-03-21. Trevor McDougall & Paul Barker.
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
     """
 
     SA = np.maximum(SA, 0)
@@ -720,21 +682,20 @@ def enthalpy_diff(SA, CT, p_shallow, p_deep):
     part2 = (B + b2 * p_deep) * (A + b2 * p_shallow)
     part3 = (N * b2 - M * b1) / (b2 * (B - A))
 
-    """This function calculates enthalpy_diff using the computationally
-    efficient 48-term expression for density in terms of SA, CT and p.  If one
-    wanted to compute the enthalpy difference using the full TEOS-10 Gibbs
-    function, the following lines of code will enable this.
+    # This function calculates enthalpy_diff using the computationally
+    # efficient 48-term expression for density in terms of SA, CT and p.  If one
+    # wanted to compute the enthalpy difference using the full TEOS-10 Gibbs
+    # function, the following lines of code will enable this.
 
-    pt = pt_from_CT(SA, CT)
-    t_shallow = pt_from_t(SA, pt, 0, p_shallow)
-    t_deep = pt_from_t(SA, pt, 0, p_deep)
-    enthalpy_diff = (enthalpy_t_exact(SA, t_deep, p_deep) -
-                     enthalpy_t_exact(SA, t_shallow, p_shallow))
+    # pt = pt_from_CT(SA, CT)
+    # t_shallow = pt_from_t(SA, pt, 0, p_shallow)
+    # t_deep = pt_from_t(SA, pt, 0, p_deep)
+    # enthalpy_diff = (enthalpy_t_exact(SA, t_deep, p_deep) -
+    #                  enthalpy_t_exact(SA, t_shallow, p_shallow))
 
-    or call the following, it is identical to the lines above.
+    # or call the following, it is identical to the lines above.
 
-    enthalpy_diff = enthalpy_diff_CT_exact(SA, CT, p_shallow, p_deep)
-    """
+    # enthalpy_diff = enthalpy_diff_CT_exact(SA, CT, p_shallow, p_deep)
 
     return db2Pascal * (delta_p * (a2 - 2 * a3 * b1 / b2 + 0.5 * a3 * p_sum) /
                         b2 + (M / (2 * b2)) *
@@ -744,10 +705,10 @@ def enthalpy_diff(SA, CT, p_shallow, p_deep):
 
 @match_args_return
 def internal_energy(SA, CT, p):
-    r"""Calculates specific internal energy of seawater using the
+    """
+    Calculates specific internal energy of seawater using the
     computationally-efficient 48-term expression for density in terms of SA,
     CT and p (McDougall et al., 2011).
-
 
     Parameters
     ----------
@@ -763,10 +724,6 @@ def internal_energy(SA, CT, p):
     internal_energy : array_like
                       specific internal energy [J/kg]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     The 48-term equation has been fitted in a restricted range of parameter
@@ -775,7 +732,6 @@ def internal_energy(SA, CT, p):
     "infunnel(SA, CT, p)" is available to be used if one wants to test if
     some of one's data lies outside this "funnel".
 
-
     Examples
     --------
     TODO
@@ -783,35 +739,32 @@ def internal_energy(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-04-04. Trevor McDougall and Paul Barker.
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
     """
 
     SA = np.maximum(SA, 0)
 
-    """This function calculates enthalpy using the computationally-efficient
-    48-term expression for density in terms of SA, CT and p. If one wanted to
-    compute enthalpy from SA, CT, and p with the full TEOS-10 Gibbs function,
-    the following line of code will enable this.
+    # This function calculates enthalpy using the computationally-efficient
+    # 48-term expression for density in terms of SA, CT and p. If one wanted to
+    # compute enthalpy from SA, CT, and p with the full TEOS-10 Gibbs function,
+    # the following line of code will enable this.
 
-    internal_energy = internal_energy_CT_exact(SA, CT, p)
-    """
+    # internal_energy = internal_energy_CT_exact(SA, CT, p)
 
     return (enthalpy(SA, CT, p) - (P0 + db2Pascal * p) * specvol(SA, CT, p))
 
 
 @match_args_return
 def rho(SA, CT, p):
-    r"""Calculates in-situ density from Absolute Salinity and Conservative
+    """
+    Calculates in-situ density from Absolute Salinity and Conservative
     Temperature, using the computationally-efficient 48-term expression for
     density in terms of SA, CT and p (McDougall et al., 2011).
 
@@ -828,10 +781,6 @@ def rho(SA, CT, p):
     -------
     rho : array_like
           in-situ density [kg/m**3]
-
-    See Also
-    --------
-    TODO
 
     Notes
     -----
@@ -852,46 +801,43 @@ def rho(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See appendix A.20 and appendix K.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See appendix A.20 and appendix K.
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-04-18. Paul Barker and Trevor McDougall.
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
     """
 
     SA = np.maximum(SA, 0)
     sqrtSA = np.sqrt(SA)
     args = SA, CT, p, sqrtSA
 
-    """This function calculates rho using the computationally-efficient 48-term
-    expression for density in terms of SA, CT and p. If one wanted to compute
-    rho from SA, CT, and p with the full TEOS-10 Gibbs function, the following
-    lines of code will enable this.
-
-    pt0 = pt_from_CT(SA, CT)
-    t = pt_from_t(SA, pt0, 0, p)
-    rho = rho_t_exact(SA, t, p)
-
-    or call the following, it is identical to the lines above.
-
-    rho = rho_CT_exact(SA, CT, p)
-
-    or call the following, it is identical to the lines above.
-
-    rho,_ ,_ = rho_alpha_beta_CT_exact(SA, CT, p)
-    """
+    # This function calculates rho using the computationally-efficient 48-term
+    # expression for density in terms of SA, CT and p. If one wanted to compute
+    # rho from SA, CT, and p with the full TEOS-10 Gibbs function, the following
+    # lines of code will enable this.
+    #
+    # pt0 = pt_from_CT(SA, CT)
+    # t = pt_from_t(SA, pt0, 0, p)
+    # rho = rho_t_exact(SA, t, p)
+    #
+    # or call the following, it is identical to the lines above.
+    #
+    # rho = rho_CT_exact(SA, CT, p)
+    #
+    # or call the following, it is identical to the lines above.
+    #
+    # rho,_ ,_ = rho_alpha_beta_CT_exact(SA, CT, p)
 
     return v_hat_denominator(*args) / v_hat_numerator(*args)
 
 
 def rho_alpha_beta(SA, CT, p):
-    r"""Calculates in-situ density, the appropriate thermal expansion
+    """
+    Calculates in-situ density, the appropriate thermal expansion
     coefficient and the appropriate saline contraction coefficient of seawater
     from Absolute Salinity and Conservative Temperature.  This function uses
     the computationally-efficient 48-term expression for density in terms of
@@ -921,10 +867,6 @@ def rho_alpha_beta(SA, CT, p):
            saline contraction coefficient [kg g :math:`-1`]
            at constant Conservative Temperature.
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     The 48-term equation has been fitted in a restricted range of parameter
@@ -940,17 +882,14 @@ def rho_alpha_beta(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See appendix A.20 and appendix K.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See appendix A.20 and appendix K.
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-04-03. Paul Barker and Trevor McDougall.
+      computationally efficient 48-term expression for the density of
+      seawater in terms of Conservative Temperature, and related properties
+      of seawater.
     """
 
     return rho(SA, CT, p), alpha(SA, CT, p), beta(SA, CT, p)
@@ -958,7 +897,8 @@ def rho_alpha_beta(SA, CT, p):
 
 @match_args_return
 def SA_from_rho(rho, CT, p):
-    r"""Calculates the Absolute Salinity of a seawater sample, for given values
+    """
+    Calculates the Absolute Salinity of a seawater sample, for given values
     of its density, Conservative Temperature and sea pressure (in dbar).  This
     function uses the computationally-efficient 48-term expression for density
     in terms of SA, CT and p (McDougall et al., 2011).
@@ -979,10 +919,6 @@ def SA_from_rho(rho, CT, p):
     SA : array_like
          Absolute Salinity  [g/kg]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     This is expressed on the Reference-Composition Salinity Scale of
@@ -1001,21 +937,18 @@ def SA_from_rho(rho, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See section 2.5
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See section 2.5
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
 
     .. [3] Millero, F. J., R. Feistel, D. G. Wright, and T. J. McDougall, 2008:
-    The composition of Standard Seawater and the definition of the
-    Reference-Composition Salinity Scale, Deep-Sea Res. I, 55, 50-72.
-
-    Modifications:
-    2011-04-04. Trevor McDougall and Paul Barker.
+       The composition of Standard Seawater and the definition of the
+       Reference-Composition Salinity Scale, Deep-Sea Res. I, 55, 50-72.
     """
 
     v_lab = 1. / rho
@@ -1047,12 +980,12 @@ def SA_from_rho(rho, CT, p):
 
 
 def sigma0(SA, CT):
-    r"""Calculates potential density anomaly with reference pressure of 0 dbar,
+    """
+    Calculates potential density anomaly with reference pressure of 0 dbar,
     this being this particular potential density minus 1000 kg/m^3.  This
     function has inputs of Absolute Salinity and Conservative Temperature.
     This function uses the computationally-efficient 48-term expression for
     density in terms of SA, CT and p (McDougall et al., 2011).
-
 
     Parameters
     ----------
@@ -1066,28 +999,23 @@ def sigma0(SA, CT):
     sigma0 : array_like
              potential density anomaly with [kg/m**3]
              respect to a reference pressure of 0 dbar
-
-    See Also
-    --------
-    gsw.rho
     """
 
-    """This function calculates sigma0 using the computationally-efficient
-    48-term expression for density in terms of SA, CT and p.  If one wanted
-    to compute sigma0 with the full TEOS-10 Gibbs function expression for
-    density, the following lines of code will enable this.
-
-    sigma0 = rho_CT_exact(SA, CT, 0) - 1000
-    """
+    # This function calculates sigma0 using the computationally-efficient
+    # 48-term expression for density in terms of SA, CT and p.  If one wanted
+    # to compute sigma0 with the full TEOS-10 Gibbs function expression for
+    # density, the following lines of code will enable this.
+    #
+    # sigma0 = rho_CT_exact(SA, CT, 0) - 1000
 
     return rho(SA, CT, 0.) - 1000
 
 
 def sigma1(SA, CT):
-    r"""Calculates potential density anomaly with reference pressure of 1000
+    """
+    Calculates potential density anomaly with reference pressure of 1000
     dbar, this being this particular potential density minus 1000 kg/m^3.
     This function has inputs of Absolute Salinity and Conservative Temperature.
-
 
     Parameters
     ----------
@@ -1101,28 +1029,23 @@ def sigma1(SA, CT):
     sigma1 : array_like
              potential density anomaly with [kg/m**3]
              respect to a reference pressure of 1000 dbar
-
-    See Also
-    --------
-    gsw.rho
     """
 
-    """This function calculates sigma1 using the computationally-efficient
-    48-term expression for density in terms of SA, CT and p.  If one wanted
-    to compute sigma1 with the full TEOS-10 Gibbs function expression for
-    density, the following lines of code will enable this.
-
-    rho1 = rho_CT_exact(SA, CT, 1000)
-    """
+    # This function calculates sigma1 using the computationally-efficient
+    # 48-term expression for density in terms of SA, CT and p.  If one wanted
+    # to compute sigma1 with the full TEOS-10 Gibbs function expression for
+    # density, the following lines of code will enable this.
+    #
+    # rho1 = rho_CT_exact(SA, CT, 1000)
 
     return rho(SA, CT, 1000.) - 1000
 
 
 def sigma2(SA, CT):
-    r"""Calculates potential density anomaly with reference pressure of 2000
+    """
+    Calculates potential density anomaly with reference pressure of 2000
     dbar, this being this particular potential density minus 1000 kg/m^3.
     This function has inputs of Absolute Salinity and Conservative Temperature.
-
 
     Parameters
     ----------
@@ -1136,28 +1059,23 @@ def sigma2(SA, CT):
     sigma2 : array_like
              potential density anomaly with [kg/m**3]
              respect to a reference pressure of 2000 dbar
-
-    See Also
-    --------
-    gsw.rho
     """
 
-    """This function calculates sigma2 using the computationally-efficient
-    48-term expression for density in terms of SA, CT and p.  If one wanted
-    to compute sigma2 with the full TEOS-10 Gibbs function expression for
-    density, the following lines of code will enable this.
-
-    rho2 = rho_CT_exact(SA, CT, 2000.)
-    """
+    # This function calculates sigma2 using the computationally-efficient
+    # 48-term expression for density in terms of SA, CT and p.  If one wanted
+    # to compute sigma2 with the full TEOS-10 Gibbs function expression for
+    # density, the following lines of code will enable this.
+    #
+    # rho2 = rho_CT_exact(SA, CT, 2000.)
 
     return rho(SA, CT, 2000.) - 1000
 
 
 def sigma3(SA, CT):
-    r"""Calculates potential density anomaly with reference pressure of 3000
+    """
+    Calculates potential density anomaly with reference pressure of 3000
     dbar, this being this particular potential density minus 1000 kg/m^3.
     This function has inputs of Absolute Salinity and Conservative Temperature.
-
 
     Parameters
     ----------
@@ -1171,28 +1089,23 @@ def sigma3(SA, CT):
     sigma1 : array_like
              potential density anomaly with [kg/m**3]
              respect to a reference pressure of 3000 dbar
-
-    See Also
-    --------
-    gsw.rho
     """
 
-    """This function calculates sigma3 using the computationally-efficient
-    48-term expression for density in terms of SA, CT and p.  If one wanted
-    to compute sigma3 with the full TEOS-10 Gibbs function expression for
-    density, the following lines of code will enable this.
-
-    rho3 = rho_CT_exact(SA, CT, 3000.)
-    """
+    # This function calculates sigma3 using the computationally-efficient
+    # 48-term expression for density in terms of SA, CT and p.  If one wanted
+    # to compute sigma3 with the full TEOS-10 Gibbs function expression for
+    # density, the following lines of code will enable this.
+    #
+    # rho3 = rho_CT_exact(SA, CT, 3000.)
 
     return rho(SA, CT, 3000.) - 1000
 
 
 def sigma4(SA, CT):
-    r"""Calculates potential density anomaly with reference pressure of 4000
+    """
+    Calculates potential density anomaly with reference pressure of 4000
     dbar, this being this particular potential density minus 1000 kg/m^3.
     This function has inputs of Absolute Salinity and Conservative Temperature.
-
 
     Parameters
     ----------
@@ -1206,30 +1119,25 @@ def sigma4(SA, CT):
     sigma1 : array_like
              potential density anomaly with [kg/m**3]
              respect to a reference pressure of 4000 dbar
-
-    See Also
-    --------
-    gsw.rho
     """
 
-    """This function calculates sigma3 using the computationally-efficient
-    48-term expression for density in terms of SA, CT and p.  If one wanted
-    to compute sigma3 with the full TEOS-10 Gibbs function expression for
-    density, the following lines of code will enable this.
-
-    rho4 = rho_CT_exact(SA, CT, 4000.)
-    """
+    # This function calculates sigma3 using the computationally-efficient
+    # 48-term expression for density in terms of SA, CT and p.  If one wanted
+    # to compute sigma3 with the full TEOS-10 Gibbs function expression for
+    # density, the following lines of code will enable this.
+    #
+    # rho4 = rho_CT_exact(SA, CT, 4000.)
 
     return rho(SA, CT, 4000.) - 1000
 
 
 @match_args_return
 def sound_speed(SA, CT, p):
-    r"""Calculates the speed of sound in seawater.  This function has inputs of
+    """
+    Calculates the speed of sound in seawater.  This function has inputs of
     Absolute Salinity and Conservative Temperature.  This function uses the
     computationally-efficient 48-term expression for density in terms of SA,
     CT and p (McDougall et al., 2011).
-
 
     Parameters
     ----------
@@ -1245,10 +1153,6 @@ def sound_speed(SA, CT, p):
     sound_speed : array_like
                   speed of sound in seawater [m/s]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     Approximate with a r.m.s. of 6.7 cm s^-1.
@@ -1259,7 +1163,6 @@ def sound_speed(SA, CT, p):
     "infunnel(SA, CT, p)" is available to be used if one wants to test if
     some of one's data lies outside this "funnel".
 
-
     Examples
     --------
     TODO
@@ -1267,17 +1170,14 @@ def sound_speed(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqn. (2.17.1).
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqn. (2.17.1).
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-03-23. Paul Barker and Trevor McDougall.
+      computationally efficient 48-term expression for the density of
+      seawater in terms of Conservative Temperature, and related properties
+      of seawater.
     """
 
     SA = np.maximum(SA, 0)
@@ -1301,10 +1201,10 @@ def sound_speed(SA, CT, p):
 
 @match_args_return
 def specvol(SA, CT, p):
-    r"""Calculates specific volume from Absolute Salinity, Conservative
+    """
+    Calculates specific volume from Absolute Salinity, Conservative
     Temperature and pressure, using the computationally-efficient 48-term
     expression for density (McDougall et al., 2011).
-
 
     Parameters
     ----------
@@ -1320,10 +1220,6 @@ def specvol(SA, CT, p):
     specvol : array_like
               specific volume [m**3/kg]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     The 48-term equation has been fitted in a restricted range of parameter
@@ -1332,7 +1228,6 @@ def specvol(SA, CT, p):
     available to be used if one wants to test if some of one's data lies
     outside this "funnel".
 
-
     Examples
     --------
     TODO
@@ -1340,34 +1235,30 @@ def specvol(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqn. (2.7.2).
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqn. (2.7.2).
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-03-18. Paul Barker and Trevor McDougall.
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
     """
 
     SA = np.maximum(SA, 0)
 
-    """This function calculates specvol using the computationally-efficient
-    48-term expression for density in terms of SA, CT and p. If one wanted to
-    compute specvol from SA, CT, and p with the full TEOS-10 Gibbs function,
-    the following lines of code will enable this.
-
-    pt = pt_from_CT(SA, CT)
-    t = pt_from_t(SA, pt, 0, p)
-    specvol = specvol_t_exact(SA, t, p)
-
-    or call the following, it is identical to the lines above.
-
-    specvol = specvol_CT_exact(SA, CT, p)
-    """
+    # This function calculates specvol using the computationally-efficient
+    # 48-term expression for density in terms of SA, CT and p. If one wanted to
+    # compute specvol from SA, CT, and p with the full TEOS-10 Gibbs function,
+    # the following lines of code will enable this.
+    #
+    # pt = pt_from_CT(SA, CT)
+    # t = pt_from_t(SA, pt, 0, p)
+    # specvol = specvol_t_exact(SA, t, p)
+    #
+    # or call the following, it is identical to the lines above.
+    #
+    # specvol = specvol_CT_exact(SA, CT, p)
 
     SA = np.maximum(SA, 0)
     sqrtSA = np.sqrt(SA)
@@ -1378,12 +1269,12 @@ def specvol(SA, CT, p):
 
 @match_args_return
 def specvol_anom(SA, CT, p):
-    r"""Calculates specific volume anomaly from Absolute Salinity, Conservative
+    """
+    Calculates specific volume anomaly from Absolute Salinity, Conservative
     Temperature and pressure.  It uses the computationally-efficient 48-term
     expression for density as a function of SA, CT and p (McDougall et al.,
     2011).  The reference value of Absolute Salinity is SSO and the reference
     value of Conservative Temperature is equal to 0 degrees C.
-
 
     Parameters
     ----------
@@ -1399,10 +1290,6 @@ def specvol_anom(SA, CT, p):
     specvol_anom : array_like
                    specific volume anomaly [m**3/kg]
 
-    See Also
-    --------
-    TODO
-
     Notes
     -----
     The 48-term equation has been fitted in a restricted range of parameter
@@ -1411,7 +1298,6 @@ def specvol_anom(SA, CT, p):
     available to be used if one wants to test if some of one's data lies
     outside this "funnel".
 
-
     Examples
     --------
     TODO
@@ -1419,36 +1305,32 @@ def specvol_anom(SA, CT, p):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See Eqn. (3.7.3).
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See Eqn. (3.7.3).
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of
-    seawater in terms of Conservative Temperature, and related properties
-    of seawater.
-
-    Modifications:
-    2011-03-24. Paul Barker and Trevor McDougall.
+       computationally efficient 48-term expression for the density of
+       seawater in terms of Conservative Temperature, and related properties
+       of seawater.
     """
 
     SA = np.maximum(SA, 0)
     sqrtSA = np.sqrt(SA)
     args = SA, CT, p, sqrtSA
 
-    """This function calculates specvol_anom using the computationally-
-    efficient 48-term expression for density in terms of SA, CT and p.  If
-    one wanted to compute specvol_anom from SA, CT, and p with the full
-    TEOS-10 Gibbs function, the following lines of code will enable this.
-
-    pt = pt_from_CT(SA, CT)
-    t = pt_from_t(SA, pt, 0, p)
-    specvol_anom = specvol_anom_t_exact(SA, t, p)
-
-    or call the following, it is identical to the lines above.
-
-    specvol_anom = specvol_anom_CT_exact(SA, CT, p)
-    """
+    # This function calculates specvol_anom using the computationally-
+    # efficient 48-term expression for density in terms of SA, CT and p.  If
+    # one wanted to compute specvol_anom from SA, CT, and p with the full
+    # TEOS-10 Gibbs function, the following lines of code will enable this.
+    #
+    # pt = pt_from_CT(SA, CT)
+    # t = pt_from_t(SA, pt, 0, p)
+    # specvol_anom = specvol_anom_t_exact(SA, t, p)
+    #
+    # or call the following, it is identical to the lines above.
+    #
+    # specvol_anom = specvol_anom_CT_exact(SA, CT, p)
 
     return (v_hat_numerator(*args) / v_hat_denominator(*args) -
             specvol_SSO_0_p(p))

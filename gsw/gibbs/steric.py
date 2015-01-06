@@ -11,7 +11,8 @@ __all__ = ['steric_height']
 
 @match_args_return
 def steric_height(SA, CT, p, p_ref):
-    r"""Calculates steric height anomaly as the pressure integral of specific
+    """
+    Calculates steric height anomaly as the pressure integral of specific
     volume anomaly from the pressure p of the "bottle" to the reference
     pressure p_ref, divided by the constant value of the gravitational
     acceleration, 9.7963 m s^-2.  That is, this function returns the dynamic
@@ -78,10 +79,6 @@ def steric_height(SA, CT, p, p_ref):
     profile, the steric height anomaly for each "bottle" on the whole vertical
     profile is returned as NaN.
 
-    See Also
-    --------
-    TODO
-
     Examples
     --------
     TODO
@@ -89,19 +86,16 @@ def steric_height(SA, CT, p, p_ref):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See section 3.27.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See section 3.27.
 
     .. [2] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2011:  A
-    computationally efficient 48-term expression for the density of seawater
-    in terms of Conservative Temperature, and related properties of seawater.
+       computationally efficient 48-term expression for the density of seawater
+       in terms of Conservative Temperature, and related properties of seawater.
 
     .. [3] Griffies, S. M., 2004: Fundamentals of Ocean Climate Models.
-    Princeton, NJ: Princeton University Press, 518 pp + xxxiv.
-
-    Modifications:
-    2010-05-20. Trevor McDougall and Paul Barker.
+       Princeton, NJ: Princeton University Press, 518 pp + xxxiv.
     """
 
     p_ref = np.asanyarray(p_ref)

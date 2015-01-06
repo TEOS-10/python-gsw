@@ -45,7 +45,8 @@ P = (2.570124672768757e-1, -1.917742353032266e+1, -1.413382858617969e-2,
 
 @match_args_return
 def brineSA_CT(CT, p, saturation_fraction=1):
-    r"""Calculates the Absolute Salinity of seawater at the freezing
+    """
+    Calculates the Absolute Salinity of seawater at the freezing
     temperature.  That is, the output is the Absolute Salinity of seawater,
     with the fraction saturation_fraction of dissolved air, that is in
     equilibrium with ice at Conservative Temperature CT and pressure p.  If the
@@ -67,14 +68,6 @@ def brineSA_CT(CT, p, saturation_fraction=1):
     brine_SA_CT : array_like
                  Absolute Salinity of seawater when it freezes [ g/kg ]
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     Examples
     --------
     TODO
@@ -82,13 +75,9 @@ def brineSA_CT(CT, p, saturation_fraction=1):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See sections 3.33.
-
-    Modifications:
-    2011-28-03. Trevor McDougall and Paul Barker.
-
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See sections 3.33.
     """
 
     CT, p, saturation_fraction = np.broadcast_arrays(CT, p,
@@ -103,8 +92,8 @@ def brineSA_CT(CT, p, saturation_fraction=1):
 
     SA = np.maximum(SA, 0)
 
-    CTsat = CT - (1 - saturation_fraction) * 1e-3 * (2.4 - a * SA) * (1 + b *
-                 (1 - SA / SSO))
+    CTsat = (CT - (1 - saturation_fraction) * 1e-3 * (2.4 - a * SA) *
+             (1 + b * (1 - SA / SSO)))
 
     SA = (P[0] + p * (P[2] + P[4] * CTsat + p * (P[5] + CTsat * (P[7] + P[9] *
           CTsat) + p * (P[8] + CTsat * (P[10] + P[12] * CTsat) + p * (P[11] +
@@ -190,29 +179,28 @@ def brineSA_CT(CT, p, saturation_fraction=1):
 
         SA = SA_old - (CT_freeze - CT) / dCT_dSA
 
-    """The following lines of code, if implemented, calculates the error of
-    this function in terms of Conservative Temperature, CT_error.  With
-    Number_of_Iterations = 1, the maximum error in CT is 2x10^-7 C.  With
-    Number_of_Iterations = 2, the maximum error in CT is 7x10^-15 C, which is
-    the machine precision of the computer.  Number_of_Iterations = 2 is what
-    we recommend.
-
-    SA_r = 0.01 * SA
-    x = np.sqrt(SA_r)
-    CT_freeze = c[0] + SA_r * (c[1] + x * (c[2] + x * (c[3] + x * (c[4] + x *
-                (c[5] + c[6] * x))))) + p_r * (c[7] + p_r * (c[8] + c[9] *
-                p_r)) + SA_r * p_r * (c[10] + p_r * (c[12] + p_r * (c[15] +
-                c[21] * SA_r)) + SA_r * (c[13] + c[17] * p_r + c[19] * SA_r) +
-                x * (c[11] + p_r * (c[14] + c[18] * p_r) + SA_r * (c[16] +
-                c[20] * p_r + c[22] * SA_r))) - saturation_fraction * 1e-3 *
-                (2.4 - a * SA) * (1 + b * (1 - SA / SSO))
-
-    CT_error = np.abs(CT_freeze - CT)
-
-    tmp = np.logical_or(p > 10000, SA > 120
-    out = np.logical_and(tmp, p + SA * 71.428571428571402 > 13571.42857142857)
-    CT_error[out] = np.ma.masked
-    """
+    # The following lines of code, if implemented, calculates the error of
+    # this function in terms of Conservative Temperature, CT_error.  With
+    # Number_of_Iterations = 1, the maximum error in CT is 2x10^-7 C.  With
+    # Number_of_Iterations = 2, the maximum error in CT is 7x10^-15 C, which is
+    # the machine precision of the computer.  Number_of_Iterations = 2 is what
+    # we recommend.
+    #
+    # SA_r = 0.01 * SA
+    # x = np.sqrt(SA_r)
+    # CT_freeze = c[0] + SA_r * (c[1] + x * (c[2] + x * (c[3] + x * (c[4] + x *
+    #             (c[5] + c[6] * x))))) + p_r * (c[7] + p_r * (c[8] + c[9] *
+    #             p_r)) + SA_r * p_r * (c[10] + p_r * (c[12] + p_r * (c[15] +
+    #             c[21] * SA_r)) + SA_r * (c[13] + c[17] * p_r + c[19] * SA_r)
+    #             + x * (c[11] + p_r * (c[14] + c[18] * p_r) + SA_r * (c[16] +
+    #             c[20] * p_r + c[22] * SA_r))) - saturation_fraction * 1e-3 *
+    #             (2.4 - a * SA) * (1 + b * (1 - SA / SSO))
+    #
+    # CT_error = np.abs(CT_freeze - CT)
+    #
+    # tmp = np.logical_or(p > 10000, SA > 120
+    # out = np.logical_and(tmp, p + SA * 71.428571428571402 > 13571.42857142857)
+    # CT_error[out] = np.ma.masked
 
     brine_SA_CT = SA
 
@@ -230,12 +218,13 @@ def brineSA_CT(CT, p, saturation_fraction=1):
 
 @match_args_return
 def brineSA_t(t, p, saturation_fraction=1):
-    r"""Calculates the Absolute Salinity of seawater at the freezing
-    temperature.  That is, the output is the Absolute Salinity of seawater,
-    with the fraction saturation_fraction of dissolved air, that is in
-    equilibrium with ice at in-situ temperature t and pressure p.  If the input
-    values are such that there is no positive value of Absolute Salinity for
-    which seawater is frozen, the output, brineSA_t, is put equal to -99.
+    """
+    Calculates the Absolute Salinity of seawater at the freezing temperature.
+    That is, the output is the Absolute Salinity of seawater, with the fraction
+    saturation_fraction of dissolved air, that is in equilibrium with ice at
+    in-situ temperature t and pressure p.  If the input values are such that
+    there is no positive value of Absolute Salinity for which seawater is
+    frozen, the output, brineSA_t, is put equal to -99.
 
     Parameters
     ----------
@@ -252,14 +241,6 @@ def brineSA_t(t, p, saturation_fraction=1):
     brine_SA_t : array_like
                  Absolute Salinity of seawater when it freezes [ g/kg ]
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     Examples
     --------
     TODO
@@ -267,13 +248,9 @@ def brineSA_t(t, p, saturation_fraction=1):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See sections 3.33.
-
-    Modifications:
-    2011-28-03. Trevor McDougall and Paul Barker.
-
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See sections 3.33.
     """
 
     t, p, saturation_fraction = np.broadcast_arrays(t, p, saturation_fraction)
@@ -357,20 +334,19 @@ def brineSA_t(t, p, saturation_fraction=1):
 
         SA = SA_old - (t_freeze - t) / dt_dSA
 
-    """The following lines of code, if implemented, calculate the error of this
-    function in terms of in-situ temperature.  With Number_of_Iterations = 4,
-    the max error in t is 3x10^-13 C.  With Number_of_Iterations = 5, the max
-    error in t is 2x10^-14 C, which is the machine precision of the computer.
-    Number_of_Iterations = 5 is what we recommend.
-
-    SA[SA < 0] = np.ma.masked
-
-    t_freeze = t_freezing(SA, p, saturation_fraction)
-    t_error = np.abs(t_freeze - t)
-    tmp = np.logical_or(p > 10000, SA > 120)
-    out = np.logical_and(tmp, p + SA * 71.428571428571402 > 13571.42857142857)
-    t_error[out] = np.ma.masked
-    """
+    # The following lines of code, if implemented, calculate the error of this
+    # function in terms of in-situ temperature.  With Number_of_Iterations = 4,
+    # the max error in t is 3x10^-13 C.  With Number_of_Iterations = 5, the max
+    # error in t is 2x10^-14 C, which is the machine precision of the computer.
+    # Number_of_Iterations = 5 is what we recommend.
+    #
+    # SA[SA < 0] = np.ma.masked
+    #
+    # t_freeze = t_freezing(SA, p, saturation_fraction)
+    # t_error = np.abs(t_freeze - t)
+    # tmp = np.logical_or(p > 10000, SA > 120)
+    # out = np.logical_and(tmp, p + SA * 71.428571428571402 > 13571.42857142857)
+    # t_error[out] = np.ma.masked
 
     brine_SA_t = SA
     tmp = np.logical_or(p > 10000, SA > 120)
@@ -386,7 +362,8 @@ def brineSA_t(t, p, saturation_fraction=1):
 
 @match_args_return
 def CT_freezing(SA, p, saturation_fraction=1):
-    r"""Calculates the Conservative Temperature at which seawater freezes.
+    """
+    Calculates the Conservative Temperature at which seawater freezes.
 
     Parameters
     ----------
@@ -404,14 +381,6 @@ def CT_freezing(SA, p, saturation_fraction=1):
           Conservative Temperature at freezing of
           seawater [:math:`^\circ` C (ITS-90)]
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     Examples
     --------
     TODO
@@ -419,13 +388,9 @@ def CT_freezing(SA, p, saturation_fraction=1):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See sections 3.33 and 3.34.
-
-    Modifications:
-    2011-11-04. Trevor McDougall, Paul Barker and Rainer Feistal.
-
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See sections 3.33 and 3.34.
     """
 
     SA, p, saturation_fraction = np.broadcast_arrays(SA, p,
@@ -447,13 +412,13 @@ def CT_freezing(SA, p, saturation_fraction=1):
                  c[19] * SA_r) + x * (c[11] + p_r * (c[14] + c[18] * p_r) +
                  SA_r * (c[16] + c[20] * p_r + c[22] * SA_r))))
 
-    """The error of this fit ranges between -5e-4 K and 6e-4 K when compared
-    with the Conservative Temperature calculated from the exact in-situ
-    freezing temperature which is found by a Newton-Raphson iteration of the
-    equality of the chemical potentials of water in seawater and in ice.
-    (Note that the in-situ freezing temperature can be found by this exact
-    method using the function sea_ice_freezingtemperature_si in the SIA
-    library)."""
+    # The error of this fit ranges between -5e-4 K and 6e-4 K when compared
+    # with the Conservative Temperature calculated from the exact in-situ
+    # freezing temperature which is found by a Newton-Raphson iteration of the
+    # equality of the chemical potentials of water in seawater and in ice.
+    # (Note that the in-situ freezing temperature can be found by this exact
+    # method using the function sea_ice_freezingtemperature_si in the SIA
+    # library).
 
     # Adjust for the effects of dissolved air.
     a, b = 0.014289763856964, 0.057000649899720
@@ -472,7 +437,8 @@ def CT_freezing(SA, p, saturation_fraction=1):
 
 @match_args_return
 def t_freezing(SA, p, saturation_fraction=1):
-    r"""Calculates the in-situ temperature at which seawater freezes.
+    """
+    Calculates the in-situ temperature at which seawater freezes.
 
     Parameters
     ----------
@@ -490,14 +456,6 @@ def t_freezing(SA, p, saturation_fraction=1):
                   in-situ temperature at which seawater freezes
                   [:math:`^\circ` C (ITS-90)]
 
-    See Also
-    --------
-    TODO
-
-    Notes
-    -----
-    TODO
-
     Examples
     --------
     TODO
@@ -505,45 +463,39 @@ def t_freezing(SA, p, saturation_fraction=1):
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See sections 3.33 and 3.34.
-
-    Modifications:
-    2011-11-03. Trevor McDougall, Paul Barker and Rainer Feistal.
-
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See sections 3.33 and 3.34.
     """
 
-    """This function, t_freezing, calculates the in-situ freezing temperature,
-    t_freezing, of seawater by first evaluating a polynomial of the
-     Conservative Temperature at which seawater freezes, CT_freezing, using
-    the GSW function CT_freezing.  The in-situ freezing temperature is then
-    calculated using the GSW function t_from_CT.  However, if one wanted to
-    compute the in-situ freezing temperature directly from a single polynomial
-    expression without first calculating the Conservative Temperature at the
-    freezing point, the following lines of code achieve this.  The error of the
-    following fit is similar to that of the present function, t_freezing, and
-    ranges between -8e-4 K and 3e-4 K when compared with the in-situ freezing
-    temperature evaluated by Newton-Raphson iteration of the equality of the
-    chemical potentials of water in seawater and in ice.  (Note that the
-    in-situ freezing temperature can be found by this exact method using the
-    function sea_ice_freezingtemperature_si in the SIA library).
-
-    SA_r = SA * 1e-2
-    x = np.sqrt(SA_r)
-    p_r = p * 1e-4
-
-    t_freeze = T[0] + SA_r * (T[1] + x * (T[2] + x * (T[3] + x * (T[4] + x *
-               (T[5] + T[6] * x))))) + p_r * (T[7] + p_r * (T[8] + T[9] *
-               p_r)) + SA_r * p_r * (T[10] + p_r * (T[12] + p_r * (T[15] +
-               T[21] * SA_r)) + SA_r * (T[13] + T[17] * p_r + T[19] * SA_r) +
-               x * (T[11] + p_r * (T[14] + T[18] * p_r)  + SA_r * (T[16] +
-               T[20] * p_r + T[22] * SA_r)))
-
-    Adjust for the effects of dissolved air
-    t_freezing -= saturation_fraction * (1e-3) * (2.4 - SA / 70.33008)
-
-    """
+    # This function, t_freezing, calculates the in-situ freezing temperature,
+    # t_freezing, of seawater by first evaluating a polynomial of the
+    #  Conservative Temperature at which seawater freezes, CT_freezing, using
+    # the GSW function CT_freezing.  The in-situ freezing temperature is then
+    # calculated using the GSW function t_from_CT.  However, if one wanted to
+    # compute the in-situ freezing temperature directly from a single polynomial
+    # expression without first calculating the Conservative Temperature at the
+    # freezing point, the following lines of code achieve this.  The error of the
+    # following fit is similar to that of the present function, t_freezing, and
+    # ranges between -8e-4 K and 3e-4 K when compared with the in-situ freezing
+    # temperature evaluated by Newton-Raphson iteration of the equality of the
+    # chemical potentials of water in seawater and in ice.  (Note that the
+    # in-situ freezing temperature can be found by this exact method using the
+    # function sea_ice_freezingtemperature_si in the SIA library).
+    #
+    # SA_r = SA * 1e-2
+    # x = np.sqrt(SA_r)
+    # p_r = p * 1e-4
+    #
+    # t_freeze = T[0] + SA_r * (T[1] + x * (T[2] + x * (T[3] + x * (T[4] + x *
+    #            (T[5] + T[6] * x))))) + p_r * (T[7] + p_r * (T[8] + T[9] *
+    #            p_r)) + SA_r * p_r * (T[10] + p_r * (T[12] + p_r * (T[15] +
+    #            T[21] * SA_r)) + SA_r * (T[13] + T[17] * p_r + T[19] * SA_r) +
+    #            x * (T[11] + p_r * (T[14] + T[18] * p_r)  + SA_r * (T[16] +
+    #            T[20] * p_r + T[22] * SA_r)))
+    #
+    # Adjust for the effects of dissolved air
+    # t_freezing -= saturation_fraction * (1e-3) * (2.4 - SA / 70.33008)
 
     SA, p, saturation_fraction = np.broadcast_arrays(SA, p,
                                                      saturation_fraction)

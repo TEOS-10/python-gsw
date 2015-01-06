@@ -208,7 +208,7 @@ class SA_table(object):
         # TODO: check to see whether this discrepancy is also found in V3.
         # TODO: check: do we even need to calculate ndepth? It doesn't
         #       appear to be used for anything.
-        #self.ndepth = np.ma.masked_invalid(data.ndepth_ref.T).astype(np.int8)
+        # self.ndepth = np.ma.masked_invalid(data.ndepth_ref.T).astype(np.int8)
         ndepth = self.dsa.count(axis=-1)
         self.ndepth = np.ma.masked_equal(ndepth, 0)
         return self._delta_SA(p, lon, lat)
@@ -226,12 +226,14 @@ class SA_table(object):
 
 
 def Fdelta(p, lon, lat):
-    r"""Fdelta from the Absolute Salinity Anomaly Ratio (SAAR)::
-       Fdelta = (1 + r1)SAAR/(1 - r1*SAAR)
-              = (SA/Sstar) - 1
+    """
+    Fdelta from the Absolute Salinity Anomaly Ratio (SAAR):
+    Fdelta = (1 + r1)SAAR/(1 - r1*SAAR)
+           = (SA/Sstar) - 1
     with r1 being the constant 0.35 based on the work of Pawlowicz et al.
     (2011). Note that since SAAR is everywhere less than 0.001 in the global
     ocean, Fdelta is only slightly different to 1.35*SAAR.
+
     Parameters
     ----------
     p : array_like
@@ -240,31 +242,37 @@ def Fdelta(p, lon, lat):
           decimal degrees east (will be treated modulo 360)
     lat : array_like
           decimal degrees (+ve N, -ve S) [-90..+90]
+
     Returns
     -------
     Fdelta : masked array; masked where no nearby ocean is found in data
            Ratio of SA to Sstar, minus 1 [unitless]
+
     Notes
     -----
     The mask is only set when the observation is well and truly on dry
     land; often the warning flag is not set until one is several hundred
     kilometers inland from the coast.
+
     References
     ----------
     .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.  Available from http://www.TEOS-10.org
-    See section 2.5 and appendices A.4 and A.5 of this TEOS-10 Manual.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.  Available from http://www.TEOS-10.org
+       See section 2.5 and appendices A.4 and A.5 of this TEOS-10 Manual.
+
     .. [2] McDougall, T.J., D.R. Jackett, F.J. Millero, R. Pawlowicz and
-    P.M. Barker, 2012: A global algorithm for estimating Absolute Salinity.
-    Ocean Science, 8, 1123-1134.
-    http://www.ocean-sci.net/8/1123/2012/os-8-1123-2012.pdf
-    .. [3] Pawlawicz, R., D.G. Wright and F.J. Millero, 2011; The effects of
-    biogeochemical processes on oceanic conductivity/salinty/density
-    relationships and the characterization of real seawater. Ocean Science,
-    7, 363-387.  http://www.ocean-sci.net/7/363/2011/os-7-363-2011.pdf
+       P.M. Barker, 2012: A global algorithm for estimating Absolute Salinity.
+       Ocean Science, 8, 1123-1134.
+       http://www.ocean-sci.net/8/1123/2012/os-8-1123-2012.pdf
+
+    .. [3] Pawlowicz, R., D.G. Wright and F.J. Millero, 2011; The effects of
+       biogeochemical processes on oceanic conductivity/salinty/density
+       relationships and the characterization of real seawater. Ocean Science,
+       7, 363-387.  http://www.ocean-sci.net/7/363/2011/os-7-363-2011.pdf
     """
+
     r = 0.35
     saar, _ = SAAR(p, lon, lat)
     Fdelta = ((1 + r) * saar) / (1 - r * saar)
@@ -273,34 +281,32 @@ def Fdelta(p, lon, lat):
 
 @match_args_return
 def Hill_ratio_at_SP2(t):
-    r"""TODO: Write docstring
-    Hill ratio at SP = 2
     """
-    # USAGE:
-    #  Hill_ratio = Hill_ratio_at_SP2(t)
-    #
-    # DESCRIPTION:
-    #  Calculates the Hill ratio, which is the adjustment needed to apply for
-    #  Practical Salinities smaller than 2.  This ratio is defined at a
-    #  Practical Salinity = 2 and in-situ temperature, t using PSS-78. The Hill
-    #  ratio is the ratio of 2 to the output of the Hill et al. (1986) formula
-    #  for Practical Salinity at the conductivity ratio, Rt, at which Practical
-    #  Salinity on the PSS-78 scale is exactly 2.
-    #
-    # INPUT:
-    #  t  =  in-situ temperature (ITS-90)                  [ deg C ]
-    #
-    # OUTPUT:
-    #  Hill_ratio  =  Hill ratio at SP of 2                [ unitless ]
-    #
-    # AUTHOR:
-    #  Trevor McDougall and Paul Barker
-    #
-    # VERSION NUMBER: 3.0 (26th March, 2011)
+    USAGE:
+     Hill_ratio = Hill_ratio_at_SP2(t)
+
+    DESCRIPTION:
+     Calculates the Hill ratio, which is the adjustment needed to apply for
+     Practical Salinities smaller than 2.  This ratio is defined at a
+     Practical Salinity = 2 and in-situ temperature, t using PSS-78. The Hill
+     ratio is the ratio of 2 to the output of the Hill et al. (1986) formula
+     for Practical Salinity at the conductivity ratio, Rt, at which Practical
+     Salinity on the PSS-78 scale is exactly 2.
+
+    INPUT:
+     t  =  in-situ temperature (ITS-90)                  [ deg C ]
+
+    OUTPUT:
+     Hill_ratio  =  Hill ratio at SP of 2                [ unitless ]
+
+    AUTHOR:
+     Trevor McDougall and Paul Barker
+
+    VERSION NUMBER: 3.0 (26th March, 2011)
+    """
+
     SP2 = 2 * np.ones_like(t)
-    #------------------------------
-    # Start of the calculation
-    #------------------------------
+
     a0 = 0.0080
     a1 = -0.1692
     a2 = 25.3851
@@ -326,18 +332,18 @@ def Hill_ratio_at_SP2(t):
     k = 0.0162
     t68 = t * 1.00024
     ft68 = (t68 - 15) / (1 + k * (t68 - 15))
-    #--------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     # Find the initial estimates of Rtx (Rtx0) and of the derivative dSP_dRtx
     # at SP = 2.
-    #--------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     Rtx0 = g0 + t68 * (g1 + t68 * (g2 + t68 * (g3 + t68 * (g4 + t68 * (g5
               + t68 * (g6 + t68 * (g7 + t68 * (g8 + t68 * g9))))))))
     dSP_dRtx = (a1 + (2 * a2 + (3 * a3 + (4 * a4 + 5 * a5 * Rtx0) * Rtx0) *
                 Rtx0) * Rtx0 + ft68 * (b1 + (2 * b2 + (3 * b3 + (4 * b4 + 5 *
                 b5 * Rtx0) * Rtx0) * Rtx0) * Rtx0))
-    #--------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     # Begin a single modified Newton-Raphson iteration to find Rt at SP = 2.
-    #--------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     SP_est = (a0 + (a1 + (a2 + (a3 + (a4 + a5 * Rtx0) * Rtx0) * Rtx0) * Rtx0) *
               Rtx0 + ft68 * (b0 + (b1 + (b2 + (b3 + (b4 + b5 * Rtx0) * Rtx0) *
               Rtx0) * Rtx0) * Rtx0))
@@ -360,7 +366,8 @@ def Hill_ratio_at_SP2(t):
 
 @match_args_return
 def SAAR(p, lon, lat):
-    r"""Absolute Salinity Anomaly Ratio (excluding the Baltic Sea).
+    """
+    Absolute Salinity Anomaly Ratio (excluding the Baltic Sea).
     Calculates the Absolute Salinity Anomaly Ratio, SAAR, in the open ocean
     by spatially interpolating the global reference data set of SAAR to the
     location of the seawater sample.
@@ -391,39 +398,47 @@ def SAAR(p, lon, lat):
     The in_ocean flag is only set when the observation is well and truly on dry
     land; often the warning flag is not set until one is several hundred
     kilometers inland from the coast.
-    References
-    ----------
-    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.
-    .. [2] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
-    for estimating Absolute Salinity in the global ocean.  Submitted to Ocean
-    Science. A preliminary version is available at Ocean Sci. Discuss.,
-    6, 215-242.
-    http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
+
     The algorithm is taken from the matlab implementation of the references,
     but the numpy implementation here differs substantially from the
     matlab implementation.
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.
+
+    .. [2] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
+       for estimating Absolute Salinity in the global ocean.  Submitted to
+       Ocean Science. A preliminary version is available at Ocean Sci.
+       Discuss., 6, 215-242.
+       http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
     """
+
     saar = SA_table().SAAR(p, lon, lat)
     return saar, ~saar.mask
 
 
 def SA_from_SP_Baltic(SP, lon, lat):
-    r"""Computes absolute salinity from practical in the Baltic Sea.
+    """
+    Computes absolute salinity from practical in the Baltic Sea.
+
     Parameters
     ----------
     SP : array_like or masked array
         Practical salinity (PSS-78)
     lon, lat : array_like or masked arrays
                geographical position
+
     Returns
     -------
     SA : masked array, at least 1D
          Absolute salinity   [g/kg]
          masked where inputs are masked or position outside the Baltic
     """
+
     # Handle masked array input
     input_mask = False
     if np.ma.is_masked(SP):
@@ -435,7 +450,7 @@ def SA_from_SP_Baltic(SP, lon, lat):
     SP, lon, lat = list(map(np.atleast_1d, (SP, lon, lat)))
     SP, lon, lat = np.broadcast_arrays(SP, lon, lat)
     inds_baltic = in_Baltic(lon, lat)
-    #SA_baltic = np.ma.masked_all(SP.shape, dtype=np.float)
+    # SA_baltic = np.ma.masked_all(SP.shape, dtype=np.float)
     all_nans = np.nan + np.zeros_like(SP)
     SA_baltic = np.ma.MaskedArray(all_nans, mask=~inds_baltic)
     if np.any(inds_baltic):
@@ -446,8 +461,10 @@ def SA_from_SP_Baltic(SP, lon, lat):
 
 
 def SP_from_SA_Baltic(SA, lon, lat):
-    r"""Calculates Practical Salinity (SP) for the Baltic Sea, from a value
+    """
+    Calculates Practical Salinity (SP) for the Baltic Sea, from a value
     computed analytically from Absolute Salinity.
+
     Parameters
     ----------
     SA : array_like
@@ -456,38 +473,44 @@ def SP_from_SA_Baltic(SA, lon, lat):
           decimal degrees east [0..+360]
     lat : array_like
           decimal degrees (+ve N, -ve S) [-90..+90]
+
     Returns
     -------
     SP_baltic : array_like
                 salinity [psu (PSS-78)], unitless
+
     See Also
     --------
     SP_from_SA, SP_from_Sstar
+
     Notes
     -----
     This program will only produce Practical Salinity values for the Baltic
     Sea.
+
     Examples
     --------
     TODO
+
     References
     ----------
     .. [1] Feistel, R., S. Weinreben, H. Wolf, S. Seitz, P. Spitzer, B. Adel,
-    G. Nausch, B. Schneider and D. G. Wright, 2010c: Density and Absolute
-    Salinity of the Baltic Sea 2006-2009.  Ocean Science, 6, 3-24.
-    http://www.ocean-sci.net/6/3/2010/os-6-3-2010.pdf
+       G. Nausch, B. Schneider and D. G. Wright, 2010c: Density and Absolute
+       Salinity of the Baltic Sea 2006-2009.  Ocean Science, 6, 3-24.
+       http://www.ocean-sci.net/6/3/2010/os-6-3-2010.pdf
+
     .. [2] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.
+
     .. [3] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
-    for estimating Absolute Salinity in the global ocean. Submitted to Ocean
-    Science. A preliminary version is available at Ocean Sci. Discuss.,
-    6, 215-242.
-    http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
-    Modifications:
-    2010-07-23. David Jackett, Trevor McDougall & Paul Barker
+       for estimating Absolute Salinity in the global ocean. Submitted to Ocean
+       Science. A preliminary version is available at Ocean Sci. Discuss.,
+       6, 215-242.
+       http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
     """
+
     SA, lon, lat = list(map(np.ma.masked_invalid, (SA, lon, lat)))
     lon, lat, SA = np.broadcast_arrays(lon, lat, SA)
     inds_baltic = in_Baltic(lon, lat)
@@ -497,12 +520,14 @@ def SP_from_SA_Baltic(SA, lon, lat):
     SP_baltic[inds_baltic] = ((35 / (SSO - 0.087)) *
                               (SA[inds_baltic] - 0.087))
     return SP_baltic
+
+
 # FIXME: Check if this is still used and remove it.
-
-
 def SP_from_SA_Baltic_old(SA, lon, lat):
-    r"""Calculates Practical Salinity (SP) for the Baltic Sea, from a value
+    """
+    Calculates Practical Salinity (SP) for the Baltic Sea, from a value
     computed analytically from Absolute Salinity.
+
     Parameters
     ----------
     SA : array_like
@@ -511,38 +536,44 @@ def SP_from_SA_Baltic_old(SA, lon, lat):
           decimal degrees east [0..+360]
     lat : array_like
           decimal degrees (+ve N, -ve S) [-90..+90]
+
     Returns
     -------
     SP_baltic : array_like
                 salinity [psu (PSS-78)], unitless
+
     See Also
     --------
     SP_from_SA, SP_from_Sstar
+
     Notes
     -----
     This program will only produce Practical Salinity values for the Baltic
     Sea.
+
     Examples
     --------
     TODO
+
     References
     ----------
     .. [1] Feistel, R., S. Weinreben, H. Wolf, S. Seitz, P. Spitzer, B. Adel,
-    G. Nausch, B. Schneider and D. G. Wright, 2010c: Density and Absolute
-    Salinity of the Baltic Sea 2006-2009.  Ocean Science, 6, 3-24.
-    http://www.ocean-sci.net/6/3/2010/os-6-3-2010.pdf
+       G. Nausch, B. Schneider and D. G. Wright, 2010c: Density and Absolute
+       Salinity of the Baltic Sea 2006-2009.  Ocean Science, 6, 3-24.
+       http://www.ocean-sci.net/6/3/2010/os-6-3-2010.pdf
+
     .. [2] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.
+
     .. [3] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
-    for estimating Absolute Salinity in the global ocean. Submitted to Ocean
-    Science. A preliminary version is available at Ocean Sci. Discuss.,
-    6, 215-242.
-    http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
-    Modifications:
-    2010-07-23. David Jackett, Trevor McDougall & Paul Barker
+       for estimating Absolute Salinity in the global ocean. Submitted to Ocean
+       Science. A preliminary version is available at Ocean Sci. Discuss.,
+       6, 215-242.
+       http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
     """
+
     SA, lon, lat = list(map(np.ma.masked_invalid, (SA, lon, lat)))
     lon, lat, SA = np.broadcast_arrays(lon, lat, SA)
     xb1, xb2, xb3 = 12.6, 7., 26.
@@ -566,11 +597,13 @@ def SP_from_SA_Baltic_old(SA, lon, lat):
 
 @match_args_return
 def deltaSA_atlas(p, lon, lat):
-    r"""Absolute Salinity anomaly atlas value (excluding the Baltic Sea).
+    """
+    Absolute Salinity anomaly atlas value (excluding the Baltic Sea).
     Calculates the Absolute Salinity anomaly atlas value, SA - SR,
     in the open ocean by spatially interpolating the global reference
     data set of deltaSA_atlas to the location of the seawater sample.
     This function uses version 3.0 of the deltaSA_ref look up table.
+
     Parameters
     ----------
     p : array_like
@@ -579,10 +612,12 @@ def deltaSA_atlas(p, lon, lat):
           decimal degrees east (will be treated modulo 360)
     lat : array_like
           decimal degrees (+ve N, -ve S) [-90..+90]
+
     Returns
     -------
     deltaSA_atlas : masked array; masked where no nearby ocean is found in data
            Absolute Salinity anomaly atlas value  [g/kg]
+
     Notes
     -----
     The Absolute Salinity anomaly atlas value in the Baltic Sea is
@@ -593,43 +628,50 @@ def deltaSA_atlas(p, lon, lat):
     The mask is only set when the observation is well and truly on dry
     land; often the warning flag is not set until one is several hundred
     kilometers inland from the coast.
-    References
-    ----------
-    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp.
-    .. [2] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
-    for estimating Absolute Salinity in the global ocean.  Submitted to Ocean
-    Science. A preliminary version is available at Ocean Sci. Discuss.,
-    6, 215-242.
-    http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
+
     The algorithm is taken from the Matlab implementation of the references,
     but the numpy implementation here differs substantially from the
     Matlab implementation.
+
+    References
+    ----------
+    .. [1] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp.
+
+    .. [2] McDougall, T.J., D.R. Jackett and F.J. Millero, 2010: An algorithm
+       for estimating Absolute Salinity in the global ocean.  Submitted to Ocean
+       Science. A preliminary version is available at Ocean Sci. Discuss.,
+       6, 215-242.
+       http://www.ocean-sci-discuss.net/6/215/2009/osd-6-215-2009-print.pdf
     """
     return SA_table().delta_SA_ref(p, lon, lat)
 
 
 def enthalpy_SSO_0_CT25(p):
-    r"""Calculates enthalpy at the Standard Ocean Salinity (SSO) and at a
+    """
+    Calculates enthalpy at the Standard Ocean Salinity (SSO) and at a
     Conservative Temperature of zero degrees C (CT=0), as a function of
     pressure (p [dbar]) or enthalpy_CT25(35.16504,0,p).
+
     Parameters
     ----------
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     enthalpy_CT25 : array_like
                     enthalpy_CT25 at (SSO, CT = 0, p), 25-term equation.
                     [J kg :sup:`-1`]
+
     Notes
     -----
     Uses a streamlined version of the 25-term CT version of the Gibbs function,
     that is, a streamlined version of the code "enthalpy_CT25(SA,CT,p)"
-    Modifications:
     """
+
     p = np.asanyarray(p)
     mask = np.ma.getmask(p)
     p = np.ma.filled(p, 0)
@@ -652,11 +694,13 @@ def enthalpy_SSO_0_CT25(p):
 
 # FIXME: Check if this is still used and remove it.
 def enthalpy_SSO_0_p(p):
-    r"""This function calculates enthalpy at the Standard Ocean Salinty, SSO,
+    """
+    This function calculates enthalpy at the Standard Ocean Salinty, SSO,
     and at a Conservative Temperature of zero degrees C, as a function of
     pressure, p, in dbar, using a streamlined version of the 48-term CT
     version of the Gibbs function, that is, a streamlined version of the
     code "enthalpy(SA,CT,p).
+
     Examples
     --------
     >>> import gsw
@@ -664,15 +708,15 @@ def enthalpy_SSO_0_p(p):
     >>> gsw.library.enthalpy_SSO_0_p(p)
     array([   97.26388276,   486.27439004,  1215.47518168,  2430.24919716,
             5827.90973888,  9704.32296903])
-    Modifications:
-    VERSION NUMBER: 3.03 (29th April, 2013)
+
     References
     ----------
     .. [1] McDougall T.J., P.M. Barker, R. Feistel and D.R. Jackett, 2013:  A
-    computationally efficient 48-term expression for the density of seawater in
-    terms of Conservative Temperature, and related properties of seawater.  To
-    be submitted to J. Atm. Ocean. Technol., xx, yyy-zzz.
+       computationally efficient 48-term expression for the density of seawater
+       in terms of Conservative Temperature, and related properties of
+       seawater.  To be submitted to J. Atm. Ocean. Technol., xx, yyy-zzz.
     """
+
     v01 = 9.998420897506056e+2
     v05 = -6.698001071123802
     v08 = -3.988822378968490e-2
@@ -708,8 +752,10 @@ def enthalpy_SSO_0_p(p):
 
 
 def entropy_part(SA, t, p):
-    r"""Calculates entropy, except that it does not evaluate any terms that are
+    """
+    Calculates entropy, except that it does not evaluate any terms that are
     functions of Absolute Salinity alone.
+
     Parameters
     ----------
     SA : array_like
@@ -718,11 +764,13 @@ def entropy_part(SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     entropy_part : array_like
                    entropy minus the terms that due to SA alone
                    [J kg :sup:`-1` K :sup:`-1`]
+
     Notes
     -----
     By not calculating these terms, which are a function only of Absolute
@@ -730,8 +778,8 @@ def entropy_part(SA, t, p):
     the computation of a natural logarithm). These terms are a necessary part
     of entropy, but are not needed when calculating potential temperature from
     in situ temperature.
-    Modifications:
     """
+
     SA, t, p, mask = strip_mask(SA, t, p)
     x2 = sfac * SA
     x = np.sqrt(x2)
@@ -777,18 +825,22 @@ def entropy_part(SA, t, p):
 
 
 def entropy_part_zerop(SA, pt0):
-    r"""Calculates entropy at a sea surface (p = 0 dbar), except that it does
+    """
+    Calculates entropy at a sea surface (p = 0 dbar), except that it does
     not evaluate any terms that are functions of Absolute Salinity alone.
+
     Parameters
     ----------
     SA : array_like
          Absolute salinity [g kg :sup:`-1`]
     pt0 : array_like
           potential temperature relative to 0 dbar [:math:`^\circ` C (ITS-90)]
+
     Returns
     -------
     entropy_part_zerop : array_like
                          [J kg :sup:`-1` K :sup:`-1`]
+
     Notes
     -----
     By not calculating these terms, which are a function only of Absolute
@@ -796,8 +848,8 @@ def entropy_part_zerop(SA, pt0):
     the computation of a natural logarithm). These terms are a necessary part
     of entropy, but are not needed when calculating potential temperature from
     in situ temperature.
-    Modifications:
     """
+
     SA, pt0, mask = strip_mask(SA, pt0)
     x2 = sfac * SA
     x = np.sqrt(x2)
@@ -819,7 +871,8 @@ def entropy_part_zerop(SA, pt0):
 
 # FIXME: Check if this is still used and remove it.
 def gibbs(ns, nt, npr, SA, t, p):
-    r"""Calculates specific Gibbs energy and its derivatives up to order 2 for
+    """
+    Calculates specific Gibbs energy and its derivatives up to order 2 for
     seawater.
     The Gibbs function approach allows the calculation of internal energy,
     entropy, enthalpy, potential enthalpy and the chemical potentials of
@@ -828,6 +881,7 @@ def gibbs(ns, nt, npr, SA, t, p):
     EOS-80 but are essential for the accurate accounting of heat in the ocean
     and for the consistent and accurate treatment of air-sea and ice-sea heat
     fluxes.
+
     Parameters
     ----------
     ns : int
@@ -842,6 +896,7 @@ def gibbs(ns, nt, npr, SA, t, p):
         in situ temperature [:math:`^\circ` C (ITS-90)]
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     gibbs : array_like
@@ -857,6 +912,7 @@ def gibbs(ns, nt, npr, SA, t, p):
             The mixed derivatives are output in units of:
             [(J kg :sup:`-1`) (g kg :sup:`-1`) :sup:`-ns` K :sup:`-nt`
             Pa :sup:`-npr`]
+
     Notes
     -----
     The Gibbs function for seawater is that of TEOS-10 (IOC et al., 2010),
@@ -868,32 +924,38 @@ def gibbs(ns, nt, npr, SA, t, p):
     (2008).
     The derivatives are taken with respect to pressure in Pa, not withstanding
     that the pressure input into this routine is in dbar.
+
     References
     ----------
     .. [1] Feistel, R., 2003: A new extended Gibbs thermodynamic potential of
-    seawater Progr. Oceanogr., 58, 43-114.
+       seawater Progr. Oceanogr., 58, 43-114.
+
     .. [2] Feistel, R., 2008: A Gibbs function for seawater thermodynamics
-    for -6 to 80 :math:`^\circ` C and salinity up to 120 g kg :sup:`-1`,
-    Deep-Sea Res. I, 55, 1639-1671.
+       for -6 to 80 :math:`^\circ` C and salinity up to 120 g kg :sup:`-1`,
+       Deep-Sea Res. I, 55, 1639-1671.
+
     .. [3] IAPWS, 2008: Release on the IAPWS Formulation 2008 for the
-    Thermodynamic Properties of Seawater. The International Association for the
-    Properties of Water and Steam. Berlin, Germany, September 2008, available
-    from http://www.iapws.org.  This Release is referred to as IAPWS-08.
+       Thermodynamic Properties of Seawater. The International Association for
+       the Properties of Water and Steam. Berlin, Germany, September 2008,
+       available from http://www.iapws.org.  This Release is referred to as
+       IAPWS-08.
+
     .. [4] IAPWS, 2009: Supplementary Release on a Computationally Efficient
-    Thermodynamic Formulation for Liquid Water for Oceanographic Use. The
-    International Association for the Properties of Water and Steam. Doorwerth,
-    The Netherlands, September 2009, available from http://www.iapws.org.
-    This Release is referred to as IAPWS-09.
+       Thermodynamic Formulation for Liquid Water for Oceanographic Use. The
+       International Association for the Properties of Water and Steam.
+       Doorwerth, The Netherlands, September 2009, available from
+       http://www.iapws.org.  This Release is referred to as IAPWS-09.
+
     .. [5] IOC, SCOR and IAPSO, 2010: The international thermodynamic equation
-    of seawater - 2010: Calculation and use of thermodynamic properties.
-    Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-    UNESCO (English), 196 pp. See section 2.6 and appendices A.6,  G and H.
+       of seawater - 2010: Calculation and use of thermodynamic properties.
+       Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+       UNESCO (English), 196 pp. See section 2.6 and appendices A.6,  G and H.
+
     .. [6] Millero, F. J., R. Feistel, D. G. Wright, and T. J. McDougall, 2008:
-    The composition of Standard Seawater and the definition of the
-    Reference-Composition Salinity Scale, Deep-Sea Res. I, 55, 50-72.
-    Modifications:
-    2010-09-24. David Jackett, Paul Barker and Trevor McDougall
+       The composition of Standard Seawater and the definition of the
+       Reference-Composition Salinity Scale, Deep-Sea Res. I, 55, 50-72.
     """
+
     SA, t, p = np.asanyarray(SA), np.asanyarray(t), np.asanyarray(p)
     SA = np.atleast_1d(SA)
     nonzero_SA = np.any(SA > 0)
@@ -1146,7 +1208,7 @@ def gibbs(ns, nt, npr, SA, t, p):
             g08[ipos] = g08[ipos] + 1702.453469893412 * np.log(x[ipos])
             gibbs = 0.5 * sfac * 0.025 * g08
             # FIXME: commented by FF, g110 without nan did not pass
-            #mask[inpos] = True
+            # mask[inpos] = True
         else:
             all_masked = True
     elif (ns == 1) & (nt == 0) & (npr == 1):
@@ -1324,25 +1386,29 @@ def gibbs(ns, nt, npr, SA, t, p):
 
 
 def gibbs_pt0_pt0(SA, pt0):
-    r"""Calculates the second derivative of the specific Gibbs function with
+    """
+    Calculates the second derivative of the specific Gibbs function with
     respect to temperature at zero sea pressure or _gibbs(0,2,0,SA,t,0).
+
     Parameters
     ----------
     SA : array_like
          Absolute salinity [g kg :sup:`-1`]
     pt0 : array_like
           potential temperature relative to 0 dbar [:math:`^\circ` C (ITS-90)]
+
     Returns
     -------
     gibbs_pt0_pt0 : array_like
                     TODO: write the eq. for the second derivative of the
                     specific Gibbs function. FIXME: [units]
+
     Notes
     -----
     This library function is called by both "pt_from_CT(SA,CT)"
     and "pt0_from_t(SA,t,p)".
-    Modifications:
     """
+
     SA, pt0, mask = strip_mask(SA, pt0)
     x2 = sfac * SA
     x = np.sqrt(x2)
@@ -1364,27 +1430,31 @@ def gibbs_pt0_pt0(SA, pt0):
 
 
 def in_Baltic(lon, lat):
-    """Check if positions are in the Baltic Sea
+    """
+    Check if positions are in the Baltic Sea
+
     Parameters
     ----------
     lon, lat : array_like or masked arrays
+
     Returns
     -------
     in_Baltic : boolean array (at least 1D)
                 True for points in the Baltic Sea
                 False for points outside, masked or NaN
     """
+
     lon, lat = np.atleast_1d(lon, lat)
     # Polygon bounding the Baltic, (xb, yb)
     # Effective boundary is the intersection of this polygon
     # with rectangle defined by xmin, xmax, ymin, ymax
-    #
+
     # start with southwestern point and go round cyclonically
     xb = np.array([12.6, 45.0, 26.0,  7.0, 12.6])
     yb = np.array([50.0, 50.0, 69.0, 59.0, 50.0])
     # Enclosing rectangle
-    #xmin, xmax = xb.min(), xb.max()
-    #ymin, ymax = yb.min(), yb.max()
+    # xmin, xmax = xb.min(), xb.max()
+    # ymin, ymax = yb.min(), yb.max()
     xmin, xmax = 7.0, 32.0
     ymin, ymax = 52.0, 67.0
     # First check if outside the rectangle
@@ -1410,7 +1480,9 @@ def in_Baltic(lon, lat):
 
 
 def infunnel(SA, CT, p):
-    r"""Oceanographic funnel check for the 25-term equation
+    """
+    Oceanographic funnel check for the 25-term equation
+
     Parameters
     ----------
     SA : array_like
@@ -1420,6 +1492,7 @@ def infunnel(SA, CT, p):
     p  : array_like
          sea pressure                 [dbar]
            (ie. absolute pressure - 10.1325 dbar)
+
     Returns
     -------
     in_funnel : boolean ndarray or scalar
@@ -1430,11 +1503,9 @@ def infunnel(SA, CT, p):
     the error in the fit of the computationally-efficient 25-term
     expression for density in terms of SA, CT and p was calculated
     (McDougall et al., 2010).
-    author:
-    Trevor McDougall and Paul Barker
-    2011-02-27: Bjørn Ådlandsvik, python version
     """
-    # Check variables and resize if necessary
+
+    # Check variables and re-size if necessary.
     scalar = np.isscalar(SA) and np.isscalar(CT) and np.isscalar(p)
     SA, CT, p = np.broadcast_arrays(SA, CT, p)
     input_nan = np.isnan(SA) | np.isnan(CT) | np.isnan(p)
@@ -1453,7 +1524,7 @@ def infunnel(SA, CT, p):
 
 
 def interp_SA_CT(SA, CT, p, p_i):
-    r"""TODO: Write docstring.
+    """
     function [SA_i, CT_i] = interp_SA_CT(SA,CT,p,p_i)
     interp_SA_CT                    linear interpolation to p_i on a cast
     ==========================================================================
@@ -1464,7 +1535,8 @@ def interp_SA_CT(SA, CT, p, p_i):
 
 
 def interp_S_T(S, T, z, znew, P=None):
-    r"""Linear interpolation of ndarrays *S* and *T* from *z* to *znew*.
+    """
+    Linear interpolation of ndarrays *S* and *T* from *z* to *znew*.
     Optionally interpolate a third ndarray, *P*.
     *z* must be strictly increasing or strictly decreasing.  It must
     be a 1-D array, and its length must match the last dimension
@@ -1476,6 +1548,7 @@ def interp_S_T(S, T, z, znew, P=None):
     yield corresponding *nan* in the output.
     The basic algorithm is from scipy.interpolate.
     """
+
     isscalar = False
     if not np.iterable(znew):
         isscalar = True
@@ -1527,7 +1600,8 @@ def interp_S_T(S, T, z, znew, P=None):
 
 
 def interp_ref_cast(spycnl, A="gn"):
-    r"""Translation of:
+    """
+    Translation of:
     [SA_iref_cast, CT_iref_cast, p_iref_cast] = interp_ref_cast(spycnl, A)
     interp_ref_cast            linear interpolation of the reference cast
     ==========================================================================
@@ -1553,6 +1627,7 @@ def interp_ref_cast(spycnl, A="gn"):
     for the gamma_n case, even when the sigma_2 case is in effect.
     That bug is fixed here.
     """
+
     if A.lower() in ["s2", "sigma2", "sigma_2"]:
         A = "s2"
     gsw_data = read_data("gsw_data_v3_0.npz")
@@ -1579,24 +1654,29 @@ def interp_ref_cast(spycnl, A="gn"):
 
 
 def specvol_SSO_0_CT25(p):
-    r"""Calculates specific volume at the Standard Ocean Salinity (SSO) and
+    """
+    Calculates specific volume at the Standard Ocean Salinity (SSO) and
     Conservative Temperature of zero degrees C (CT=0), as a function of
     pressure (p [dbar]) or spec_vol_CT25(35.16504,0,p).
+
     Parameters
     ----------
     p : array_like
         pressure [dbar]
+
     Returns
     -------
     specvol_SSO_0_CT25 : array_like
                          Specific volume at (SSO, CT=0, p), 25-term equation.
                          [m :sup:`3` kg :sup:`-1`]
+
     Notes
     -----
     It uses a streamlined version of the 25-term CT version of specific volume
     that is, a streamlined version of the code "rho_alpha_beta_CT25(SA,CT,p)"
     Modifications
     """
+
     p = np.asanyarray(p)
     # No need to strip mask and replace it here; the calculation is simple.
     specvol_SSO_0_CT25 = ((1. + SSO * (2.0777716085618458e-003 + np.sqrt(SSO) *
@@ -1611,15 +1691,16 @@ def specvol_SSO_0_CT25(p):
     return specvol_SSO_0_CT25
 
 
-# Salinity lib functions
+# Salinity lib functions.
 def specvol_SSO_0_p(p):
-    r"""This function calculates specific volume at the Standard Ocean
+    """
+    This function calculates specific volume at the Standard Ocean
     Salinity, SSO, and at a Conservative Temperature of zero degrees C, as a
     function of pressure, p, in dbar, using a streamlined version of the
     48-term CT version of specific volume, that is, a streamlined version of
     the code "specvol(SA, CT, p)".
-    Modifications:
     """
+
     v01 = 9.998420897506056e+2
     v05 = -6.698001071123802
     v08 = -3.988822378968490e-2
