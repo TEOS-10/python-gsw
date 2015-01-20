@@ -3,44 +3,59 @@
 from __future__ import absolute_import
 
 import io
+import os
 import re
+import sys
+import codecs
 from setuptools import setup
+from setuptools.command.test import test as TestCommand
 
 
-def read(*filenames, **kwargs):
-    encoding = kwargs.get('encoding', 'utf-8')
-    sep = kwargs.get('sep', '\n')
-    buf = []
-    for filename in filenames:
-        with io.open(filename, encoding=encoding) as f:
-            buf.append(f.read())
-    return sep.join(buf)
+rootpath = os.path.abspath(os.path.dirname(__file__))
 
 
-VERSIONFILE = "gsw/__init__.py"
-verstrline = open(VERSIONFILE, "rt").read()
-VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
-mo = re.search(VSRE, verstrline, re.M)
-if mo:
-    verstr = mo.group(1)
-else:
-    raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
+class PyTest(TestCommand):
+    """python setup.py test"""
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = ['--strict', '--verbose', '--tb=long', 'tests']
+        self.test_suite = True
+
+    def run_tests(self):
+        import pytest
+        errno = pytest.main(self.test_args)
+        sys.exit(errno)
+
+
+def read(*parts):
+    return open(os.path.join(rootpath, *parts), 'r').read()
+
+
+def extract_version():
+    version = None
+    fname = os.path.join(rootpath, 'gsw', '__init__.py')
+    with open(fname) as f:
+        for line in f:
+            if (line.startswith('__version__')):
+                _, version = line.split('=')
+                version = version.strip()[1:-1]  # Remove quotation characters
+                break
+    return version
+
 
 email = "ocefpaf@gmail.com"
 maintainer = "Filipe Fernandes"
 authors = ['Eric Firing', u'Bjørn Ådlandsvik', 'Filipe Fernandes']
 
-install_requires = ['numpy', 'nose']
-
 LICENSE = read('LICENSE.txt')
-long_description = read('README.txt', 'CHANGES.txt')
+long_description = '{}\n{}'.format(read('README.txt'), read('CHANGES.txt'))
 
 config = dict(name='gsw',
-              version=verstr,
+              version=extract_version(),
               packages=['gsw', 'gsw/gibbs', 'gsw/utilities', 'gsw/test'],
               package_data={'gsw': ['utilities/data/*.npz']},
-              test_suite='tests',
-              use_2to3=False,
+              tests_require=['pytest'],
+              cmdclass=dict(test=PyTest),
               license=LICENSE,
               long_description=long_description,
               classifiers=['Development Status :: 4 - Beta',
@@ -63,6 +78,8 @@ config = dict(name='gsw',
               download_url='https://pypi.python.org/pypi/gsw/',
               platforms='any',
               keywords=['oceanography', 'seawater', 'TEOS-10', 'gibbs'],
-              install_requires=install_requires)
+              install_requires=['numpy', 'scipy'],
+              extras_require=dict(testing=['pytest'])
+              )
 
 setup(**config)
