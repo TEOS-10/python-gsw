@@ -78,7 +78,7 @@ config = dict(name='gsw',
               download_url='https://pypi.python.org/pypi/gsw/',
               platforms='any',
               keywords=['oceanography', 'seawater', 'TEOS-10', 'gibbs'],
-              install_requires=['numpy', 'scipy'],
+              install_requires=['numpy'],
               extras_require=dict(testing=['pytest'])
               )
 
