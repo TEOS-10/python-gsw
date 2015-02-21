@@ -6,10 +6,6 @@ import os
 from functools import wraps
 
 import numpy as np
-try:
-    from scipy.io import loadmat
-except:
-    pass
 
 __all__ = ['Bunch',
            'Cache_npz',
@@ -397,6 +393,7 @@ def loadmatbunch(fname, masked=True):
     converts floating point arrays to masked arrays, and uses
     nested Bunch objects in place of the matlab structures.
     """
+    from scipy.io import loadmat
     out = Bunch()
     fobj = open(fname, 'rb')
     xx = loadmat(fobj)
