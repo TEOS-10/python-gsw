@@ -6,7 +6,10 @@ import os
 from functools import wraps
 
 import numpy as np
-from scipy.io import loadmat
+try:
+    from scipy.io import loadmat
+except:
+    pass
 
 __all__ = ['Bunch',
            'Cache_npz',
