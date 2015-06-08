@@ -5,10 +5,10 @@ python gsw
 
 .. image:: https://badge.fury.io/py/gsw.png
    :target: http://badge.fury.io/py/gsw
-.. image:: https://api.travis-ci.org/ocefpaf/python-gsw.png?branch=master
-   :target: https://travis-ci.org/ocefpaf/python-gsw
+.. image:: https://api.travis-ci.org/TEOS-10/python-gsw.png?branch=master
+   :target: https://travis-ci.org/TEOS-10/python-gsw
 .. image:: http://bottlepy.org/docs/dev/_static/Gittip.png
-   :target: https://www.gittip.com/ocefpaf/
+   :target: https://www.gittip.com/TEOS-10/
 
 Python implementation of the Thermodynamic Equation Of Seawater - 2010 (`TEOS-10 <http://www.teos-10.org/>`__)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
