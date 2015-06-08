@@ -26,14 +26,6 @@ before_install:
 
 install:
     - export PYTHONWARNINGS=all
-    #- python setup.py install
 
 script:
-    - if [[ $CONDA == python=2.7* ]]; then
-        py.test ;
-      else
-        py.test ;
-      fi
-
-after_success:
-    - coveralls
+    - py.test

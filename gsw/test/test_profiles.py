@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""Unit check for standard profiles for the Gibbs Sea Water python package."""
+
+"""
+Unit check for standard profiles for the Gibbs Sea Water python package.
+"""
+
 from __future__ import print_function
 
 # Auto generates and perform a set of test methods like:
@@ -42,7 +46,7 @@ cf = Bunch(np.load(os.path.join(datadir, 'gsw_cf.npz')))
 function_arguments = dict(
     # absolute_salinity_sstar_ct.py
     SA_from_SP=('SP', 'p', 'long', 'lat'),  # uses SAAR
-    #Sstar_from_SP  TODO
+    # Sstar_from_SP  TODO
     CT_from_t=('SA', 't', 'p'),
     #
     # thermodynamics_from_t.py
@@ -64,9 +68,9 @@ function_arguments = dict(
     enthalpy_t_exact=('SA', 't', 'p'),
     dynamic_enthalpy_t_exact=('SA', 't', 'p'),
     SA_from_rho_t_exact=('rho', 't', 'p'),
-    #t_from_rho_exact=('rho', 'SA', 'p'),
+    # t_from_rho_exact=('rho', 'SA', 'p'),
     t_maxdensity_exact=('SA', 'p'),
-    #entropy_t_exact=('SA', 't', 'p'),             # Not in V3.03
+    # entropy_t_exact=('SA', 't', 'p'),             # Not in V3.03
     cp_t_exact=('SA', 't', 'p'),
     isochoric_heat_cap_t_exact=('SA', 't', 'p'),
     chem_potential_relative_t_exact=('SA', 't', 'p'),
@@ -78,14 +82,14 @@ function_arguments = dict(
     osmotic_pressure_t_exact=('SA', 't', 'p'),
     #
     # conversion.py
-    #deltaSA_from_SP  TODO
-    #SA_Sstar_from_SP  TODO
+    # deltaSA_from_SP  TODO
+    # SA_Sstar_from_SP  TODO
     SR_from_SP=('SP',),
     SP_from_SR=('SR',),
-    #SP_from_SA=('SA', 'p', 'long', 'lat'),  TODO
-    #Sstar_from_SA=('SA', 'p', 'long', 'lat'),  TODO
-    #SA_from_Sstar=('Sstar', 'p', 'long', 'lat'), TODO
-    #SP_from_Sstar=('Sstar', 'p', 'long', 'lat'),  TODO
+    # SP_from_SA=('SA', 'p', 'long', 'lat'),  TODO
+    # Sstar_from_SA=('SA', 'p', 'long', 'lat'),  TODO
+    # SA_from_Sstar=('Sstar', 'p', 'long', 'lat'), TODO
+    # SP_from_Sstar=('Sstar', 'p', 'long', 'lat'),  TODO
     pt_from_CT=('SA', 'CT'),
     t_from_CT=('SA', 'CT', 'p'),
     CT_from_pt=('SA', 'pt'),
@@ -108,25 +112,25 @@ function_arguments = dict(
     ionic_strength_from_SA=('SA',),
     #
     # density_enthalpy_48_ct.py
-    #rho_CT  TODO
-    #alpha_CT  TODO
-    #beta_CT  TODO
-    #rho_alpha_beta_CT  TODO
-    #specvol_CT  TODO
-    #specvol_anom_CT  TODO
-    #sigma0_CT  TODO
-    #sigma1_CT  TODO
-    #sigma2_CT  TODO
-    #sigma3_CT  TODO
-    #sigma4_CT  TODO
-    #sound_speed_CT  TODO
-    #internal_energy_CT  TODO
-    #enthalpy_CT  TODO
-    #enthalpy_diff_CT  TODO
-    #dynamic_enthalpy_CT  TODO
-    #SA_from_rho_CT  TODO
-    #CT_from_rho  TODO
-    #CT_maxdensity TODO
+    # rho_CT  TODO
+    # alpha_CT  TODO
+    # beta_CT  TODO
+    # rho_alpha_beta_CT  TODO
+    # specvol_CT  TODO
+    # specvol_anom_CT  TODO
+    # sigma0_CT  TODO
+    # sigma1_CT  TODO
+    # sigma2_CT  TODO
+    # sigma3_CT  TODO
+    # sigma4_CT  TODO
+    # sound_speed_CT  TODO
+    # internal_energy_CT  TODO
+    # enthalpy_CT  TODO
+    # enthalpy_diff_CT  TODO
+    # dynamic_enthalpy_CT  TODO
+    # SA_from_rho_CT  TODO
+    # CT_from_rho  TODO
+    # CT_maxdensity TODO
     #
     # density_enthalpy_48.py NOTE: None are tested on Matlab.
     rho=('SA', 'CT', 'p'),
@@ -166,18 +170,18 @@ function_arguments = dict(
     dynamic_enthalpy_CT_exact=('SA', 'CT', 'p'),
     SA_from_rho_CT_exact=('rho', 'CT', 'p'),
     # FIXME: NameError: 't_from_rho_exact' not defined
-    #CT_from_rho_exact=('rho', 'SA', 'p'),
+    # CT_from_rho_exact=('rho', 'SA', 'p'),
     CT_maxdensity_exact=('SA', 'p'),
     #
     # derivatives.py
-    #CT_first_derivatives=('SA', 'pt'),  FIXME: out should tuple.
-    #CT_second_derivatives=('SA', 'pt'),  FIXME: out should tuple.
-    #enthalpy_first_derivatives=('SA', 'CT', 'p'),  FIXME: out should tuple.
-    #enthalpy_second_derivatives=('SA', 'CT', 'p'),  FIXME: out should tuple.
-    #entropy_first_derivatives=('SA', 'CT'),  FIXME: out should tuple.
-    #entropy_second_derivatives=('SA', 'CT'),  FIXME: out should tuple.
-    #pt_first_derivatives=('SA', 'CT'),  FIXME: out should tuple.
-    #pt_second_derivatives=('SA', 'CT'),  FIXME: out should tuple.
+    # CT_first_derivatives=('SA', 'pt'),  FIXME: out should tuple.
+    # CT_second_derivatives=('SA', 'pt'),  FIXME: out should tuple.
+    # enthalpy_first_derivatives=('SA', 'CT', 'p'),  FIXME: out should tuple.
+    # enthalpy_second_derivatives=('SA', 'CT', 'p'),  FIXME: out should tuple.
+    # entropy_first_derivatives=('SA', 'CT'),  FIXME: out should tuple.
+    # entropy_second_derivatives=('SA', 'CT'),  FIXME: out should tuple.
+    # pt_first_derivatives=('SA', 'CT'),  FIXME: out should tuple.
+    # pt_second_derivatives=('SA', 'CT'),  FIXME: out should tuple.
     #
     # earth.py
     f=('lat',),
@@ -193,44 +197,44 @@ function_arguments = dict(
     brineSA_t=('t_freezing', 'p', 'sat05'),
     #
     # geostrophic.py
-    #geostrophic_velocity  TODO
+    # geostrophic_velocity  TODO
     #
     # geostrophic_48.py
-    #geo_strf_dyn_height  TODO
-    #geo_strf_dyn_height_pc  TODO
-    #geo_strf_isopycnal  TODO
-    #geof_str_isopycnal_pc  TODO
-    #geo_strf_Montgomery  TODO
-    #geo_strf_Cunningham  TODO
+    # geo_strf_dyn_height  TODO
+    # geo_strf_dyn_height_pc  TODO
+    # geo_strf_isopycnal  TODO
+    # geof_str_isopycnal_pc  TODO
+    # geo_strf_Montgomery  TODO
+    # geo_strf_Cunningham  TODO
     #
     # isobaric.py
-    #latentheat_melting  TODO
-    #latentheat_evap_CT  TODO
-    #latentheat_evap_t=('SA', 't'),
+    # latentheat_melting  TODO
+    # latentheat_evap_CT  TODO
+    # latentheat_evap_t=('SA', 't'),
     #
     # library.py
-    #gibbs
-    #SAAR=('p', 'long', 'lat'),          #  not directly tested on Matlab
+    # gibbs
+    # SAAR=('p', 'long', 'lat'),          #  not directly tested on Matlab
     Fdelta=('p', 'long', 'lat'),
     deltaSA_atlas=('p', 'long', 'lat'),
-    #SA_from_SP_Baltic=('SP', 'long', 'lat'),  NOTE: Not tested on Matlab.
-    #SP_from_SA_Baltic=('SA', 'long', 'lat'),  NOTE: Not tested on Matlab.
-    #infunnel=('SA', 'CT', 'p'),  NOTE: Not tested on Matlab.
-    #entropy_part=('SA', 'CT', 'p'),  NOTE: Not tested on Matlab.
-    #entropy_part_zerop=('SA', 'pt0'),  NOTE: Not tested on Matlab.
-    #interp_ref_cast=('spycnl', 'gn'),  NOTE: Not tested on Matlab.
-    #interp_SA_CT=('SA', 'CT', 'p', 'p_i'),  NOTE: Not tested on Matlab.
-    #gibbs_pt0_pt0=('SA', 'pt0'),  NOTE: Not tested on Matlab.
-    #specvol_SSO_0_p=('p'),  NOTE: Not tested on Matlab.
-    #enthalpy_SSO_0_p=('p',),  FIXME: No enthalpy_SSO_0_p.
-    #Hill_ratio_at_SP2= ('t'),  FIXME: No Hill_ratio_at_SP2.
+    # SA_from_SP_Baltic=('SP', 'long', 'lat'),  NOTE: Not tested on Matlab.
+    # SP_from_SA_Baltic=('SA', 'long', 'lat'),  NOTE: Not tested on Matlab.
+    # infunnel=('SA', 'CT', 'p'),  NOTE: Not tested on Matlab.
+    # entropy_part=('SA', 'CT', 'p'),  NOTE: Not tested on Matlab.
+    # entropy_part_zerop=('SA', 'pt0'),  NOTE: Not tested on Matlab.
+    # interp_ref_cast=('spycnl', 'gn'),  NOTE: Not tested on Matlab.
+    # interp_SA_CT=('SA', 'CT', 'p', 'p_i'),  NOTE: Not tested on Matlab.
+    # gibbs_pt0_pt0=('SA', 'pt0'),  NOTE: Not tested on Matlab.
+    # specvol_SSO_0_p=('p'),  NOTE: Not tested on Matlab.
+    # enthalpy_SSO_0_p=('p',),  FIXME: No enthalpy_SSO_0_p.
+    # Hill_ratio_at_SP2= ('t'),  FIXME: No Hill_ratio_at_SP2.
     #
-    #neutral_nonlinear_48.py
-    #cabbeling,  TODO
-    #thermobaric,  TODO
-    #isopycnal_slope_ratio,  TODO
-    #isopycnal_vs_ntp_CT_ratio,  TODO
-    #ntp_pt_vs_CT_ratio  TODO
+    # neutral_nonlinear_48.py
+    # cabbeling,  TODO
+    # thermobaric,  TODO
+    # isopycnal_slope_ratio,  TODO
+    # isopycnal_vs_ntp_CT_ratio,  TODO
+    # ntp_pt_vs_CT_ratio  TODO
     #
     # practical_salinity.py
     SP_from_C=('C', 't', 'p'),
@@ -238,11 +242,11 @@ function_arguments = dict(
     SP_from_R=('R_cf', 't', 'p'),
     R_from_SP=('SP', 't', 'p'),
     SP_salinometer=('Rt', 't'),
-    #SP_from_SK=('SK',),  NOTE: Not tested on Matlab.
-    #SK_from_SP=('SP',),  NOTE: Not tested on Matlab.
+    # SP_from_SK=('SK',),  NOTE: Not tested on Matlab.
+    # SK_from_SP=('SP',),  NOTE: Not tested on Matlab.
     #
     # steric.py
-    #steric_height=TODO
+    # steric_height=TODO
     #
     # water_column_48.py
     Nsquared=('SA', 'CT', 'p', 'lat'),
@@ -250,7 +254,7 @@ function_arguments = dict(
     IPV_vs_fNsquared_ratio=('SA', 'CT', 'p'))
 
 
-# Make aliases for some values to be used as arguments
+# Make aliases for some values to be used as arguments.
 cv.entropy_chck_cast = cv.entropy_from_CT
 cv.Abs_Pressure_from_p_chck_cast = cv.Abs_Pressure_from_p
 cv.depth_chck_cast = cv.depth_from_z
@@ -286,7 +290,7 @@ not_match = {
     'Turner_Rsubrho': 'Tu',
     'IPV_vs_fNsquared_ratio': 'IPVfN2',
     'Nsquared': 'n2',
-    #'chem_potential_relative_t_exact': 'chem_potential_t_exact',
+    # 'chem_potential_relative_t_exact': 'chem_potential_t_exact',
     'rho_alpha_beta_CT_exact': 'rho_CTrab_exact',
     'rho_alpha_beta': 'rho_rab'}
 
@@ -307,7 +311,7 @@ def generic_test(self, func=None, argnames=None):
     # Check that the maximal error is less than the given tolerance
     if isinstance(out, tuple):
         out = out[0]
-        #print("""%s returns a tuple.""" % func)
+        # print("""%s returns a tuple.""" % func)
     target = getattr(cv, func)
     maxdiff = np.nanmax(abs(out - target))
     maxallowed = getattr(cv, func + '_ca')
