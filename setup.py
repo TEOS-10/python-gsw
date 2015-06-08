@@ -18,7 +18,7 @@ class PyTest(TestCommand):
     """python setup.py test"""
     def finalize_options(self):
         TestCommand.finalize_options(self)
-        self.test_args = ['--strict', '--verbose', '--tb=long', 'tests']
+        self.test_args = ['--verbose']
         self.test_suite = True
 
     def run_tests(self):
@@ -50,11 +50,14 @@ authors = ['Eric Firing', u'Bjørn Ådlandsvik', 'Filipe Fernandes']
 LICENSE = read('LICENSE.txt')
 long_description = '{}\n{}'.format(read('README.rst'), read('CHANGES.txt'))
 
+with open('requirements-dev.txt') as f:
+    tests_require = f.readlines()
+tests_require = [t.strip() for t in tests_require]
+
 config = dict(name='gsw',
               version=extract_version(),
               packages=['gsw', 'gsw/gibbs', 'gsw/utilities', 'gsw/test'],
               package_data={'gsw': ['utilities/data/*.npz']},
-              tests_require=['pytest', 'scipy', 'oct2py'],
               cmdclass=dict(test=PyTest),
               license=LICENSE,
               long_description=long_description,
@@ -79,7 +82,7 @@ config = dict(name='gsw',
               platforms='any',
               keywords=['oceanography', 'seawater', 'TEOS-10', 'gibbs'],
               install_requires=['numpy'],
-              extras_require=dict(testing=['pytest'])
+              tests_require=tests_require,
               )
 
 setup(**config)
