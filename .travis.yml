@@ -10,8 +10,7 @@ before_install:
     - sudo apt-add-repository -y ppa:picaso/octave
     - sudo apt-get update -qq
     - sudo apt-get install -qq octave liboctave-dev
-    - URL=http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh
-    - wget $URL -O miniconda.sh
+    - wget http://bit.ly/miniconda -O miniconda.sh
     - bash miniconda.sh -b -p $HOME/miniconda
     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
