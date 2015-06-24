@@ -15,7 +15,6 @@ rootpath = os.path.abspath(os.path.dirname(__file__))
 
 
 class PyTest(TestCommand):
-    """python setup.py test"""
     def finalize_options(self):
         TestCommand.finalize_options(self)
         self.test_args = ['--verbose']
@@ -77,7 +76,7 @@ config = dict(name='gsw',
               author_email=email,
               maintainer=maintainer,
               maintainer_email=email,
-              url='http://pypi.python.org/pypi/seawater/',
+              url='https://github.com/TEOS-10/python-gsw',
               download_url='https://pypi.python.org/pypi/gsw/',
               platforms='any',
               keywords=['oceanography', 'seawater', 'TEOS-10', 'gibbs'],
