@@ -3,12 +3,18 @@ python gsw
 
 (This python module is incomplete and should be used with caution!)
 
-.. image:: https://badge.fury.io/py/gsw.png
-   :target: http://badge.fury.io/py/gsw
-.. image:: https://api.travis-ci.org/TEOS-10/python-gsw.png?branch=master
+.. image:: http://img.shields.io/pypi/v/gsw.svg?style=flat
+   :target: https://pypi.python.org/pypi/gsw
+   :alt: Version_status
+.. image:: http://img.shields.io/pypi/dm/gsw.svg?style=flat
+   :target: https://pypi.python.org/pypi/gsw
+   :alt: Downloads
+.. image:: http://img.shields.io/travis/TEOS-10/python-gsw/master.svg?style=flat
    :target: https://travis-ci.org/TEOS-10/python-gsw
-.. image:: http://bottlepy.org/docs/dev/_static/Gittip.png
-   :target: https://www.gittip.com/TEOS-10/
+   :alt: Build_status
+.. image:: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+   :target: https://github.com/TEOS-10/python-gsw/blob/master/LICENSE.txt
+   :alt: license
 
 Python implementation of the Thermodynamic Equation Of Seawater - 2010 (`TEOS-10 <http://www.teos-10.org/>`__)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
