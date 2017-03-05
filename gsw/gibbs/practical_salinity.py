@@ -186,7 +186,7 @@ def R_from_SP(SP, t, p):
     if (SP < 0).any():
         raise ValueError('R_from_SP: SP must be non-negative!')
 
-    SP, t, p = np.broadcast_arrays(SP, t, p)
+    SP, t, p = np.broadcast_arrays(SP, t, p, subok=True)
 
     # Setting up the constants
     t68 = t * 1.00024
@@ -447,7 +447,7 @@ def SP_from_C(C, t, p):
        of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
     """
 
-    C, t, p = np.broadcast_arrays(C, t, p)
+    C, t, p = np.broadcast_arrays(C, t, p, subok=True)
 
     t68 = t * 1.00024
     ft68 = (t68 - 15) / (1 + k * (t68 - 15))
@@ -541,7 +541,7 @@ def SP_from_R(R, t, p):
        of seawater.  Unesco Technical Papers in Marine Science, 44, 53 pp.
     """
 
-    R, t, p = np.broadcast_arrays(R, t, p)
+    R, t, p = np.broadcast_arrays(R, t, p, subok=True)
 
     t68 = t * 1.00024
     ft68 = (t68 - 15) / (1 + k * (t68 - 15))
@@ -660,7 +660,7 @@ def SP_salinometer(Rt, t):
        particular, Eqns. (E.2.1) and (E.2.6).
     """
 
-    Rt, t = np.broadcast_arrays(Rt, t)
+    Rt, t = np.broadcast_arrays(Rt, t, subok=True)
 
     t68 = t * 1.00024
     ft68 = (t68 - 15) / (1 + k * (t68 - 15))

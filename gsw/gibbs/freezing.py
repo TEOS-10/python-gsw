@@ -81,7 +81,8 @@ def brineSA_CT(CT, p, saturation_fraction=1):
     """
 
     CT, p, saturation_fraction = np.broadcast_arrays(CT, p,
-                                                     saturation_fraction)
+                                                     saturation_fraction,
+                                                     subok=True)
 
     if np.logical_or(saturation_fraction < 0, saturation_fraction > 1).any():
         raise ValueError('Saturation_fraction MUST be between zero and one.')
@@ -253,7 +254,8 @@ def brineSA_t(t, p, saturation_fraction=1):
        UNESCO (English), 196 pp. See sections 3.33.
     """
 
-    t, p, saturation_fraction = np.broadcast_arrays(t, p, saturation_fraction)
+    t, p, saturation_fraction = np.broadcast_arrays(t, p, saturation_fraction,
+                                                    subok=True)
 
     if np.logical_or(saturation_fraction < 0, saturation_fraction > 1).any():
         raise ValueError('Saturation_fraction MUST be between zero and one.')
@@ -394,7 +396,8 @@ def CT_freezing(SA, p, saturation_fraction=1):
     """
 
     SA, p, saturation_fraction = np.broadcast_arrays(SA, p,
-                                                     saturation_fraction)
+                                                     saturation_fraction,
+                                                     subok=True)
     if (SA < 0).any():
         raise ValueError('SA must be non-negative!')
 
@@ -498,7 +501,8 @@ def t_freezing(SA, p, saturation_fraction=1):
     # t_freezing -= saturation_fraction * (1e-3) * (2.4 - SA / 70.33008)
 
     SA, p, saturation_fraction = np.broadcast_arrays(SA, p,
-                                                     saturation_fraction)
+                                                     saturation_fraction,
+                                                     subok=True)
     if (SA < 0).any():
         raise ValueError('SA must be non-negative!')
 

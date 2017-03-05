@@ -84,7 +84,7 @@ def distance(lon, lat, p=0):
     elif lon.ndim != lat.ndim:
         raise ValueError('lon, lat must have the same dimension')
 
-    lon, lat, p = np.broadcast_arrays(lon, lat, p)
+    lon, lat, p = np.broadcast_arrays(lon, lat, p, subok=True)
 
     dlon = np.diff(lon * DEG2RAD)
     dlat = np.diff(lat * DEG2RAD)

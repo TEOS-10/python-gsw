@@ -140,7 +140,7 @@ class SA_table(object):
         mask_in = np.ma.mask_or(np.ma.getmask(p), np.ma.getmask(lon))
         mask_in = np.ma.mask_or(mask_in, np.ma.getmask(lat))
         p, lon, lat = [np.ma.filled(a, 0).astype(float) for a in (p, lon, lat)]
-        p, lon, lat = np.broadcast_arrays(p, lon, lat)
+        p, lon, lat = np.broadcast_arrays(p, lon, lat, subok=True)
         if p.ndim > 1:
             shape_in = p.shape
             p, lon, lat = list(map(np.ravel, (p, lon, lat)))
@@ -448,7 +448,7 @@ def SA_from_SP_Baltic(SP, lon, lat):
     if np.ma.is_masked(lat):
         input_mask = input_mask | lat.mask
     SP, lon, lat = list(map(np.atleast_1d, (SP, lon, lat)))
-    SP, lon, lat = np.broadcast_arrays(SP, lon, lat)
+    SP, lon, lat = np.broadcast_arrays(SP, lon, lat, subok=True)
     inds_baltic = in_Baltic(lon, lat)
     # SA_baltic = np.ma.masked_all(SP.shape, dtype=np.float)
     all_nans = np.nan + np.zeros_like(SP)
@@ -512,7 +512,7 @@ def SP_from_SA_Baltic(SA, lon, lat):
     """
 
     SA, lon, lat = list(map(np.ma.masked_invalid, (SA, lon, lat)))
-    lon, lat, SA = np.broadcast_arrays(lon, lat, SA)
+    lon, lat, SA = np.broadcast_arrays(lon, lat, SA, subok=True)
     inds_baltic = in_Baltic(lon, lat)
     if not inds_baltic.sum():
         return None
@@ -575,7 +575,7 @@ def SP_from_SA_Baltic_old(SA, lon, lat):
     """
 
     SA, lon, lat = list(map(np.ma.masked_invalid, (SA, lon, lat)))
-    lon, lat, SA = np.broadcast_arrays(lon, lat, SA)
+    lon, lat, SA = np.broadcast_arrays(lon, lat, SA, subok=True)
     xb1, xb2, xb3 = 12.6, 7., 26.
     xb1a, xb3a = 45., 26.
     yb1, yb2, yb3 = 50., 59., 69.
@@ -965,7 +965,7 @@ def gibbs(ns, nt, npr, SA, t, p):
     SA = np.ma.filled(SA, 0)
     t = np.ma.filled(t, 20)
     p = np.ma.filled(p, 10)
-    SA, t, p = np.broadcast_arrays(SA, t, p)
+    SA, t, p = np.broadcast_arrays(SA, t, p, subok=True)
     gibbs = np.zeros(SA.shape, dtype=np.float)  # Use if all_masked is True
     all_masked = False
     # Ensure a full mask, so we can set elements if necessary.
@@ -1465,7 +1465,7 @@ def in_Baltic(lon, lat):
         in_rectangle = in_rectangle.data & ~in_rectangle.mask
     # Closer check for points in the rectangle
     if np.any(in_rectangle):
-        lon, lat = np.broadcast_arrays(lon, lat)
+        lon, lat = np.broadcast_arrays(lon, lat, subok=True)
         in_baltic = np.zeros(lon.shape, dtype='bool')
         lon1 = lon[in_rectangle]
         lat1 = lat[in_rectangle]
@@ -1507,7 +1507,7 @@ def infunnel(SA, CT, p):
 
     # Check variables and re-size if necessary.
     scalar = np.isscalar(SA) and np.isscalar(CT) and np.isscalar(p)
-    SA, CT, p = np.broadcast_arrays(SA, CT, p)
+    SA, CT, p = np.broadcast_arrays(SA, CT, p, subok=True)
     input_nan = np.isnan(SA) | np.isnan(CT) | np.isnan(p)
     infunnel = ((p <= 8000) &
                 (SA >= 0) &
