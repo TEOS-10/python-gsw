@@ -8,6 +8,7 @@ from .constants import sfac, SSO, db2Pascal
 from ..utilities import match_args_return, strip_mask, read_data
 
 __all__ = ['deltaSA_atlas',
+           'enthalpy_SSO_0',
            'enthalpy_SSO_0_p',
            'entropy_part',
            'entropy_part_zerop',
@@ -22,6 +23,10 @@ __all__ = ['deltaSA_atlas',
            'SA_from_SP_Baltic',
            'specvol_SSO_0_p',
            'SP_from_SA_Baltic']
+
+
+h006 = -2.1078768810e-9
+h007 =  2.8019291329e-10
 
 
 class SA_table(object):
@@ -690,6 +695,56 @@ def enthalpy_SSO_0_CT25(p):
                            np.log(1 + (b2 * p * (B - A)) /
                            (A * (B + b2 * p)))))
     return np.ma.array(enthalpy_SSO_0_CT25, mask=mask, copy=False)
+
+
+def enthalpy_SSO_0(p):
+    """
+    Enthalpy at SSO and CT(T=0) C (75-term equation)
+
+    This function calculates enthalpy at the Standard Ocean Salinty, SSO,
+    and at a Conservative Temperature of zero degrees C, as a function of
+    pressure, p, in dbar, using a streamlined version of the 75-term
+    computationally-efficient expression for specific volume, that is, a
+    streamlined version of the code "enthalpy(SA,CT,p)".
+
+    Parameters
+    ----------
+    p : array_like
+        pressure [dbar]
+
+    Returns
+    -------
+    enthalpy_SSO_0 : array_like
+                     enthalpy at (SSO, CT=0, p)
+                     [J kg :sup:`-1`]
+
+    Examples
+    --------
+    >>> import gsw
+    >>> p = np.array([10, 50, 125, 250, 600, 1000])
+    >>> gsw.library.enthalpy_SSO_0(p)
+    array([   97.26388583,   486.27439853,  1215.47517122,  2430.24907325,
+            5827.90879421,  9704.32030926])
+
+    Version
+    -------
+    3.05 (27th November, 2015)
+
+    References
+    ----------
+    .. [1] Roquet, F., G. Madec, T.J. McDougall, P.M. Barker, 2015: Accurate
+           polynomial expressions for the density and specifc volume of
+           seawater using the TEOS-10 standard. Ocean Modelling.
+    """
+
+    z = p * 1e-4
+
+    dynamic_enthalpy_SSO_0_p = z * (9.726613854843870e-4 + z * (
+        -2.252956605630465e-5 + z * (2.376909655387404e-6 + z * (
+            -1.664294869986011e-7 + z * (-5.988108894465758e-9 + z * (
+                h006 + h007 * z))))))
+
+    return dynamic_enthalpy_SSO_0_p * db2Pascal * 1e4
 
 
 # FIXME: Check if this is still used and remove it.
