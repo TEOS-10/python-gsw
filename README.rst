@@ -6,9 +6,6 @@ python gsw
 .. image:: http://img.shields.io/pypi/v/gsw.svg?style=flat
    :target: https://pypi.python.org/pypi/gsw
    :alt: Version_status
-.. image:: http://img.shields.io/pypi/dm/gsw.svg?style=flat
-   :target: https://pypi.python.org/pypi/gsw
-   :alt: Downloads
 .. image:: http://img.shields.io/travis/TEOS-10/python-gsw/master.svg?style=flat
    :target: https://travis-ci.org/TEOS-10/python-gsw
    :alt: Build_status

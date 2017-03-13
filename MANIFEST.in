@@ -1,11 +1,4 @@
+include *.txt
 include README.rst
-include LICENSE.txt
-include CHANGES.txt
-include docs/conf.py
-include docs/index.rst
-include docs/Makefile
-include gsw/*.py
-include gsw/gibbs/*.py
-include gsw/test/*.py
-include gsw/utilities/*.py
+recursive-include gsw *.py
 include gsw/utilities/data/*.npz
