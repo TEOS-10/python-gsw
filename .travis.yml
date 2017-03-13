@@ -1,25 +1,45 @@
 language: python
 
+sudo: false
 
-env:
-    - CONDA="python=2.7"
-    - CONDA="python=3.4"
-    - CONDA="python=3.5"
-    - CONDA="python=3.6"
+addons:
+  apt:
+    packages: octave
+
+matrix:
+  fast_finish: true
+  include:
+  - python: 2.7
+    env: NUMPY=1.11
+  - python: 2.7
+    env: NUMPY=1.12
+  - python: 3.6
+    env: NUMPY=1.11
+  - python: 3.6
+    env: NUMPY=1.12
+  - python: 3.6
+    env: TEST_TARGET=publish
 
 before_install:
-    - sudo apt-add-repository -y ppa:picaso/octave
-    - sudo apt-get update -qq
-    - sudo apt-get install -qq octave liboctave-dev
     - wget http://bit.ly/miniconda -O miniconda.sh
     - bash miniconda.sh -b -p $HOME/miniconda
     - export PATH="$HOME/miniconda/bin:$PATH"
-    - conda update --yes conda
-    # Install numpy and scipy with conda for faster tests.
-    - travis_retry conda create --yes -n test $CONDA pip numpy scipy
-    - source activate test
-    - travis_retry pip install -r requirements-dev.txt
-    - conda info -a
+    - conda update --yes --all
+    - conda config --add channels conda-forge --force
+    - conda create --yes -n TEST python=$TRAVIS_PYTHON_VERSION --file requirements-dev.txt
+    - source activate TEST
+    - conda install --yes $NUMPY
+    - if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then
+        conda install --yes doctr ;
+      fi
+
+# Test source distribution.
+install:
+    - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install gsw-${version}.tar.gz && popd
 
 script:
     - python setup.py test
+    - if [[ $TEST_TARGET == "publish" ]]; then
+        pushd docs && make html && popd
+        doctr deploy --built-docs=docs/_build/html --gh-pages-docs=. ;
+      fi
