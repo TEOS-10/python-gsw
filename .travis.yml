@@ -3,8 +3,9 @@ language: python
 
 env:
     - CONDA="python=2.7"
-    - CONDA="python=3.3"
     - CONDA="python=3.4"
+    - CONDA="python=3.5"
+    - CONDA="python=3.6"
 
 before_install:
     - sudo apt-add-repository -y ppa:picaso/octave
