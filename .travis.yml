@@ -2,6 +2,10 @@ language: python
 
 sudo: false
 
+env:
+  global:
+    - secure: "DdUE82IkNYo317595sy4H6z3GQoaVUTAAUDOOoJATa199ERxSQy8VlsMKELdRTrBEt76kSBJdjjJ7YSiOVSMt9qao9XWOWYjtfdX0KpbkmfiHMH6fmQnckNndMbPY8wa42fFusIWOxZL/jCay1Gq0GppjoHdSoaLGIk3hLkYE1U="
+
 addons:
   apt:
     packages: octave
@@ -28,7 +32,7 @@ before_install:
     - conda config --add channels conda-forge --force
     - conda create --yes -n TEST python=$TRAVIS_PYTHON_VERSION --file requirements-dev.txt
     - source activate TEST
-    - conda install --yes $NUMPY
+    - conda install --yes numpy=$NUMPY
     - if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then
         conda install --yes doctr ;
       fi
