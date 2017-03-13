@@ -14,25 +14,26 @@ matrix:
   fast_finish: true
   include:
   - python: 2.7
-    env: NUMPY=1.11
+    env: TEST_TARGET=default NUMPY=1.11
   - python: 2.7
-    env: NUMPY=1.12
+    env: TEST_TARGET=default NUMPY=1.12
   - python: 3.6
-    env: NUMPY=1.11
+    env: TEST_TARGET=default NUMPY=1.11
   - python: 3.6
-    env: NUMPY=1.12
+    env: TEST_TARGET=default NUMPY=1.12
   - python: 3.6
-    env: TEST_TARGET=publish
+    env: TEST_TARGET=publish NUMPY=1.12
 
 before_install:
     - wget http://bit.ly/miniconda -O miniconda.sh
     - bash miniconda.sh -b -p $HOME/miniconda
     - export PATH="$HOME/miniconda/bin:$PATH"
-    - conda update --yes --all
+    - conda update conda --yes
     - conda config --add channels conda-forge --force
     - conda create --yes -n TEST python=$TRAVIS_PYTHON_VERSION --file requirements-dev.txt
     - source activate TEST
-    - conda install --yes numpy=$NUMPY
+    # Install after to ensure it will be downgraded when testing an older version.
+    - conda install --yes --quiet numpy=$NUMPY
     - if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then
         conda install --yes doctr ;
       fi
@@ -42,7 +43,9 @@ install:
     - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install gsw-${version}.tar.gz && popd
 
 script:
-    - py.test -vv
+    - if [[ $TEST_TARGET == "default" ]]; then
+        py.test -vv ;
+      fi
     - if [[ $TEST_TARGET == "publish" ]]; then
         pushd docs && make html && popd
         doctr deploy --built-docs=docs/_build/html --gh-pages-docs=. ;
