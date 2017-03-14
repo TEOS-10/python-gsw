@@ -726,10 +726,6 @@ def enthalpy_SSO_0(p):
     array([   97.26388583,   486.27439853,  1215.47517122,  2430.24907325,
             5827.90879421,  9704.32030926])
 
-    Version
-    -------
-    3.05 (27th November, 2015)
-
     References
     ----------
     .. [1] Roquet, F., G. Madec, T.J. McDougall, P.M. Barker, 2015: Accurate
