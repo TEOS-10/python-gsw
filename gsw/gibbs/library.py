@@ -140,7 +140,7 @@ class SA_table(object):
         mask_in = np.ma.mask_or(np.ma.getmask(p), np.ma.getmask(lon))
         mask_in = np.ma.mask_or(mask_in, np.ma.getmask(lat))
         p, lon, lat = [np.ma.filled(a, 0).astype(float) for a in (p, lon, lat)]
-        p, lon, lat = np.broadcast_arrays(p, lon, lat, subok=True)
+        p, lon, lat = np.broadcast_arrays(p, lon, lat)
         if p.ndim > 1:
             shape_in = p.shape
             p, lon, lat = list(map(np.ravel, (p, lon, lat)))
@@ -448,7 +448,7 @@ def SA_from_SP_Baltic(SP, lon, lat):
     if np.ma.is_masked(lat):
         input_mask = input_mask | lat.mask
     SP, lon, lat = list(map(np.atleast_1d, (SP, lon, lat)))
-    SP, lon, lat = np.broadcast_arrays(SP, lon, lat, subok=True)
+    SP, lon, lat = np.broadcast_arrays(SP, lon, lat)
     inds_baltic = in_Baltic(lon, lat)
     # SA_baltic = np.ma.masked_all(SP.shape, dtype=np.float)
     all_nans = np.nan + np.zeros_like(SP)
@@ -512,7 +512,7 @@ def SP_from_SA_Baltic(SA, lon, lat):
     """
 
     SA, lon, lat = list(map(np.ma.masked_invalid, (SA, lon, lat)))
-    lon, lat, SA = np.broadcast_arrays(lon, lat, SA, subok=True)
+    lon, lat, SA = np.broadcast_arrays(lon, lat, SA)
     inds_baltic = in_Baltic(lon, lat)
     if not inds_baltic.sum():
         return None
