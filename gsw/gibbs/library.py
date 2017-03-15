@@ -965,7 +965,7 @@ def gibbs(ns, nt, npr, SA, t, p):
     SA = np.ma.filled(SA, 0)
     t = np.ma.filled(t, 20)
     p = np.ma.filled(p, 10)
-    SA, t, p = np.broadcast_arrays(SA, t, p, subok=True)
+    SA, t, p = np.broadcast_arrays(SA, t, p)
     gibbs = np.zeros(SA.shape, dtype=np.float)  # Use if all_masked is True
     all_masked = False
     # Ensure a full mask, so we can set elements if necessary.
