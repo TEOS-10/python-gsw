@@ -185,9 +185,11 @@ class SA_table(object):
         # Editing options, in case we don't want to use
         # values calculated from the wrong pressure, or from
         # an incomplete SA table grid square.
-        mask_out |= self.p_fudge > self.max_p_fudge
-        mask_out |= self.frac1 < self.min_frac
-        delta_SA = np.ma.array(delta_SA, mask=mask_out, copy=False)
+        # mask_out |= self.p_fudge > self.max_p_fudge
+        # mask_out |= self.frac1 < self.min_frac
+        # delta_SA = np.ma.array(delta_SA, mask=mask_out, copy=False)
+        # Later on, it is expected to be a masked array.
+        delta_SA = np.ma.array(delta_SA, copy=False)
         if reshaped:
             delta_SA.shape = shape_in
             self.p_fudge.shape = shape_in
