@@ -577,7 +577,7 @@ def SP_from_SA_Baltic_old(SA, lon, lat):
     """
 
     SA, lon, lat = list(map(np.ma.masked_invalid, (SA, lon, lat)))
-    lon, lat, SA = np.broadcast_arrays(lon, lat, SA)
+    lon, lat, SA = np.broadcast_arrays(lon, lat, SA, subok=True)
     xb1, xb2, xb3 = 12.6, 7., 26.
     xb1a, xb3a = 45., 26.
     yb1, yb2, yb3 = 50., 59., 69.
@@ -1467,7 +1467,7 @@ def in_Baltic(lon, lat):
         in_rectangle = in_rectangle.data & ~in_rectangle.mask
     # Closer check for points in the rectangle
     if np.any(in_rectangle):
-        lon, lat = np.broadcast_arrays(lon, lat)
+        lon, lat = np.broadcast_arrays(lon, lat, subok=True)
         in_baltic = np.zeros(lon.shape, dtype='bool')
         lon1 = lon[in_rectangle]
         lat1 = lat[in_rectangle]
@@ -1509,7 +1509,7 @@ def infunnel(SA, CT, p):
 
     # Check variables and re-size if necessary.
     scalar = np.isscalar(SA) and np.isscalar(CT) and np.isscalar(p)
-    SA, CT, p = np.broadcast_arrays(SA, CT, p)
+    SA, CT, p = np.broadcast_arrays(SA, CT, p, subok=True)
     input_nan = np.isnan(SA) | np.isnan(CT) | np.isnan(p)
     infunnel = ((p <= 8000) &
                 (SA >= 0) &

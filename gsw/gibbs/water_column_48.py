@@ -86,7 +86,7 @@ def IPV_vs_fNsquared_ratio(SA, CT, p, p_ref=0):
 
     SA = np.maximum(SA, 0)
 
-    SA, CT, p, p_ref = np.broadcast_arrays(SA, CT, p, p_ref)
+    SA, CT, p, p_ref = np.broadcast_arrays(SA, CT, p, p_ref, subok=True)
 
     p_ref = p_ref[:-1, ...]
 
@@ -194,10 +194,10 @@ def Nsquared(SA, CT, p, lat=None):
 
     if lat is not None:
         g = grav(lat, p)
-        SA, CT, p, g = np.broadcast_arrays(SA, CT, p, g)
+        SA, CT, p, g = np.broadcast_arrays(SA, CT, p, g, subok=True)
     else:
         g = 9.7963  # Standard value from Griffies (2004).
-        SA, CT, p = np.broadcast_arrays(SA, CT, p)
+        SA, CT, p = np.broadcast_arrays(SA, CT, p, subok=True)
 
     ishallow = (slice(0, -1), Ellipsis)
     ideep = (slice(1, None), Ellipsis)
@@ -287,7 +287,7 @@ def Turner_Rsubrho(SA, CT, p):
 
     SA = np.maximum(SA, 0)
 
-    SA, CT, p = np.broadcast_arrays(SA, CT, p)
+    SA, CT, p = np.broadcast_arrays(SA, CT, p, subok=True)
 
     p_mid = 0.5 * (p[0:-1, ...] + p[1:, ...])
     SA_mid = 0.5 * (SA[0:-1, ...] + SA[1:, ...])

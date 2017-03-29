@@ -58,7 +58,7 @@ def check_input(SP, p, lon, lat):
     """
 
     # Helper for the "from_SP" functions.
-    lon, lat, p, SP = np.broadcast_arrays(lon, lat, p, SP)
+    lon, lat, p, SP = np.broadcast_arrays(lon, lat, p, SP, subok=True)
 
     cond1 = ((p < 100) & (SP > 120))
     cond2 = ((p >= 100) & (SP > 42))
