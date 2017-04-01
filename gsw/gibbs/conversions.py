@@ -24,7 +24,7 @@ __all__ = ['CT_from_t',
            'SA_from_Sstar',
            'SP_from_SA',
            'SP_from_SR',
-           'SP_from_Sstar',  # TODO
+           #'SP_from_Sstar',  # TODO
            'SR_from_SP',
            'Sstar_from_SA',
            'deltaSA_from_SP',  # TODO
@@ -297,8 +297,8 @@ def SP_from_SR(SR):
     return 1. / uPS * SR
 
 
-def SP_from_Sstar():
-    pass
+#def SP_from_Sstar():
+#    pass
 
 
 @match_args_return
