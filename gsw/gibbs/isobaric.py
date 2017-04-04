@@ -6,19 +6,19 @@ from .conversions import CT_from_pt
 from ..utilities import match_args_return
 
 
-__all__ = ['latentheat_evap_CT',
-           'latentheat_melting',
-           'latentheat_evap_t']
+__all__ = ['latentheat_evap_t']
+#           'latentheat_evap_CT',
+#           'latentheat_melting',
 
 
-@match_args_return
-def latentheat_evap_CT(SA, CT):
-    pass
+#@match_args_return
+#def latentheat_evap_CT(SA, CT):
+#    pass
 
 
-@match_args_return
-def latentheat_melting(SA, p):
-    pass
+#@match_args_return
+#def latentheat_melting(SA, p):
+#    pass
 
 
 @match_args_return

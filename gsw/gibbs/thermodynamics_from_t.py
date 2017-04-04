@@ -24,7 +24,7 @@ __all__ = ['adiabatic_lapse_rate_from_t',
            'chem_potential_salt_t_exact',
            'chem_potential_water_t_exact',
            'cp_t_exact',
-           'deltaSA_from_rho_t_exact',
+#           'deltaSA_from_rho_t_exact',
            'dynamic_enthalpy_t_exact',
            'enthalpy_t_exact',
            'entropy_t_exact',
@@ -621,9 +621,9 @@ def cp_t_exact(SA, t, p):
     return -(t + Kelvin) * gibbs(n0, n2, n0, SA, t, p)
 
 
-@match_args_return
-def deltaSA_from_rho_t_exact(rho, SP, t, p):
-    pass
+#@match_args_return
+#def deltaSA_from_rho_t_exact(rho, SP, t, p):
+#    pass
 
 
 @match_args_return
