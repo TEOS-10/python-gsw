@@ -1,7 +1,9 @@
 python gsw
 ==========
 
-(This python module is incomplete and should be used with caution!)
+This python module is being replaced by a new implementation:
+`GSW-Python <https://github.com/TEOS-10/GSW-Python>`__, introduced
+on April 22, 2017.
 
 .. image:: http://img.shields.io/pypi/v/gsw.svg?style=flat
    :target: https://pypi.python.org/pypi/gsw
@@ -16,7 +18,7 @@ python gsw
 Python implementation of the Thermodynamic Equation Of Seawater - 2010 (`TEOS-10 <http://www.teos-10.org/>`__)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This module is an python alternative to the gsw MatlabTM toolbox. The
+This module is a Python alternative to the GSW-Matlab toolbox. The
 table below shows some function names in the gibbs library and the
 corresponding function names in the seawater library.
 
@@ -95,11 +97,11 @@ Thanks
 Acknowledgments
 ~~~~~~~~~~~~~~~
 
--  SCOR/IAPSO WG127 for the original MatlabTM code.
+-  SCOR/IAPSO WG127 for the original GSW-Matlab code.
 
 Caveats
 ~~~~~~~
 
 -  This python module is incomplete and should be used with caution.
--  The database used in ``_delta_SA`` comes from the MatlabTM gsw
+-  The database used in ``_delta_SA`` comes from the GSW-Matlab
    version.
