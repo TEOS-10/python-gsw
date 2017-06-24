@@ -1,3 +1,6 @@
+This repository is deprecated in favor of https://github.com/TEOS-10/GSW-Python, both packages will install a `gsw` module that should be virtually identical to use. However, `python-gsw` is a pure python of the 48-terms equation, while `GSW-Python` is a c-wrapped alternative for the latest 72-term equation.
+============================================================================================================================
+
 python gsw
 ==========
 
